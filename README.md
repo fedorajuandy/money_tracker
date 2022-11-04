@@ -4,6 +4,51 @@
 
 ## Money Tracker
 
+### Firebase CLI setup
+
+1. npm install -g firebase-tools
+2. firebase login
+3. dart pub global activate flutterfire_cli
+4. Add the path to env
+### Firebase app setup
+
+1. I have already had Firebase account
+2. Create new app in Firebase
+
+<!-- ANDROID -->
+3. Choose android after setup (the middle green... andorid icon)
+4. Enter app package name from android/app/build.gradle (com.example.bla) + nickname
+5. Download google-services.json in android/app
+6. In android/build.gradle (NOTE: DIFF FROM BEFORE), add classpath in dependencies
+7. In build.gradle (app), add apply together with the rest (change into the same format)
+[THE REST LATER IN yaml]
+8. flutter-packages-get
+
+<!-- iOS -->
+9. Choose iOS (most left)
+10. Enter name from ios/Runner.xcodeproj/project.pbxproj (PRODUCT_BUNDLE_IDENTIFIER)
+11. Download plist to ios/Runner
+12. add:
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+    );
+    to main.dart main
+
+
+### Firebase project setup
+
+1. flutterfire configure
+2. flutter pub add firebase_core [CAN ADD MANUALY TO yaml IF YA WANNA <a href="https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins">Firebase plugins</a>]
+3. flutter pub add firebase_database
+4. flutterfire configure
+5. In main.dart add 
+    import 'package:firebase_core/firebase_core.dart';
+    import 'firebase_options.dart';
+6. add:
+    final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+    to MyApp and change the app not to const
+
 ## Codes references
 
 - PPB class notes and past projects
@@ -18,8 +63,6 @@
 > Green for choices, quantity, quality, and growth
 
 - <a href="https://www.crazyegg.com/blog/color-palettes-financial/">Finance app color palletes</a>
-- <a href="https://abhijitrawool.com/restaurant-website-color-palettes/">Restaurant color palette</a>
-
 ## Images references
 
 - Brand logos are made using <a href="https://express.adobe.com/express-apps/logo-maker">Adobe Express</a> and edited using <a href="https://www.figma.com/">Figma</a>
