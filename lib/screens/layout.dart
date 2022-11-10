@@ -1,6 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:money_tracker/themes/colors.dart';
 
 class Layout extends StatefulWidget {
@@ -11,6 +10,8 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
+  int pageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +24,7 @@ class _LayoutState extends State<Layout> {
           size: 24,
         ),
         onPressed: () {
-
+          setTabs(4);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -55,10 +56,10 @@ class _LayoutState extends State<Layout> {
 
   Widget bottomNav() {
     List<IconData> iconItems = [
-      Ionicons.md_calendar,
-      Ionicons.md_stats,
-      Ionicons.md_wallet,
-      Ionicons.md_person,
+      Icons.calendar_month,
+      Icons.graphic_eq,
+      Icons.wallet,
+      Icons.person,
     ];
 
     return AnimatedBottomNavigationBar(
@@ -76,5 +77,12 @@ class _LayoutState extends State<Layout> {
         setTabs(index);
       }
     );
+  }
+
+  setTabs(index) {
+    // ignore: unused_element
+    setState() {
+      pageIndex = index;
+    }
   }
 }
