@@ -18,6 +18,7 @@
 <!-- ANDROID -->
 3. Choose android after setup (the middle green... andorid icon)
 4. Enter app package name from android/app/build.gradle (com.example.bla) + nickname
+While there, change the minSdkVersion to 21 and target to 28
 5. Download google-services.json in android/app
 6. In android/build.gradle (NOTE: DIFF FROM BEFORE), add classpath in dependencies
 7. In build.gradle (app), add apply together with the rest (change into the same format)
@@ -33,8 +34,22 @@
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
     );
-    to main.dart main
-
+    to main.dart main and correct mistake with the bulb
+13. change home to (more or less):
+    FutureBuilder(
+        future: _fbApp,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("Error:  ${snapshot.error.toString()}");
+          } else if (snapshot.hasData) {
+            return const MyHomePage(title: "LOL");
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
 
 ### Firebase project setup
 
@@ -42,12 +57,13 @@
 2. flutter pub add firebase_core [CAN ADD MANUALY TO yaml IF YA WANNA <a href="https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins">Firebase plugins</a>]
 3. flutter pub add firebase_database
 4. flutterfire configure
-5. In main.dart add 
+5. In main.dart add
     import 'package:firebase_core/firebase_core.dart';
     import 'firebase_options.dart';
 6. add:
     final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
     to MyApp and change the app not to const
+7. flutterfire configure
 
 ## Codes references
 

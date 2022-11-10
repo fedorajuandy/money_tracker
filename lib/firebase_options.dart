@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '367947949128',
     projectId: 'money-tracker-874b5',
     authDomain: 'money-tracker-874b5.firebaseapp.com',
+    databaseURL: 'https://money-tracker-874b5-default-rtdb.firebaseio.com',
     storageBucket: 'money-tracker-874b5.appspot.com',
     measurementId: 'G-KG24B8VDH8',
   );
@@ -58,6 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:367947949128:android:8bbb0878f536ff0c2a247d',
     messagingSenderId: '367947949128',
     projectId: 'money-tracker-874b5',
+    databaseURL: 'https://money-tracker-874b5-default-rtdb.firebaseio.com',
     storageBucket: 'money-tracker-874b5.appspot.com',
   );
 
@@ -66,6 +68,7 @@ class DefaultFirebaseOptions {
     appId: '1:367947949128:ios:9a995c2c5f6aeed62a247d',
     messagingSenderId: '367947949128',
     projectId: 'money-tracker-874b5',
+    databaseURL: 'https://money-tracker-874b5-default-rtdb.firebaseio.com',
     storageBucket: 'money-tracker-874b5.appspot.com',
     iosClientId: '367947949128-e4b2l1ckudb9oqjhggoph78gtki189gj.apps.googleusercontent.com',
     iosBundleId: 'com.example.moneyTracker',
@@ -76,6 +79,7 @@ class DefaultFirebaseOptions {
     appId: '1:367947949128:ios:9a995c2c5f6aeed62a247d',
     messagingSenderId: '367947949128',
     projectId: 'money-tracker-874b5',
+    databaseURL: 'https://money-tracker-874b5-default-rtdb.firebaseio.com',
     storageBucket: 'money-tracker-874b5.appspot.com',
     iosClientId: '367947949128-e4b2l1ckudb9oqjhggoph78gtki189gj.apps.googleusercontent.com',
     iosBundleId: 'com.example.moneyTracker',
