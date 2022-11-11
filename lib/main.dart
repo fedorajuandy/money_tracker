@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.hasError) {
             return Text("Error:  ${snapshot.error.toString()}");
           } else if (snapshot.hasData) {
-            return MyHomePage(title: "LOL");
+            return const MyHomePage(title: "LOL");
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title});
   final String title;
 
   @override

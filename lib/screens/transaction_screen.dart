@@ -40,20 +40,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               padding: const EdgeInsets.only(top: 60, bottom: 25, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const <Widget>[
-                      Text(
-                        "Transactions",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: dark,
-                        ),
-                      ),
-                      Icon(Icons.search),
-                    ],
-                  ),
+                  title(),
                   const SizedBox(height: 25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -62,13 +49,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         width: (size.width - 40) / 7,
                         child: Column(
                           children: <Widget>[
+                            // LGH
                             const Text(
-                              "Sun",
+                              "Day name goes here, let's start with Sun for formality",
                               style: TextStyle(
                                 fontSize: 10,
                               ),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Container(
                               width: 30,
                               height: 30,
@@ -81,7 +69,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               ),
                               child: const Center(
                                 child: Text(
-                                  "1",
+                                  "Date goes here",
                                   style: TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w600,
@@ -101,6 +89,23 @@ class _TransactionScreenState extends State<TransactionScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget title() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: const <Widget>[
+        Text(
+          "Transactions",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: dark,
+          ),
+        ),
+        Icon(Icons.search),
+      ],
     );
   }
 }

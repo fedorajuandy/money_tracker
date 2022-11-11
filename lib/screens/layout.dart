@@ -36,19 +36,16 @@ class _LayoutState extends State<Layout> {
       index: pageIndex,
       children: const <Widget>[
         Center(
-          child: Text("Daily Transaction"),
+          child: Text("Tramsactions"),
         ),
         Center(
-          child: Text("Monthly Report"),
+          child: Text("Reports"),
         ),
         Center(
-          child: Text("Make BUdget"),
+          child: Text("Plans"),
         ),
         Center(
-          child: Text(""),
-        ),
-        Center(
-          child: Text(""),
+          child: Text("Balance"),
         ),
       ],
     );
@@ -56,9 +53,13 @@ class _LayoutState extends State<Layout> {
 
   Widget bottomNav() {
     List<IconData> iconItems = [
+      // transactions
       Icons.calendar_month,
+      // reports
       Icons.graphic_eq,
+      // plans
       Icons.wallet,
+      // balance
       Icons.person,
     ];
 
