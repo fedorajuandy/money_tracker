@@ -4,22 +4,20 @@ import 'package:provider/provider.dart';
 import 'package:money_tracker/controllers/transaction_operation.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-class BalanceAddTransactionScreen extends StatefulWidget {
-  const BalanceAddTransactionScreen({super.key});
+class AddTransactionScreen extends StatefulWidget {
+  const AddTransactionScreen({super.key});
 
   @override
-  State<BalanceAddTransactionScreen> createState() => _BalanceAddTransactionScreenState();
+  State<AddTransactionScreen> createState() => _AddTransactionScreenState();
 }
 
-class _BalanceAddTransactionScreenState extends State<BalanceAddTransactionScreen> {
+class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final GlobalKey<FormState> _keyform = GlobalKey<FormState>();
   final TextEditingController _nameText = TextEditingController();
   final TextEditingController _amountText = TextEditingController();
-  String nameText = "Name";
-  String amountText = "10000";
-  DateTime added = DateTime.now();
-  String? categoryText = "Uncategorised";
-  late DatabaseReference dbRef;
+  late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('transactions');
+  String? categoryText = "Other";
+  List<String> categories = <String>['Sales', 'Income', "Food and beverages", 'Other'];
 
   @override
   Widget build(BuildContext context) {
@@ -64,64 +62,55 @@ class _BalanceAddTransactionScreenState extends State<BalanceAddTransactionScree
 
   Widget textFieldName() {
     return TextFormField(
-      cursorColor: Colors.white54,
-      style: const TextStyle(color: Colors.white),
+      cursorColor: primary,
+      style: const TextStyle(color: dark),
       decoration: const InputDecoration(
         hintText: "Title",
         hintStyle: TextStyle(
-          color: Colors.white24,
+          color: Colors.black54,
         ),
         labelText: 'Title',
         labelStyle: TextStyle(
-          color: Colors.white54,
+          color: primary,
         ),
         border: OutlineInputBorder(),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.white54,
+            color: primary,
           ),
         ),
       ),
       controller: _nameText,
       validator: (value) {
-        return (value !.isEmpty? "Please input title": null);
-      },
-      onChanged: (String value) {
-        setState(() {
-          nameText = value;
-        });
+        return (value !.isEmpty? "Please input transaction name": null);
       },
     );
   }
 
   Widget textFieldAmount() {
     return TextFormField(
-      cursorColor: Colors.white54,
-      style: const TextStyle(color: Colors.white),
+      cursorColor: primary,
+      style: const TextStyle(color: secondary),
       decoration: const InputDecoration(
-        hintText: "Description",
+        hintText: "Amount",
         hintStyle: TextStyle(
-          color: Colors.white24,
+          color: Colors.black54,
         ),
-        labelText: 'Description',
+        labelText: 'Amount',
         labelStyle: TextStyle(
-          color: Colors.white54,
+          color: primary,
         ),
         border: OutlineInputBorder(),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.white54,
+            color: primary,
           ),
         ),
       ),
+      keyboardType: TextInputType.number,
       controller: _amountText,
       validator: (value) {
-        return (value !.isEmpty? "Please input description": null);
-      },
-      onChanged: (String value) {
-        setState(() {
-          amountText = value;
-        });
+        return (value !.isEmpty? "Please input transaction amount": null);
       },
     );
   }
@@ -129,38 +118,44 @@ class _BalanceAddTransactionScreenState extends State<BalanceAddTransactionScree
   Widget buttonAdd() {
     return TextButton(
       onPressed: () {
-        Provider.of<TransactionOperation>(context, listen: false).addNewTransaction(nameText, categoryText, DateTime.now(), amountText);
+        Map<String, String> transaction = {
+          'name': _nameText.text,
+          'category': categoryText.toString(),
+          'added': DateTime.now().toString(),
+          'amount': _amountText.text,
+        };
+
+        dbRef.push().set(transaction);
+        Provider.of<TransactionOperation>(context, listen: false).addNewTransaction(_nameText.text, categoryText, DateTime.now(), double.parse(_amountText.text));
         return Navigator.pop(context);
       },
       style: TextButton.styleFrom(
-        backgroundColor: Colors.white,
+        backgroundColor: secondary,
         foregroundColor: Colors.black87,
       ),
-      child: const Text("Add Transaction"),
+      child: const Text("Add rransaction"),
     );
   }
 
   Widget dropdownCategory() {
     return DropdownButtonFormField <String>(
       decoration: const InputDecoration(
-        hintText: "Choose location",
+        hintText: "Choose category",
         hintStyle: TextStyle(
-          color: Colors.white24,
+          color: Colors.black54,
         ),
-        labelText: 'Choose location',
+        labelText: 'Choose category',
         labelStyle: TextStyle(
-          color: Colors.white54,
+          color: primary,
         ),
         border: OutlineInputBorder(),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.white54,
+            color: primary,
           ),
         ),
       ),
-      items: <String>[
-        "A", "B", "C"
-      ].map((String value) {
+      items: categories.map((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
@@ -173,7 +168,7 @@ class _BalanceAddTransactionScreenState extends State<BalanceAddTransactionScree
       },
       validator: (value) {
         if (value == null) {
-          return "Please choose a location";
+          return "Please choose a category";
         } else {
           return null;
         }

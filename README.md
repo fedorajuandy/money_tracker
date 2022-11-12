@@ -72,6 +72,7 @@ While there, change the minSdkVersion to 21 and target to 28
 - <a href="https://flutterawesome.com/budget-tracker-app-ui-with-flutter/">UI/UX</a> from <a href="https://flutterawesome.com/">Flutter libraries and tools</a>
 - <a href="https://stackoverflow.com/questions/71690214/how-do-construct-a-horizontally-scrollable-calendar-in-my-appbar-with-flutter">Horisontal scrolling calendar</a>
 - <a href="https://codingzest.com/firebase-realtime-database-crud-operations-for-flutter-project/">DateTime</a>
+- <a href="https://codingzest.com/firebase-realtime-database-crud-operations-for-flutter-project/">Firebase realtime database CRUD</a>
 
 ## Design references
 

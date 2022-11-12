@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:money_tracker/screens/add_transaction_screen.dart';
 import 'package:money_tracker/screens/balance_screen.dart';
 import 'package:money_tracker/screens/plan_screen.dart';
 import 'package:money_tracker/screens/report_screen.dart';
@@ -28,7 +29,7 @@ class _LayoutState extends State<Layout> {
           size: 24,
         ),
         onPressed: () {
-          setTabs(4);
+          const AddTransactionScreen();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
