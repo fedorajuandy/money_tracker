@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:money_tracker/screens/transaction_screen.dart';
+import 'package:money_tracker/screens/layout.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
   MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.hasError) {
             return Text("Error:  ${snapshot.error.toString()}");
           } else if (snapshot.hasData) {
-            return const TransactionScreen();
+            return const Layout();
           } else {
             return const Center(
               child: CircularProgressIndicator(),

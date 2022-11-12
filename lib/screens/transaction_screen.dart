@@ -10,7 +10,7 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  int selectedIndex = 3;
+  int selectedIndex = DateTime.now().day - 1;
   DateTime now = DateTime.now();
   late DateTime lastDayOfMonth;
 
@@ -143,7 +143,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: (MediaQuery.of(context).size.width - 40) * 0.7,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -169,7 +169,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 width: (MediaQuery.of(context).size.width - 40) * 0.3,
                 child: Row(
                   children: const <Widget>[

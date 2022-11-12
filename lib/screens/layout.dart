@@ -1,5 +1,9 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:money_tracker/screens/balance_screen.dart';
+import 'package:money_tracker/screens/plan_screen.dart';
+import 'package:money_tracker/screens/report_screen.dart';
+import 'package:money_tracker/screens/transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 
 class Layout extends StatefulWidget {
@@ -36,16 +40,16 @@ class _LayoutState extends State<Layout> {
       index: pageIndex,
       children: const <Widget>[
         Center(
-          child: Text("Tramsactions"),
+          child: TransactionScreen(),
         ),
         Center(
-          child: Text("Reports"),
+          child: ReportScreen(),
         ),
         Center(
-          child: Text("Plans"),
+          child: PlanScreen(),
         ),
         Center(
-          child: Text("Balance"),
+          child: BalanceScreen(),
         ),
       ],
     );
