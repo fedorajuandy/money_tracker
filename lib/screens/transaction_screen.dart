@@ -12,11 +12,13 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   int selectedIndex = DateTime.now().day - 1;
   DateTime now = DateTime.now();
+  // late = when runtime
   late DateTime lastDayOfMonth;
 
   @override
   void initState() {
     super.initState();
+    // get the next month, then take a step back to the last day (the last '0')
     lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
   }
 
@@ -214,15 +216,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
+  Widget sbh8() {
+    return const SizedBox(height: 8);
+  }
+
   Widget sbh10() {
     return const SizedBox(height: 10);
   }
 
   Widget sbh28() {
     return const SizedBox(height: 28);
-  }
-
-  Widget sbh8() {
-    return const SizedBox(height: 8);
   }
 }

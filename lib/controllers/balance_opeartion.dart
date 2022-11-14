@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:money_tracker/models/balance.dart';
 
@@ -12,8 +13,8 @@ class BalanceOperation extends ChangeNotifier {
     addNewBalance("Example", "Something", DateTime.now(), 10000);
   }
 
-  void addNewBalance(String name, String category, DateTime BalanceMade, double amount) {
-    Balance balance = Balance(name, category, BalanceMade, amount);
+  void addNewBalance(String name, String category, DateTime balanceMade, double amount) {
+    Balance balance = Balance(name, category, balanceMade, amount);
     _balance.add(balance);
     notifyListeners();
   }

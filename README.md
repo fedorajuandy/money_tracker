@@ -4,6 +4,8 @@
 
 ## Money Tracker
 
+<a href="https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins">Add Firebase to Flutter</a>
+
 ### Firebase CLI setup
 
 1. npm install -g firebase-tools
@@ -73,6 +75,7 @@ While there, change the minSdkVersion to 21 and target to 28
 - <a href="https://stackoverflow.com/questions/71690214/how-do-construct-a-horizontally-scrollable-calendar-in-my-appbar-with-flutter">Horisontal scrolling calendar</a>
 - <a href="https://codingzest.com/firebase-realtime-database-crud-operations-for-flutter-project/">DateTime</a>
 - <a href="https://codingzest.com/firebase-realtime-database-crud-operations-for-flutter-project/">Firebase realtime database CRUD</a>
+= <a href="https://stackoverflow.com/questions/51420559/get-last-month-date-in-flutter-dart">Datetime</a>
 
 ## Design references
 
