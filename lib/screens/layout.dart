@@ -1,11 +1,10 @@
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:money_tracker/screens/add_plan_screen.dart';
-import 'package:money_tracker/screens/add_transaction_screen.dart';
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:money_tracker/screens/balance_screen.dart';
 import 'package:money_tracker/screens/plan_screen.dart';
 import 'package:money_tracker/screens/report_screen.dart';
 import 'package:money_tracker/screens/transaction_screen.dart';
+import 'package:money_tracker/screens/add_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 
 class Layout extends StatefulWidget {
@@ -23,7 +22,6 @@ class _LayoutState extends State<Layout> {
     const PlanScreen(),
     const BalanceScreen(),
     const AddTransactionScreen(),
-    const AddPlanScreen(),
   ];
 
   @override
@@ -31,6 +29,7 @@ class _LayoutState extends State<Layout> {
     return Scaffold(
       body: mainLayout(),
       bottomNavigationBar: bottomNav(),
+      // for adding a new transaction
       floatingActionButton: FloatingActionButton(
         backgroundColor: primary,
         child: const Icon(
@@ -38,11 +37,7 @@ class _LayoutState extends State<Layout> {
           size: 24,
         ),
         onPressed: () {
-          if (pageIndex == 2) {
-            setTabs(5);
-          } else {
-            setTabs(4);
-          }
+          setTabs(4);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -50,6 +45,7 @@ class _LayoutState extends State<Layout> {
   }
 
   Widget mainLayout() {
+    // switching between screens
     return IndexedStack(
       index: pageIndex,
       children: screens
@@ -74,6 +70,7 @@ class _LayoutState extends State<Layout> {
       splashColor: secondary,
       inactiveColor: Colors.black54,
       activeIndex: pageIndex,
+      // for the add transaction button
       gapLocation: GapLocation.center,
       notchSmoothness: NotchSmoothness.smoothEdge,
       leftCornerRadius: 10,
