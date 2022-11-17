@@ -9,11 +9,11 @@ class PlanOperation extends ChangeNotifier {
   }
 
   PlanOperation() {
-    addNewPlan("Example", "Something", DateTime.now(), 10000);
+    addNewPlan("Plan name", "Category", 10000, DateTime.now());
   }
 
-  void addNewPlan(String name, String category, DateTime planMade, double amount) {
-    Plan plan = Plan(name, category, planMade, amount);
+  void addNewPlan(String name, String category, double amount, DateTime planMade) {
+    Plan plan = Plan(name, category, amount, planMade);
     _plan.add(plan);
     notifyListeners();
   }

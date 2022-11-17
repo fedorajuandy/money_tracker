@@ -10,11 +10,11 @@ class BalanceOperation extends ChangeNotifier {
   }
 
   BalanceOperation() {
-    addNewBalance("Example", "Something", DateTime.now(), 10000);
+    addNewBalance(100000);
   }
 
-  void addNewBalance(String name, String category, DateTime balanceMade, double amount) {
-    Balance balance = Balance(name, category, balanceMade, amount);
+  void addNewBalance(double amount) {
+    Balance balance = Balance(amount);
     _balance.add(balance);
     notifyListeners();
   }

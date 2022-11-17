@@ -9,11 +9,11 @@ class TransactionOperation extends ChangeNotifier {
   }
 
   TransactionOperation() {
-    addNewTransaction("Example", "Something", DateTime.now(), 10000);
+    addNewTransaction("Transaction name", "Category", 10000, DateTime.now());
   }
 
-  void addNewTransaction(String name, String? category, DateTime transactionMade, double amount) {
-    Transaction transaction = Transaction(name, category, transactionMade, amount);
+  void addNewTransaction(String name, String? category, double amount, DateTime transactionMade) {
+    Transaction transaction = Transaction(name, category, amount, transactionMade);
     _transactions.add(transaction);
     notifyListeners();
   }
