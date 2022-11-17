@@ -1,8 +1,8 @@
 class Transaction {
   String name;
   String? category;
-  DateTime transactionMade;
   double amount;
+  DateTime transactionMade;
 
-  Transaction(this.name, this.category, this.transactionMade, this.amount);
+  Transaction(this.name, this.category, this.amount, this.transactionMade);
 }

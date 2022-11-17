@@ -1,8 +1,8 @@
 class Plan {
   String name;
-  String category;
-  DateTime planMade;
+  String? category;
   double amount;
+  DateTime planMade;
 
-  Plan(this.name, this.category, this.planMade, this.amount);
+  Plan(this.name, this.category, this.amount, this.planMade);
 }
