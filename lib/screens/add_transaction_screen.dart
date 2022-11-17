@@ -126,7 +126,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         };
 
         dbRef.push().set(transaction);
-        Provider.of<TransactionOperation>(context, listen: false).addNewTransaction(_nameText.text, categoryText, DateTime.now(), double.parse(_amountText.text));
+        Provider.of<TransactionOperation>(context, listen: false).addNewTransaction(_nameText.text, categoryText, double.parse(_amountText.text), DateTime.now());
         return Navigator.pop(context);
       },
       style: TextButton.styleFrom(
