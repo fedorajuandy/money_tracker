@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:money_tracker/themes/colors.dart';
 import 'package:intl/intl.dart';
+import 'package:money_tracker/themes/colors.dart';
+import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/widgets/title.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -10,8 +12,12 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
+  // current month
   int selectedIndex = DateTime.now().month + 1;
   DateTime now = DateTime.now();
+  List <Widget> reports = [];
+  String? yearText = "Other";
+  List<String> years = <String>['2010', '2015', '2022'];
 
   @override
   void initState() {
@@ -20,6 +26,39 @@ class _ReportScreenState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    reports = [
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+      report(),
+      report1(),
+    ];
+
     return Scaffold(
       backgroundColor: dark.withOpacity(0.05),
       body: screen(),
@@ -30,6 +69,7 @@ class _ReportScreenState extends State<ReportScreen> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
+          // the 'header'
           Container(
             decoration: BoxDecoration(
               color: dark.withOpacity(0.05),
@@ -42,13 +82,15 @@ class _ReportScreenState extends State<ReportScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 60, bottom: 25, right: 20, left: 20),
+              padding: const EdgeInsets.only(top: 24, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
-                  title(),
-                  sbh28(),
+                  title("Reports"),
+                  sbh24(),
                   Column(
                     children: <Widget>[
+                      chooseYear(),
+                      sbh8(),
                       horisontalCalendar(),
                     ],
                   ),
@@ -56,26 +98,13 @@ class _ReportScreenState extends State<ReportScreen> {
               ),
             ),
           ),
-          sbh28(),
-          graph(),
+          sbh32(),
+          yearly(),
+          sbh24(),
+          monthly(),
+          sbh40(),
         ],
       ),
-    );
-  }
-
-  Widget title() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const <Widget>[
-        Text(
-          "Reports",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: dark,
-          ),
-        ),
-      ],
     );
   }
 
@@ -84,6 +113,7 @@ class _ReportScreenState extends State<ReportScreen> {
       scrollDirection: Axis.horizontal,
       physics: const ClampingScrollPhysics(),
       child: Row(
+        // generate in a loop < months
         children: List.generate(now.month + 1, (index) {
           final monthName = DateFormat("MMMM").format(DateTime(now.year, index + 1, 1));
 
@@ -96,6 +126,7 @@ class _ReportScreenState extends State<ReportScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  // month's name (MMM)
                   Container(
                     decoration: BoxDecoration(
                       color: selectedIndex == index ? primary : Colors.transparent,
@@ -109,7 +140,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       child: Text(
                         monthName.substring(0, 3),
                         style: TextStyle(
-                          fontSize: 10.0,
+                          fontSize: 14,
                           color: selectedIndex == index ? Colors.white : dark,
                           fontWeight: FontWeight.bold,
                         ),
@@ -125,7 +156,32 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget graph() {
+  Widget chooseYear() {
+    return DropdownButtonFormField <String>(
+      value: "2022",
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: accent,
+          ),
+        ),
+      ),
+      items: years.map((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (String? value) {
+        setState(() {
+          yearText = value;
+        });
+      },
+    );
+  }
+
+  Widget yearly() {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Container(
@@ -152,7 +208,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Statistic",
+                      "Yearly values",
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
@@ -160,22 +216,14 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                     ),
                     sbh10(),
-                    const Text(
-                      "Rp250,000.00",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 24,
-                      ),
-                    ),
+                    totalIncome(),
+                    sbh8(),
+                    totalExpenses(),
+                    sbh8(),
+                    highestIncome(),
+                    sbh8(),
+                    highestExpenses(),
                   ],
-                ),
-              ),
-              const Positioned(
-                bottom: 0,
-                child: SizedBox(
-                  height: 150,
-                  child: Text("Yaya's here"),
-                  // LineChart(mainData(),),
                 ),
               ),
             ],
@@ -185,15 +233,294 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget sbh8() {
-    return const SizedBox(height: 8);
+  Widget total() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        children: <Widget>[
+          Text(
+            "Total",
+            style: TextStyle(
+              fontSize: 16,
+              color: dark.withOpacity(0.4),
+              fontWeight: FontWeight.bold,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Text(
+              "Rp20,000.00",
+              style: TextStyle(
+                fontSize: 20,
+                color: dark,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget sbh10() {
-    return const SizedBox(height: 10);
+  Widget totalExpenses() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        children: <Widget>[
+          Text(
+            "Expenses",
+            style: TextStyle(
+              fontSize: 16,
+              color: dark.withOpacity(0.4),
+              fontWeight: FontWeight.bold,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Text(
+              "Rp20,000.00",
+              style: TextStyle(
+                fontSize: 20,
+                color: dark,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget sbh28() {
-    return const SizedBox(height: 28);
+  Widget totalIncome() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        children: <Widget>[
+          Text(
+            "Income",
+            style: TextStyle(
+              fontSize: 16,
+              color: dark.withOpacity(0.4),
+              fontWeight: FontWeight.bold,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Text(
+              "Rp20,000.00",
+              style: TextStyle(
+                fontSize: 20,
+                color: dark,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget highestIncome() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        children: <Widget>[
+          Text(
+            "Highest income",
+            style: TextStyle(
+              fontSize: 16,
+              color: dark.withOpacity(0.4),
+              fontWeight: FontWeight.bold,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Text(
+              "Month",
+              style: TextStyle(
+                fontSize: 20,
+                color: dark,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget highestExpenses() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        children: <Widget>[
+          Text(
+            "Highest expenses",
+            style: TextStyle(
+              fontSize: 16,
+              color: dark.withOpacity(0.4),
+              fontWeight: FontWeight.bold,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Text(
+              "Month",
+              style: TextStyle(
+                fontSize: 20,
+                color: dark,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget monthly() {
+    var size = MediaQuery.of(context).size;
+    
+    return Wrap(
+      spacing: 20,
+      children: <Widget> [
+        Container(
+          width: (size.width - 60) / 2,
+          height: 170,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: dark.withOpacity(0.01),
+                spreadRadius: 10,
+                blurRadius: 3,
+              ),
+            ]
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 25, right: 25, top: 20, bottom: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.red,
+                  )
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      "Expenses",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: dark,
+                      ),
+                    ),
+                    sbh8(),
+                    const Text(
+                      "YATTA",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          width: (size.width - 60) / 2,
+          height: 170,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: dark.withOpacity(0.01),
+                spreadRadius: 10,
+                blurRadius: 3,
+              ),
+            ]
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 25, right: 25, top: 20, bottom: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: secondary,
+                  )
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      "Income",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: dark,
+                      ),
+                    ),
+                    sbh8(),
+                    const Text(
+                      "YATTA",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget reportList() {
+    return IndexedStack(
+      index: selectedIndex,
+      children: reports,
+    );
+  }
+
+  Widget report() {
+    return Text("YAYA");
+  }
+
+  Widget report1() {
+    return Text("YAYA");
   }
 }

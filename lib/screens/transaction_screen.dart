@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
-import 'package:intl/intl.dart';
+import 'package:money_tracker/widgets/title.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -16,7 +18,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
   DateTime now = DateTime.now();
   // late = when runtime, not when initialised
   late DateTime lastDayOfMonth;
-  List <Widget> transactions = [];
+  CalendarFormat _calendarFormat = CalendarFormat.week;
+  DateTime? _selectedDay;
+  List<Widget> transactions = [];
 
   @override
   void initState() {
@@ -59,7 +63,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
       transaction(),
       transaction1(),
     ];
-    
+
     return Scaffold(
       backgroundColor: dark.withOpacity(0.05),
       body: screen(),
@@ -83,14 +87,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 40, bottom: 25, right: 20, left: 20),
+              padding: const EdgeInsets.only(top: 24, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
-                  title(),
-                  sbh24(),
+                  title("Transactions"),
                   Column(
                     children: <Widget>[
-                      horisontalCalendar(),
+                      tableCalendar(),
                     ],
                   ),
                 ],
@@ -104,22 +107,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
           sbh40(),
         ],
       ),
-    );
-  }
-
-  Widget title() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const <Widget>[
-        Text(
-          "Transactions",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: dark,
-          ),
-        ),
-      ],
     );
   }
 
@@ -178,6 +165,54 @@ class _TransactionScreenState extends State<TransactionScreen> {
           );
         }),
       ),
+    );
+  }
+
+  Widget tableCalendar() {
+    return TableCalendar(
+      firstDay: DateTime(2010, 1, 1),
+      focusedDay: now,
+      lastDay: lastDayOfMonth,
+      calendarFormat: _calendarFormat,
+      calendarStyle: CalendarStyle(
+        selectedDecoration: BoxDecoration(
+          color: secondary,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: secondary,
+          ),
+        ),
+        todayDecoration: BoxDecoration(
+          color: primary,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: primary,
+          ),
+        ),
+        weekendTextStyle: const TextStyle(
+          color: Colors.red,
+        ),
+      ),
+      // selecting a date
+      selectedDayPredicate: (day) {
+        return isSameDay(_selectedDay, day);
+      },
+      onDaySelected: (selectedDay, focusedDay) {
+        setState(() {
+          _selectedDay = selectedDay;
+          now = focusedDay;
+        });
+      },
+      onFormatChanged: (format) {
+        if (_calendarFormat != format) {
+          setState(() {
+            _calendarFormat = format;
+          });
+        }
+      },
+      onPageChanged: (focusedDay) {
+        now = focusedDay;
+      },
     );
   }
 
