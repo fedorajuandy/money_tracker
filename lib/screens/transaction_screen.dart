@@ -369,18 +369,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Row(
         children: <Widget>[
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(right: 80),
-            child: Text(
-              "Total",
-              style: TextStyle(
-                fontSize: 16,
-                color: dark.withOpacity(0.4),
-                fontWeight: FontWeight.bold,
-              ),
-              overflow: TextOverflow.ellipsis,
+          Text(
+            "Total",
+            style: TextStyle(
+              fontSize: 16,
+              color: dark.withOpacity(0.4),
+              fontWeight: FontWeight.bold,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           const Spacer(),
           const Padding(
