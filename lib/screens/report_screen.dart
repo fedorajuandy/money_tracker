@@ -20,45 +20,7 @@ class _ReportScreenState extends State<ReportScreen> {
   List<String> years = <String>['2010', '2015', '2022'];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    reports = [
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-      report(),
-      report1(),
-    ];
-
     return Scaffold(
       backgroundColor: dark.withOpacity(0.05),
       body: screen(),
@@ -85,11 +47,20 @@ class _ReportScreenState extends State<ReportScreen> {
               padding: const EdgeInsets.only(top: 24, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
-                  title("Reports"),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: title("Reports"),
+                      ),
+                      const Spacer(),
+                      Flexible(
+                        child: chooseYear(),
+                      ),
+                    ],
+                  ),
                   sbh24(),
                   Column(
                     children: <Widget>[
-                      chooseYear(),
                       sbh8(),
                       horisontalCalendar(),
                     ],
@@ -99,9 +70,9 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
           ),
           sbh32(),
-          yearly(),
-          sbh24(),
           monthly(),
+          sbh24(),
+          yearly(),
           sbh40(),
         ],
       ),
@@ -159,6 +130,10 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget chooseYear() {
     return DropdownButtonFormField <String>(
       value: "2022",
+      style: const TextStyle(
+        fontSize: 12,
+      ),
+      isDense: true,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         focusedBorder: OutlineInputBorder(
@@ -166,6 +141,7 @@ class _ReportScreenState extends State<ReportScreen> {
             color: accent,
           ),
         ),
+        isDense: true,
       ),
       items: years.map((String value) {
         return DropdownMenuItem<String>(
@@ -186,7 +162,7 @@ class _ReportScreenState extends State<ReportScreen> {
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Container(
         width: double.infinity,
-        height: 250,
+        height: 280,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -215,14 +191,18 @@ class _ReportScreenState extends State<ReportScreen> {
                         color: dark.withOpacity(0.3),
                       ),
                     ),
-                    sbh10(),
-                    totalIncome(),
+                    sbh12(),
+                    yearlyText("Income", "Rp20,000.00"),
                     sbh8(),
-                    totalExpenses(),
+                    yearlyText("Expenses", "Rp20,000.00"),
                     sbh8(),
-                    highestIncome(),
+                    yearlyText("Highest income", "Rp20,000.00"),
                     sbh8(),
-                    highestExpenses(),
+                    yearlyText("Lowest income", "Rp20,000.00"),
+                    sbh8(),
+                    yearlyText("Highest expense", "Rp20,000.00"),
+                    sbh8(),
+                    yearlyText("Lowest expense", "Rp20,000.00"),
                   ],
                 ),
               ),
@@ -233,13 +213,13 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget total() {
+  Widget yearlyText(String title, String amount) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Row(
         children: <Widget>[
           Text(
-            "Total",
+            title,
             style: TextStyle(
               fontSize: 16,
               color: dark.withOpacity(0.4),
@@ -248,140 +228,12 @@ class _ReportScreenState extends State<ReportScreen> {
             overflow: TextOverflow.ellipsis,
           ),
           const Spacer(),
-          const Padding(
-            padding: EdgeInsets.only(top: 5),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
             child: Text(
-              "Rp20,000.00",
-              style: TextStyle(
-                fontSize: 20,
-                color: dark,
-                fontWeight: FontWeight.bold,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget totalExpenses() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      child: Row(
-        children: <Widget>[
-          Text(
-            "Expenses",
-            style: TextStyle(
-              fontSize: 16,
-              color: dark.withOpacity(0.4),
-              fontWeight: FontWeight.bold,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          const Spacer(),
-          const Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: Text(
-              "Rp20,000.00",
-              style: TextStyle(
-                fontSize: 20,
-                color: dark,
-                fontWeight: FontWeight.bold,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget totalIncome() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      child: Row(
-        children: <Widget>[
-          Text(
-            "Income",
-            style: TextStyle(
-              fontSize: 16,
-              color: dark.withOpacity(0.4),
-              fontWeight: FontWeight.bold,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          const Spacer(),
-          const Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: Text(
-              "Rp20,000.00",
-              style: TextStyle(
-                fontSize: 20,
-                color: dark,
-                fontWeight: FontWeight.bold,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget highestIncome() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      child: Row(
-        children: <Widget>[
-          Text(
-            "Highest income",
-            style: TextStyle(
-              fontSize: 16,
-              color: dark.withOpacity(0.4),
-              fontWeight: FontWeight.bold,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          const Spacer(),
-          const Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: Text(
-              "Month",
-              style: TextStyle(
-                fontSize: 20,
-                color: dark,
-                fontWeight: FontWeight.bold,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget highestExpenses() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      child: Row(
-        children: <Widget>[
-          Text(
-            "Highest expenses",
-            style: TextStyle(
-              fontSize: 16,
-              color: dark.withOpacity(0.4),
-              fontWeight: FontWeight.bold,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          const Spacer(),
-          const Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: Text(
-              "Month",
-              style: TextStyle(
-                fontSize: 20,
+              amount,
+              style: const TextStyle(
+                fontSize: 16,
                 color: dark,
                 fontWeight: FontWeight.bold,
               ),
@@ -395,10 +247,10 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Widget monthly() {
     var size = MediaQuery.of(context).size;
-    
+
     return Wrap(
       spacing: 20,
-      children: <Widget> [
+      children: <Widget>[
         Container(
           width: (size.width - 60) / 2,
           height: 170,
@@ -414,18 +266,24 @@ class _ReportScreenState extends State<ReportScreen> {
             ]
           ),
           child: Padding(
-            padding: const EdgeInsets.only(left: 25, right: 25, top: 20, bottom: 20),
+            padding: const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: 36,
+                  height: 36,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.red,
-                  )
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.keyboard_double_arrow_left,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -440,10 +298,10 @@ class _ReportScreenState extends State<ReportScreen> {
                     ),
                     sbh8(),
                     const Text(
-                      "YATTA",
+                      "Rp20,000.00",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                        fontSize: 16,
                       ),
                     )
                   ],
@@ -473,12 +331,18 @@ class _ReportScreenState extends State<ReportScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: 36,
+                  height: 36,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: secondary,
-                  )
+                    color: primary,
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.keyboard_double_arrow_right,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -493,10 +357,10 @@ class _ReportScreenState extends State<ReportScreen> {
                     ),
                     sbh8(),
                     const Text(
-                      "YATTA",
+                      "Rp50,000.00",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                        fontSize: 16,
                       ),
                     )
                   ],
@@ -507,20 +371,5 @@ class _ReportScreenState extends State<ReportScreen> {
         ),
       ],
     );
-  }
-
-  Widget reportList() {
-    return IndexedStack(
-      index: selectedIndex,
-      children: reports,
-    );
-  }
-
-  Widget report() {
-    return Text("YAYA");
-  }
-
-  Widget report1() {
-    return Text("YAYA");
   }
 }

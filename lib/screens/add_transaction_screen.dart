@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:money_tracker/themes/colors.dart';
 import 'package:provider/provider.dart';
-import 'package:money_tracker/controllers/transaction_operation.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:money_tracker/themes/colors.dart';
+import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/widgets/title.dart';
+import 'package:money_tracker/controllers/transaction_operation.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({super.key});
@@ -14,50 +16,68 @@ class AddTransactionScreen extends StatefulWidget {
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final GlobalKey<FormState> _keyform = GlobalKey<FormState>();
   final TextEditingController _nameText = TextEditingController();
+  final TextEditingController _typeText = TextEditingController();
+  final TextEditingController _categoryText = TextEditingController();
   final TextEditingController _amountText = TextEditingController();
   late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('transactions');
-  String? categoryText = "Other";
-  List<String> categories = <String>['Sales', 'Income', "Food and beverages", 'Other'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primary,
-      appBar: AppBar(
-        title: const Text(
-          'Add new transaction',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        elevation: 4,
-        backgroundColor: Colors.transparent,
-      ),
-      body: Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _keyform,
-          child: ListView(
-            children: <Widget>[
-              textFieldName(),
-              separator(),
-              dropdownCategory(),
-              separator(),
-              textFieldAmount(),
-              separator(),
-              separator(),
-              buttonAdd(),
-            ],
-          ),
-        ),
-      )
+      backgroundColor: dark.withOpacity(0.05),
+      body: screen(),
     );
   }
 
-  Widget separator() {
-    return const SizedBox(height: 20);
+  Widget screen() {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          // the 'header'
+          Container(
+            decoration: BoxDecoration(
+              color: dark.withOpacity(0.05),
+              boxShadow: [
+                BoxShadow(
+                  color: dark.withOpacity(0.01),
+                  spreadRadius: 10,
+                  blurRadius: 3,
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 24, bottom: 24, right: 20, left: 20),
+              child: Column(
+                children: <Widget>[
+                  title("Add transaction"),
+                ],
+              ),
+            ),
+          ),
+          sbh32(),
+          Container(
+            padding:const EdgeInsets.only(left: 20, right: 20),
+            child: Form(
+              key: _keyform,
+              child: Column(
+                children: <Widget>[
+                  textFieldName(),
+                  sbh20(),
+                  chooseType(),
+                  sbh20(),
+                  textFieldCategory(),
+                  sbh20(),
+                  textFieldAmount(),
+                  sbh32(),
+                  buttonAdd(),
+                  sbh40(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget textFieldName() {
@@ -65,11 +85,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       cursorColor: primary,
       style: const TextStyle(color: dark),
       decoration: const InputDecoration(
-        hintText: "Title",
+        hintText: "Transaction name",
         hintStyle: TextStyle(
           color: Colors.black54,
         ),
-        labelText: 'Title',
+        labelText: "Transaction name",
         labelStyle: TextStyle(
           color: primary,
         ),
@@ -83,6 +103,37 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       controller: _nameText,
       validator: (value) {
         return (value !.isEmpty? "Please input transaction name": null);
+      },
+    );
+  }
+
+  Widget chooseType() {
+    return Text("F");
+  }
+
+  Widget textFieldCategory() {
+    return TextFormField(
+      cursorColor: primary,
+      style: const TextStyle(color: dark),
+      decoration: const InputDecoration(
+        hintText: "Category",
+        hintStyle: TextStyle(
+          color: Colors.black54,
+        ),
+        labelText: "Category",
+        labelStyle: TextStyle(
+          color: primary,
+        ),
+        border: OutlineInputBorder(),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: primary,
+          ),
+        ),
+      ),
+      controller: _nameText,
+      validator: (value) {
+        return (value !.isEmpty? "Please input transaction category": null);
       },
     );
   }
@@ -120,13 +171,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       onPressed: () {
         Map<String, String> transaction = {
           'name': _nameText.text,
-          'category': categoryText.toString(),
+          'category': _categoryText.text,
           'added': DateTime.now().toString(),
           'amount': _amountText.text,
         };
 
         dbRef.push().set(transaction);
-        Provider.of<TransactionOperation>(context, listen: false).addNewTransaction(_nameText.text, categoryText, double.parse(_amountText.text), DateTime.now());
+        Provider.of<TransactionOperation>(context, listen: false).addNewTransaction(_nameText.text, _typeText.text, _categoryText.text, double.parse(_amountText.text), DateTime.now());
         return Navigator.pop(context);
       },
       style: TextButton.styleFrom(
@@ -134,45 +185,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         foregroundColor: Colors.black87,
       ),
       child: const Text("Add rransaction"),
-    );
-  }
-
-  Widget dropdownCategory() {
-    return DropdownButtonFormField <String>(
-      decoration: const InputDecoration(
-        hintText: "Choose category",
-        hintStyle: TextStyle(
-          color: Colors.black54,
-        ),
-        labelText: 'Choose category',
-        labelStyle: TextStyle(
-          color: primary,
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      items: categories.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: (String? value) {
-        setState(() {
-          categoryText = value;
-        });
-      },
-      validator: (value) {
-        if (value == null) {
-          return "Please choose a category";
-        } else {
-          return null;
-        }
-      },
     );
   }
 }

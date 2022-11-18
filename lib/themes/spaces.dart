@@ -12,12 +12,16 @@ Widget sbh8() {
   return const SizedBox(height: 8);
 }
 
-Widget sbh10() {
-  return const SizedBox(height: 10);
+Widget sbh12() {
+  return const SizedBox(height: 12);
 }
 
 Widget sbh16() {
   return const SizedBox(height: 16);
+}
+
+Widget sbh20() {
+  return const SizedBox(height: 20);
 }
 
 Widget sbh24() {

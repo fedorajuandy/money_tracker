@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/widgets/title.dart';
 
 class BalanceScreen extends StatefulWidget {
   const BalanceScreen({super.key});
@@ -19,6 +20,39 @@ class _BalanceScreenState extends State<BalanceScreen> {
   }
 
   Widget screen() {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          // the 'header'
+          Container(
+            decoration: BoxDecoration(
+              color: dark.withOpacity(0.05),
+              boxShadow: [
+                BoxShadow(
+                  color: dark.withOpacity(0.01),
+                  spreadRadius: 10,
+                  blurRadius: 3,
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 24, bottom: 24, right: 20, left: 20),
+              child: Column(
+                children: <Widget>[
+                  title("Reports"),
+                ],
+              ),
+            ),
+          ),
+          sbh32(),
+          balance(),
+          sbh40(),
+        ],
+      ),
+    );
+  }
+
+  Widget balance() {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -48,7 +82,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     color: Colors.white
                   ),
                 ),
-                sbh10(),
+                sbh12(),
                 const Text(
                   "Rp100,000.00",
                   style: TextStyle(
