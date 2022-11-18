@@ -142,7 +142,7 @@ class _PlanScreenState extends State<PlanScreen> {
 
   Widget plans() {
     var size = MediaQuery.of(context).size;
-    
+
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Column(
@@ -174,7 +174,7 @@ class _PlanScreenState extends State<PlanScreen> {
                         fontSize: 14,
                         color: dark.withOpacity(0.6)),
                     ),
-                    sbh10(),
+                    sbh12(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[

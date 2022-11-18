@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
@@ -20,7 +19,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
   late DateTime lastDayOfMonth;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime? _selectedDay;
-  List<Widget> transactions = [];
 
   @override
   void initState() {
@@ -31,38 +29,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    transactions = [
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-      transaction(),
-      transaction1(),
-    ];
 
     return Scaffold(
       backgroundColor: dark.withOpacity(0.05),
@@ -101,69 +67,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
             ),
           ),
           sbh32(),
-          transactionList(),
+          transaction(),
+          transaction(),
           sbh16(),
           total(),
           sbh40(),
         ],
-      ),
-    );
-  }
-
-  Widget horisontalCalendar() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const ClampingScrollPhysics(),
-      child: Row(
-        // generate in a loop < lastDayOfMonth
-        children: List.generate(lastDayOfMonth.day, (index) {
-          final currDate = lastDayOfMonth.add(Duration(days: index + 1));
-          final dayName = DateFormat("E").format(currDate);
-
-          return Padding(
-            padding: EdgeInsets.only(left: index == 0 ? 16.0 : 0.0, right: 16.0),
-            child: GestureDetector(
-              onTap: () => setState(() {
-                selectedIndex = index;
-              }),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  // days
-                  Text(
-                    dayName.substring(0, 3),
-                    style: const TextStyle(
-                      fontSize: 10,
-                    ),
-                  ),
-                  sbh10(),
-                  // dates
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                      color: selectedIndex == index ? primary : Colors.transparent,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: selectedIndex == index ? primary : dark.withOpacity(0.1),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "${index + 1}",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: selectedIndex == index ? Colors.white : dark,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }),
       ),
     );
   }
@@ -213,13 +122,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
       onPageChanged: (focusedDay) {
         now = focusedDay;
       },
-    );
-  }
-
-  Widget transactionList() {
-    return IndexedStack(
-      index: selectedIndex,
-      children: transactions,
     );
   }
 
@@ -290,94 +192,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           sbh4(),
                           Text(
                             "10:40",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: dark.withOpacity(0.5),
-                              fontWeight: FontWeight.w400,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          horisontalLine(),
-        ],
-      ),
-    );
-  }
-
-  Widget transaction1() {
-    var size = MediaQuery.of(context).size;
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              // left part (name and category)
-              SizedBox(
-                child: Row(
-                  children: <Widget>[
-                    SizedBox(
-                      width: (size.width - 90) * 0.5,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const Text(
-                            "Transaction name 1",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: dark,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          sbh4(),
-                          Text(
-                            "Category 1",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: dark.withOpacity(0.5),
-                              fontWeight: FontWeight.w400,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              const Spacer(),
-              // right part (amount and time)
-              SizedBox(
-                child: Row(
-                  children: <Widget>[
-                    SizedBox(
-                      width: (size.width - 90) * 0.5,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          const Text(
-                            "Rp20,000.00",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                              color: secondary,
-                            ),
-                          ),
-                          sbh4(),
-                          Text(
-                            "12:20",
                             style: TextStyle(
                               fontSize: 12,
                               color: dark.withOpacity(0.5),
