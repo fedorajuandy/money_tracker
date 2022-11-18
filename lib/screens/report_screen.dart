@@ -126,15 +126,17 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget yearPicker() {
     return TextButton(
       style: TextButton.styleFrom(
-        backgroundColor: primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
+          side: const BorderSide(
+            color: dark,
+          ),
         ),
       ),
       child: Text(
         now.year.toString(),
         style: const TextStyle(
-          color: white,
+          color: dark,
           fontSize: 12,
         ),
       ),
