@@ -35,8 +35,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   }
 
   Widget screen() {
-    var size = MediaQuery.of(context).size;
-
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
