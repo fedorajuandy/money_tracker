@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:money_tracker/themes/colors.dart';
@@ -19,6 +20,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final TextEditingController _typeText = TextEditingController();
   final TextEditingController _categoryText = TextEditingController();
   final TextEditingController _amountText = TextEditingController();
+  final TextEditingController _dateText = TextEditingController();
+  final TextEditingController _timeText = TextEditingController();
+  DateTime now = DateTime.now();
+  int activeType = 1;
   late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('transactions');
 
   @override
@@ -30,6 +35,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   }
 
   Widget screen() {
+    var size = MediaQuery.of(context).size;
+
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -46,7 +53,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 24, bottom: 24, right: 20, left: 20),
+              padding: const EdgeInsets.only(top: 48, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
                   title("Add transaction"),
@@ -55,7 +62,21 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             ),
           ),
           sbh32(),
-          Container(
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Text(
+              "Choose type",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: dark.withOpacity(0.5),
+              ),
+            ),
+          ),
+          sbh20(),
+          chooseType(),
+          sbh40(),
+          Padding(
             padding:const EdgeInsets.only(left: 20, right: 20),
             child: Form(
               key: _keyform,
@@ -63,11 +84,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 children: <Widget>[
                   textFieldName(),
                   sbh20(),
-                  chooseType(),
-                  sbh20(),
                   textFieldCategory(),
                   sbh20(),
                   textFieldAmount(),
+                  sbh20(),
+                  pickDateTime(),
                   sbh32(),
                   buttonAdd(),
                   sbh40(),
@@ -76,6 +97,132 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget chooseType() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: <Widget>[
+          typeIncome(),
+          typeExpense(),
+        ],
+      ),
+    );
+  }
+
+  Widget typeIncome() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          activeType = 0;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Container(
+          margin: const EdgeInsets.only(left: 10),
+          width: 150,
+          height: 170,
+          decoration: BoxDecoration(
+            color: white,
+            border: Border.all(
+              width: 2,
+              color: activeType == 0 ? primary : Colors.transparent
+            ),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: dark.withOpacity(0.01),
+                spreadRadius: 10,
+                blurRadius: 3,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 25, right: 25, top: 20, bottom: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: primary,
+                  ),
+                ),
+                const Text(
+                  "Income",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget typeExpense() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          activeType = 1;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Container(
+          margin: const EdgeInsets.only(left: 10),
+          width: 150,
+          height: 170,
+          decoration: BoxDecoration(
+            color: white,
+            border: Border.all(
+              width: 2,
+              color: activeType == 1 ? red : Colors.transparent
+            ),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: dark.withOpacity(0.01),
+                spreadRadius: 10,
+                blurRadius: 3,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 25, right: 25, top: 20, bottom: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: red,
+                  ),
+                ),
+                const Text(
+                  "Expense",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -89,7 +236,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         hintStyle: TextStyle(
           color: Colors.black54,
         ),
-        labelText: "Transaction name",
+        labelText: 'Transaction name',
         labelStyle: TextStyle(
           color: primary,
         ),
@@ -105,10 +252,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         return (value !.isEmpty? "Please input transaction name": null);
       },
     );
-  }
-
-  Widget chooseType() {
-    return Text("F");
   }
 
   Widget textFieldCategory() {
@@ -131,7 +274,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           ),
         ),
       ),
-      controller: _nameText,
+      controller: _categoryText,
       validator: (value) {
         return (value !.isEmpty? "Please input transaction category": null);
       },
@@ -141,7 +284,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget textFieldAmount() {
     return TextFormField(
       cursorColor: primary,
-      style: const TextStyle(color: secondary),
+      style: const TextStyle(color: dark),
       decoration: const InputDecoration(
         hintText: "Amount",
         hintStyle: TextStyle(
@@ -166,8 +309,68 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
+  Widget pickDateTime() {
+    return TextFormField(
+      controller: _dateText,
+      readOnly: true,
+      style: const TextStyle(color: dark),
+      decoration: const InputDecoration(
+        hintStyle: TextStyle(
+          color: Colors.black54,
+        ),
+        labelText: 'Date',
+        labelStyle: TextStyle(
+          color: primary,
+        ),
+        suffixIcon: Icon(
+          Icons.calendar_month,
+          color: primary,
+        ),
+        border: OutlineInputBorder(),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: primary,
+          ),
+        ),
+      ),
+      cursorColor: primary,
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: now,
+          firstDate: DateTime(now.year - 10),
+          lastDate: now,
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: const ColorScheme.light(
+                  primary: primary, // <-- SEE HERE
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+
+        if (pickedDate != null) {
+          String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+          setState(() {
+            _dateText.text = formattedDate;
+          });
+        }
+      },
+    );
+  }
+
   Widget buttonAdd() {
     return TextButton(
+      style: TextButton.styleFrom(
+        backgroundColor: primary,
+        foregroundColor: white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+      ),
       onPressed: () {
         Map<String, String> transaction = {
           'name': _nameText.text,
@@ -180,11 +383,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         Provider.of<TransactionOperation>(context, listen: false).addNewTransaction(_nameText.text, _typeText.text, _categoryText.text, double.parse(_amountText.text), DateTime.now());
         return Navigator.pop(context);
       },
-      style: TextButton.styleFrom(
-        backgroundColor: secondary,
-        foregroundColor: Colors.black87,
-      ),
-      child: const Text("Add rransaction"),
+      child: const Text("Add transaction"),
     );
   }
 }
