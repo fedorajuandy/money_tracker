@@ -16,7 +16,7 @@ class _ReportScreenState extends State<ReportScreen> {
   int selectedIndex = DateTime.now().month + 1;
   final DateTime _selectedDate = DateTime.now();
   DateTime now = DateTime.now();
-  int selectedYear = DateTime.now().year;
+  int _selectedYear = DateTime.now().year;
   List <Widget> reports = [];
 
   @override
@@ -49,13 +49,9 @@ class _ReportScreenState extends State<ReportScreen> {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Flexible(
-                        child: title("Reports"),
-                      ),
+                      title("Reports"),
                       const Spacer(),
-                      Flexible(
-                        child: yearPicker(),
-                      ),
+                      yearPicker(),
                     ],
                   ),
                   sbh24(),
@@ -166,7 +162,7 @@ class _ReportScreenState extends State<ReportScreen> {
           selectedDate: _selectedDate,
           onChanged: (DateTime value) {
             setState(() {
-              selectedYear = value.year;
+              _selectedYear = value.year;
             });
             Navigator.pop(context);
           },
@@ -252,7 +248,7 @@ class _ReportScreenState extends State<ReportScreen> {
               amount,
               style: const TextStyle(
                 fontSize: 16,
-                color: primary,
+                color: secondary,
                 fontWeight: FontWeight.bold,
               ),
               overflow: TextOverflow.ellipsis,
@@ -284,7 +280,7 @@ class _ReportScreenState extends State<ReportScreen> {
               amount,
               style: const TextStyle(
                 fontSize: 16,
-                color: red,
+                color: red1,
                 fontWeight: FontWeight.bold,
               ),
               overflow: TextOverflow.ellipsis,

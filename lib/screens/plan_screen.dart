@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:money_tracker/screens/add_plan_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
@@ -13,6 +14,8 @@ class PlanScreen extends StatefulWidget {
 
 class _PlanScreenState extends State<PlanScreen> {
   int selectedIndex = DateTime.now().month + 1;
+  final DateTime _selectedDate = DateTime.now();
+  int _selectedYear = DateTime.now().year;
   DateTime now = DateTime.now();
   List <Widget> reports = [];
   String? yearText = "Other";
@@ -48,13 +51,18 @@ class _PlanScreenState extends State<PlanScreen> {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Flexible(
-                        child: title("Plans"),
+                      Row(
+                        children: <Widget>[
+                          title("Plans"),
+                          sbw8(),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 3),
+                            child: addPlanButton(),
+                          ),
+                        ],
                       ),
                       const Spacer(),
-                      Flexible(
-                        child: chooseYear(),
-                      ),
+                      yearPicker(),
                     ],
                   ),
                   sbh24(),
@@ -70,39 +78,81 @@ class _PlanScreenState extends State<PlanScreen> {
           ),
           sbh32(),
           plans(),
+          plans(),
           sbh40(),
         ],
       ),
     );
   }
 
-  Widget chooseYear() {
-    return DropdownButtonFormField <String>(
-      value: "2022",
-      style: const TextStyle(
-        fontSize: 12,
-      ),
-      isDense: true,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: accent,
-          ),
+  Widget addPlanButton() {
+    return TextButton(
+      style: TextButton.styleFrom(
+        backgroundColor: primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-        isDense: true,
       ),
-      items: years.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
+      child: const Text(
+        "Add plan",
+        style: TextStyle(
+          color: white,
+          fontSize: 14,
+        ),
+      ),
+      onPressed: () {
+        Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const AddPlanScreen()),
         );
-      }).toList(),
-      onChanged: (String? value) {
-        setState(() {
-          yearText = value;
-        });
       },
+    );
+  }
+
+  Widget yearPicker() {
+    return TextButton(
+      style: TextButton.styleFrom(
+        backgroundColor: primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      child: Text(
+        now.year.toString(),
+        style: const TextStyle(
+          color: white,
+          fontSize: 12,
+        ),
+      ),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return pickYear();
+          },
+        );
+      },
+    );
+  }
+
+  Widget pickYear() {
+    return AlertDialog(
+      title: const Text("Select Year"),
+      content: SizedBox( // Need to use container to add size constraint.
+        width: 300,
+        height: 300,
+        child: YearPicker(
+          firstDate: DateTime(now.year - 10, 1, 1),
+          lastDate: DateTime(now.year + 10, 1, 1),
+          initialDate: now,
+          selectedDate: _selectedDate,
+          onChanged: (DateTime value) {
+            setState(() {
+              _selectedYear = value.year;
+            });
+            Navigator.pop(context);
+          },
+        ),
+      ),
     );
   }
 
@@ -181,12 +231,28 @@ class _PlanScreenState extends State<PlanScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      "Name",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: dark.withOpacity(0.6)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "Plan name",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: dark.withOpacity(0.6)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3),
+                          child: Text(
+                            "2022-12-31",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: dark.withOpacity(0.6),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     sbh12(),
                     Row(
@@ -232,7 +298,7 @@ class _PlanScreenState extends State<PlanScreen> {
                     Stack(
                       children: <Widget>[
                         Container(
-                          width: (size.width - 40),
+                          width: (size.width - 80),
                           height: 4,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
@@ -240,7 +306,7 @@ class _PlanScreenState extends State<PlanScreen> {
                           ),
                         ),
                         Container(
-                          width: (size.width - 40) * 0.5,
+                          width: (size.width - 80) * 0.5,
                           height: 4,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),

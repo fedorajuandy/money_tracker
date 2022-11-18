@@ -83,6 +83,7 @@ While there, change the minSdkVersion to 21 and target to 28
 
 - <a href="https://uxdesign.cc/3-colors-for-financial-applications-ec75c806e454">Finance app colors</a>
 - <a href="https://dribbble.com/tags/expense_tracker">UI/UX</a>
+- <a href="https://www.behance.net/gallery/79266823/Budget-tracker-App-UI-kit">Main UI/UX</a>
 
 > Green for choices, quantity, quality, and growth
 
