@@ -14,10 +14,10 @@ class ReportScreen extends StatefulWidget {
 class _ReportScreenState extends State<ReportScreen> {
   // current month
   int selectedIndex = DateTime.now().month + 1;
+  final DateTime _selectedDate = DateTime.now();
   DateTime now = DateTime.now();
+  int selectedYear = DateTime.now().year;
   List <Widget> reports = [];
-  String? yearText = "Other";
-  List<String> years = <String>['2010', '2015', '2022'];
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _ReportScreenState extends State<ReportScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 24, bottom: 24, right: 20, left: 20),
+              padding: const EdgeInsets.only(top: 48, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
                   Row(
@@ -54,7 +54,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       const Spacer(),
                       Flexible(
-                        child: chooseYear(),
+                        child: yearPicker(),
                       ),
                     ],
                   ),
@@ -127,33 +127,51 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget chooseYear() {
-    return DropdownButtonFormField <String>(
-      value: "2022",
-      style: const TextStyle(
-        fontSize: 12,
-      ),
-      isDense: true,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: accent,
-          ),
+  Widget yearPicker() {
+    return TextButton(
+      style: TextButton.styleFrom(
+        backgroundColor: primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-        isDense: true,
       ),
-      items: years.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
+      child: Text(
+        now.year.toString(),
+        style: const TextStyle(
+          color: white,
+          fontSize: 12,
+        ),
+      ),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return pickYear();
+          },
         );
-      }).toList(),
-      onChanged: (String? value) {
-        setState(() {
-          yearText = value;
-        });
       },
+    );
+  }
+
+  Widget pickYear() {
+    return AlertDialog(
+      title: const Text("Select Year"),
+      content: SizedBox( // Need to use container to add size constraint.
+        width: 300,
+        height: 300,
+        child: YearPicker(
+          firstDate: DateTime(now.year - 10, 1, 1),
+          lastDate: DateTime(now.year + 10, 1, 1),
+          initialDate: now,
+          selectedDate: _selectedDate,
+          onChanged: (DateTime value) {
+            setState(() {
+              selectedYear = value.year;
+            });
+            Navigator.pop(context);
+          },
+        ),
+      ),
     );
   }
 
@@ -192,17 +210,17 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                     ),
                     sbh12(),
-                    yearlyText("Income", "Rp20,000.00"),
+                    yearlyTextPositive("Income", "Rp20,000.00"),
                     sbh8(),
-                    yearlyText("Expenses", "Rp20,000.00"),
+                    yearlyTextNegative("Expenses", "Rp20,000.00"),
                     sbh8(),
-                    yearlyText("Highest income", "Rp20,000.00"),
+                    yearlyTextPositive("Highest income", "Rp20,000.00"),
                     sbh8(),
-                    yearlyText("Lowest income", "Rp20,000.00"),
+                    yearlyTextNegative("Lowest income", "Rp20,000.00"),
                     sbh8(),
-                    yearlyText("Highest expense", "Rp20,000.00"),
+                    yearlyTextPositive("Lowest expense", "Rp20,000.00"),
                     sbh8(),
-                    yearlyText("Lowest expense", "Rp20,000.00"),
+                    yearlyTextNegative("Highest expense", "Rp20,000.00"),
                   ],
                 ),
               ),
@@ -213,7 +231,7 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget yearlyText(String title, String amount) {
+  Widget yearlyTextPositive(String title, String amount) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Row(
@@ -234,7 +252,39 @@ class _ReportScreenState extends State<ReportScreen> {
               amount,
               style: const TextStyle(
                 fontSize: 16,
-                color: dark,
+                color: primary,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget yearlyTextNegative(String title, String amount) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              color: dark.withOpacity(0.4),
+              fontWeight: FontWeight.bold,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              amount,
+              style: const TextStyle(
+                fontSize: 16,
+                color: red,
                 fontWeight: FontWeight.bold,
               ),
               overflow: TextOverflow.ellipsis,
@@ -276,7 +326,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   height: 36,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.red,
+                    color: red,
                   ),
                   child: const Center(
                     child: Icon(

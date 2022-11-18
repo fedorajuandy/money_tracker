@@ -43,14 +43,23 @@ class _PlanScreenState extends State<PlanScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 24, bottom: 24, right: 20, left: 20),
+              padding: const EdgeInsets.only(top: 48, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
-                  title("Plans"),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: title("Plans"),
+                      ),
+                      const Spacer(),
+                      Flexible(
+                        child: chooseYear(),
+                      ),
+                    ],
+                  ),
                   sbh24(),
                   Column(
                     children: <Widget>[
-                      chooseYear(),
                       sbh8(),
                       horisontalCalendar(),
                     ],
@@ -70,6 +79,10 @@ class _PlanScreenState extends State<PlanScreen> {
   Widget chooseYear() {
     return DropdownButtonFormField <String>(
       value: "2022",
+      style: const TextStyle(
+        fontSize: 12,
+      ),
+      isDense: true,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         focusedBorder: OutlineInputBorder(
@@ -77,6 +90,7 @@ class _PlanScreenState extends State<PlanScreen> {
             color: accent,
           ),
         ),
+        isDense: true,
       ),
       items: years.map((String value) {
         return DropdownMenuItem<String>(
@@ -187,7 +201,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                 fontSize: 20,
                               ),
                             ),
-                            sbh8(),
+                            sbw8(),
                             Padding(
                               padding: const EdgeInsets.only(top: 3),
                               child: Text(

@@ -35,3 +35,7 @@ Widget sbh32() {
 Widget sbh40() {
   return const SizedBox(height: 40);
 }
+
+Widget sbw8() {
+  return const SizedBox(width: 8);
+}
