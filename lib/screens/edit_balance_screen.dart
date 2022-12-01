@@ -39,7 +39,7 @@ class _EditBalanceScreenState extends State<EditBalanceScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 48, bottom: 24, right: 20, left: 20),
+              padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
                   title("Edit balance"),

@@ -51,7 +51,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 48, bottom: 24, right: 20, left: 20),
+              padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
                   title("Add transaction"),
@@ -86,7 +86,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   sbh20(),
                   textFieldAmount(),
                   sbh20(),
-                  pickDateTime(),
+                  pickDate(),
+                  sbh20(),
+                  pickTime(),
                   sbh32(),
                   buttonAdd(),
                   sbh40(),
@@ -307,7 +309,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget pickDateTime() {
+  Widget pickDate() {
     return TextFormField(
       controller: _dateText,
       readOnly: true,
@@ -354,6 +356,57 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
           setState(() {
             _dateText.text = formattedDate;
+          });
+        }
+      },
+    );
+  }
+
+  Widget pickTime() {
+    return TextFormField(
+      controller: _timeText,
+      readOnly: true,
+      style: const TextStyle(color: dark),
+      decoration: const InputDecoration(
+        hintStyle: TextStyle(
+          color: Colors.black54,
+        ),
+        labelText: 'Time',
+        labelStyle: TextStyle(
+          color: primary,
+        ),
+        suffixIcon: Icon(
+          Icons.calendar_month,
+          color: primary,
+        ),
+        border: OutlineInputBorder(),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: primary,
+          ),
+        ),
+      ),
+      cursorColor: primary,
+      onTap: () async {
+        TimeOfDay? pickedTime = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: const ColorScheme.light(
+                  primary: primary, // <-- SEE HERE
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+
+        if (pickedTime != null) {
+          String formattedTime = "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
+          setState(() {
+            _timeText.text = formattedTime;
           });
         }
       },

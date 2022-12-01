@@ -79,6 +79,7 @@ While there, change the minSdkVersion to 21 and target to 28
 - <a href="https://stackoverflow.com/questions/51420559/get-last-month-date-in-flutter-dart">Datetime</a>
 - <a href="https://stackoverflow.com/questions/62022135/how-to-only-display-the-year-in-datepicker-for-flutter">YearPicker</a>
 <a href="https://www.flutterbeads.com/change-date-picker-color-in-flutter/">Modify DatePicker</a>
+- <a href="https://www.youtube.com/watch?v=3wsIBoyKmdA">TimePicker</a>
 
 ## Design references
 
