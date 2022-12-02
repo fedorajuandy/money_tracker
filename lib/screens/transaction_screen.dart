@@ -211,11 +211,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
                             Text(
-                              transaction['amount'],
-                              style: const TextStyle(
+                              CurrencyFormat.convertToIdr(int.parse(transaction['amount']), 2),
+                              style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 15,
-                                color: secondary,
+                                color: transaction['type'] == "1" ? red1 : secondary,
                               ),
                             ),
                             sbh4(),
@@ -236,6 +236,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 ),
               ),
               sbw8(),
+              // for edit and delete
               SizedBox(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,

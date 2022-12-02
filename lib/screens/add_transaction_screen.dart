@@ -20,7 +20,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final TextEditingController _dateText = TextEditingController();
   final TextEditingController _timeText = TextEditingController();
   DateTime now = DateTime.now();
-  int activeType = 1;
+  int activeType = 0;
   late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('transactions');
 
   @override

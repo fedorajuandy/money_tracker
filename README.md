@@ -2,7 +2,9 @@
 
 2019130032 - Fedora Yoshe Juandy
 
-<p style="color: red">NOTE! Ignore master branch</p>
+```diff
+- NOTE! Ignore master branch
+```
 
 Long story short:
 
