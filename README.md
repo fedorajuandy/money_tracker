@@ -2,9 +2,20 @@
 
 2019130032 - Fedora Yoshe Juandy
 
+<p style="color: red">NOTE! Ignore master branch</p>
+
+Long story short:
+
+- committed at LIKMI
+- tried to sync at LIKMI
+- WiFi error
+- everything got messed up
+- my fever-addled brain decided just moved the branch
+- present time:
+
 ## Money Tracker
 
-<a href="https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins">Add Firebase to Flutter</a>
+<a href="https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins">How to Add Firebase to Flutter</a>
 
 ### Firebase CLI setup
 
@@ -12,12 +23,14 @@
 2. firebase login
 3. dart pub global activate flutterfire_cli
 4. Add the path to env
+
 ### Firebase app setup
 
-1. I have already had Firebase account
+1. Make Firebase account
 2. Create new app in Firebase
 
-<!-- ANDROID -->
+For Android:
+
 3. Choose android after setup (the middle green... andorid icon)
 4. Enter app package name from android/app/build.gradle (com.example.bla) + nickname
 While there, change the minSdkVersion to 21 and target to 28
@@ -27,7 +40,8 @@ While there, change the minSdkVersion to 21 and target to 28
 [THE REST LATER IN yaml]
 8. flutter-packages-get
 
-<!-- iOS -->
+For iOS:
+
 9. Choose iOS (most left)
 10. Enter name from ios/Runner.xcodeproj/project.pbxproj (PRODUCT_BUNDLE_IDENTIFIER)
 11. Download plist to ios/Runner
@@ -67,7 +81,7 @@ While there, change the minSdkVersion to 21 and target to 28
     to MyApp and change the app not to const
 7. flutterfire configure
 
-## Codes references
+## Code references
 
 - PPB class notes and past projects
 - <a href="https://docs.flutter.dev/">Flutter documentation</a>
@@ -83,17 +97,17 @@ While there, change the minSdkVersion to 21 and target to 28
 - <a href="https://stackoverflow.com/questions/14865568/currency-format-in-dart">Currency format</a>
 - <a href="https://galangaji.medium.com/5-flutter-tutorial-cara-mudah-format-rupiah-pada-dart-c1711621e648">IDR format</a>
 - <a href="https://stackoverflow.com/questions/54027270/how-to-create-a-scroll-view-with-fixed-footer-with-flutter">Fixed header footer</a>
+- <a href="https://www.youtube.com/watch?v=eMHbgIgJyUQ">Icons</a>
 
 ## Design references
 
 - <a href="https://uxdesign.cc/3-colors-for-financial-applications-ec75c806e454">Finance app colors</a>
-- <a href="https://dribbble.com/tags/expense_tracker">UI/UX</a>
+- <a href="https://dribbble.com/tags/expense_tracker">General UI/UX</a>
 - <a href="https://www.behance.net/gallery/79266823/Budget-tracker-App-UI-kit">Main UI/UX</a>
-
-> Green for choices, quantity, quality, and growth
-
 - <a href="https://www.crazyegg.com/blog/color-palettes-financial/">Finance app color palletes</a>
-## Images references
 
-- Brand logos are made using <a href="https://express.adobe.com/express-apps/logo-maker">Adobe Express</a> and edited using <a href="https://www.figma.com/">Figma</a>
-- 
+> Green for choices, quantity, quality, and growth. And money, of course.
+
+## Image references
+
+- Icon is made using <a href="https://express.adobe.com/express-apps/logo-maker">Adobe Express</a> and edited using <a href="https://www.figma.com/">Figma</a>
