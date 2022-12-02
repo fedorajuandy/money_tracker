@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:money_tracker/screens/update_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
@@ -12,6 +15,8 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
+  Query dbRef = FirebaseDatabase.instance.ref().child('transactions');
+  DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
   // today's date
   int selectedIndex = DateTime.now().day - 1;
   DateTime now = DateTime.now();
@@ -67,8 +72,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
             ),
           ),
           sbh32(),
-          transaction(),
-          transaction(),
+          FirebaseAnimatedList(
+            query: dbRef,
+            itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+              Map transaction = snapshot.value as Map;
+              transaction['key'] = snapshot.key;
+              return transactionList(transaction: transaction);
+            },
+          ),
           sbh16(),
           total(),
           sbh40(),
@@ -99,7 +110,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           ),
         ),
         weekendTextStyle: const TextStyle(
-          color: Colors.red,
+          color: red,
         ),
       ),
       // selecting a date
@@ -125,7 +136,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
-  Widget transaction() {
+  Widget transactionList({required Map transaction}) {
     var size = MediaQuery.of(context).size;
 
     return Padding(
@@ -145,9 +156,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          const Text(
-                            "Transaction name",
-                            style: TextStyle(
+                          Text(
+                            transaction['name'],
+                            style: const TextStyle(
                               fontSize: 14,
                               color: dark,
                               fontWeight: FontWeight.w600,
@@ -156,7 +167,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           ),
                           sbh4(),
                           Text(
-                            "Category",
+                            transaction['category'],
                             style: TextStyle(
                               fontSize: 12,
                               color: dark.withOpacity(0.5),
@@ -181,9 +192,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          const Text(
-                            "Rp10,000.00",
-                            style: TextStyle(
+                          Text(
+                            transaction['amount'],
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 15,
                               color: secondary,
@@ -191,7 +202,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           ),
                           sbh4(),
                           Text(
-                            "10:40",
+                            transaction['added'],
                             style: TextStyle(
                               fontSize: 12,
                               color: dark.withOpacity(0.5),
@@ -205,6 +216,39 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   ],
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => UpdateTransactionScreen(transactionKey: transaction['key'])));
+                    },
+                    child: Row(
+                      children: const <Widget>[
+                        Icon(
+                          Icons.edit,
+                          color: primary,
+                        ),
+                      ],
+                    ),
+                  ),
+                  sbw8(),
+                  GestureDetector(
+                    onTap: () {
+                      reference.child(transaction['key']).remove();
+                    },
+                    child: Row(
+                      children: const <Widget>[
+                        Icon(
+                          Icons.delete,
+                          color: red,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
           horisontalLine(),

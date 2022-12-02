@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
-import 'package:money_tracker/controllers/transaction_operation.dart';
 
 class AddPlanScreen extends StatefulWidget {
   const AddPlanScreen({super.key});

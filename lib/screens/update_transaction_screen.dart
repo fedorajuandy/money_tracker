@@ -5,14 +5,15 @@ import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
 
-class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key});
+class UpdateTransactionScreen extends StatefulWidget {
+  const UpdateTransactionScreen({Key? key, required this.transactionKey}) : super(key: key);
+  final String transactionKey;
 
   @override
-  State<AddTransactionScreen> createState() => _AddTransactionScreenState();
+  State<UpdateTransactionScreen> createState() => _UpdateTransactionScreenState();
 }
 
-class _AddTransactionScreenState extends State<AddTransactionScreen> {
+class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   final GlobalKey<FormState> _keyform = GlobalKey<FormState>();
   final TextEditingController _nameText = TextEditingController();
   final TextEditingController _categoryText = TextEditingController();
@@ -21,7 +22,24 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final TextEditingController _timeText = TextEditingController();
   DateTime now = DateTime.now();
   int activeType = 1;
-  late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('transactions');
+  late DatabaseReference dbRef;
+
+  @override
+  void initState() {
+    super.initState();
+    dbRef = FirebaseDatabase.instance.ref().child('transactions');
+    getTransactionData();
+  }
+
+  void getTransactionData() async {
+    DataSnapshot snapshot = await dbRef.child(widget.transactionKey).get();
+    Map transaction = snapshot.value as Map;
+    _nameText.text = transaction['name'];
+    _categoryText.text = transaction['category'];
+    _amountText.text = transaction['amount'];
+    _dateText.text = transaction['date'];
+    activeType = transaction['type'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -428,8 +446,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           'amount': _amountText.text,
         };
 
-        dbRef.push().set(transaction);
-        return Navigator.pop(context);
+        dbRef.child(widget.transactionKey).update(transaction).then((value) => {
+          Navigator.pop(context),
+        });
       },
       child: const Text("Add transaction"),
     );
