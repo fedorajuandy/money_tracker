@@ -80,6 +80,9 @@ While there, change the minSdkVersion to 21 and target to 28
 - <a href="https://stackoverflow.com/questions/62022135/how-to-only-display-the-year-in-datepicker-for-flutter">YearPicker</a>
 <a href="https://www.flutterbeads.com/change-date-picker-color-in-flutter/">Modify DatePicker</a>
 - <a href="https://www.youtube.com/watch?v=3wsIBoyKmdA">TimePicker</a>
+- <a href="https://stackoverflow.com/questions/14865568/currency-format-in-dart">Currency format</a>
+- <a href="https://galangaji.medium.com/5-flutter-tutorial-cara-mudah-format-rupiah-pada-dart-c1711621e648">IDR format</a>
+- <a href="https://stackoverflow.com/questions/54027270/how-to-create-a-scroll-view-with-fixed-footer-with-flutter">Fixed header footer</a>
 
 ## Design references
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:money_tracker/screens/update_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
+import 'package:money_tracker/themes/currency_format.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -17,6 +19,11 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   Query dbRef = FirebaseDatabase.instance.ref().child('transactions');
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
+  /* Map<dynamic, dynamic> transactions = dbRef.data.value;
+    transactions.forEach((key, transactions) {
+      needs.add(Need.fromSnapshot(transactions));
+  }); */
+  final currFormat = NumberFormat("#,##0.00", "en_US");
   // today's date
   int selectedIndex = DateTime.now().day - 1;
   DateTime now = DateTime.now();
@@ -42,49 +49,58 @@ class _TransactionScreenState extends State<TransactionScreen> {
   }
 
   Widget screen() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          // the 'header'
-          Container(
-            decoration: BoxDecoration(
-              color: dark.withOpacity(0.05),
-              boxShadow: [
-                BoxShadow(
-                  color: dark.withOpacity(0.01),
-                  blurRadius: 3,
-                  spreadRadius: 10,
+    return Column(
+      children: <Widget>[
+        // the 'header'
+        Container(
+          decoration: BoxDecoration(
+            color: dark.withOpacity(0.05),
+            boxShadow: [
+              BoxShadow(
+                color: dark.withOpacity(0.01),
+                blurRadius: 3,
+                spreadRadius: 10,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
+            child: Column(
+              children: <Widget>[
+                title("Transactions"),
+                Column(
+                  children: <Widget>[
+                    tableCalendar(),
+                  ],
                 ),
               ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
-              child: Column(
-                children: <Widget>[
-                  title("Transactions"),
-                  Column(
-                    children: <Widget>[
-                      tableCalendar(),
-                    ],
-                  ),
-                ],
-              ),
+          ),
+        ),
+        sbh32(),
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const ScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                FirebaseAnimatedList(
+                  query: dbRef,
+                  itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+                    Map transaction = snapshot.value as Map;
+                    transaction['key'] = snapshot.key;
+                    return transactionList(transaction: transaction);
+                  },
+                  physics: const ScrollPhysics(),
+                  shrinkWrap: true,
+                ),
+                sbh16(),
+                total(),
+              ],
             ),
           ),
-          sbh32(),
-          FirebaseAnimatedList(
-            query: dbRef,
-            itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-              Map transaction = snapshot.value as Map;
-              transaction['key'] = snapshot.key;
-              return transactionList(transaction: transaction);
-            },
-          ),
-          sbh16(),
-          total(),
-          sbh40(),
-        ],
-      ),
+        ),
+        sbh40(),
+      ],
     );
   }
 
@@ -187,28 +203,67 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 child: Row(
                   children: <Widget>[
                     SizedBox(
-                      width: (size.width - 90) * 0.5,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Text(
-                            transaction['amount'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                              color: secondary,
+                      width: (size.width - 120) * 0.5,
+                      child: SizedBox(
+                        width: (size.width - 120) * 0.5,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              transaction['amount'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                color: secondary,
+                              ),
                             ),
+                            sbh4(),
+                            Text(
+                              transaction['added'].substring(11, 16),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: dark.withOpacity(0.5),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              sbw8(),
+              SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => UpdateTransactionScreen(transactionKey: transaction['key'])));
+                      },
+                      child: Row(
+                        children: const <Widget>[
+                          Icon(
+                            Icons.edit,
+                            color: primary,
                           ),
-                          sbh4(),
-                          Text(
-                            transaction['added'],
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: dark.withOpacity(0.5),
-                              fontWeight: FontWeight.w400,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                        ],
+                      ),
+                    ),
+                    sbw8(),
+                    GestureDetector(
+                      onTap: () {
+                        reference.child(transaction['key']).remove();
+                      },
+                      child: Row(
+                        children: const <Widget>[
+                          Icon(
+                            Icons.delete,
+                            color: red,
                           ),
                         ],
                       ),
@@ -216,39 +271,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => UpdateTransactionScreen(transactionKey: transaction['key'])));
-                    },
-                    child: Row(
-                      children: const <Widget>[
-                        Icon(
-                          Icons.edit,
-                          color: primary,
-                        ),
-                      ],
-                    ),
-                  ),
-                  sbw8(),
-                  GestureDetector(
-                    onTap: () {
-                      reference.child(transaction['key']).remove();
-                    },
-                    child: Row(
-                      children: const <Widget>[
-                        Icon(
-                          Icons.delete,
-                          color: red,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )
             ],
           ),
           horisontalLine(),
@@ -272,11 +294,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
             overflow: TextOverflow.ellipsis,
           ),
           const Spacer(),
-          const Padding(
-            padding: EdgeInsets.only(top: 5),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
             child: Text(
-              "Rp20,000.00",
-              style: TextStyle(
+              // CurrencyFormat.convertToIdr(getTotal(transaction: transaction), 2),
+              "YOLO",
+              style: const TextStyle(
                 fontSize: 20,
                 color: dark,
                 fontWeight: FontWeight.bold,
@@ -287,6 +310,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
         ],
       ),
     );
+  }
+
+  double getTotal({required Map transaction}) {
+    double sum = 0;
+
+    for(int i = 0; i < transaction.length; i++){
+      sum += transaction['amount'][i];
+    }
+
+    return sum;
   }
 
   Widget horisontalLine() {
