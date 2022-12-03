@@ -34,11 +34,12 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   void getTransactionData() async {
     DataSnapshot snapshot = await dbRef.child(widget.transactionKey).get();
     Map transaction = snapshot.value as Map;
+    activeType = int.parse(transaction['type']);
     _nameText.text = transaction['name'];
     _categoryText.text = transaction['category'];
     _amountText.text = transaction['amount'];
     _dateText.text = transaction['date'];
-    activeType = transaction['type'];
+    _timeText.text = transaction['time'];
   }
 
   @override
@@ -450,8 +451,9 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
           'type': activeType.toString(),
           'name': _nameText.text,
           'category': _categoryText.text,
-          'added': _dateText.text ,
           'amount': _amountText.text,
+          'added': _dateText.text,
+          'time': _timeText.text,
         };
 
         dbRef.child(widget.transactionKey).update(transaction).then((value) => {

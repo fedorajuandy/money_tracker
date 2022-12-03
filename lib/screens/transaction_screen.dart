@@ -220,7 +220,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             ),
                             sbh4(),
                             Text(
-                              transaction['added'].substring(11, 16),
+                              transaction['time'],
                               style: TextStyle(
                                 fontSize: 12,
                                 color: dark.withOpacity(0.5),

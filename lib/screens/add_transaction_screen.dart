@@ -348,7 +348,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             return Theme(
               data: Theme.of(context).copyWith(
                 colorScheme: const ColorScheme.light(
-                  primary: primary, // <-- SEE HERE
+                  primary: primary,
                 ),
               ),
               child: child!,
@@ -432,8 +432,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           'type': activeType.toString(),
           'name': _nameText.text,
           'category': _categoryText.text,
-          'added': DateTime.now().toString(),
           'amount': _amountText.text,
+          'added': _dateText.text,
+          'time': _timeText.text,
         };
 
         dbRef.push().set(transaction);
