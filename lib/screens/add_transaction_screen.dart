@@ -87,7 +87,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   sbh20(),
                   pickTime(),
                   sbh32(),
-                  buttonAdd(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      buttonCancel(),
+                      sbw8(),
+                      buttonAdd(),
+                    ],
+                  ),
                   sbh40(),
                 ],
               ),
@@ -418,6 +425,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
+        padding: EdgeInsets.all(20),
       ),
       onPressed: () {
         Map<String, String> transaction = {
@@ -432,6 +440,26 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         return Navigator.pop(context);
       },
       child: const Text("Add transaction"),
+    );
+  }
+
+  Widget buttonCancel() {
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.all(20),
+        backgroundColor: white,
+        foregroundColor: primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: const BorderSide(
+            color: primary,
+          ),
+        ),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text("Cancel"),
     );
   }
 }

@@ -105,7 +105,14 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
                   sbh20(),
                   pickTime(),
                   sbh32(),
-                  buttonAdd(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      buttonCancel(),
+                      sbw8(),
+                      buttonUpdate(),
+                    ],
+                  ),
                   sbh40(),
                 ],
               ),
@@ -327,7 +334,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   Widget pickDate() {
     return TextFormField(
       controller: _dateText,
-      readOnly: true,
+      readOnly: false,
       style: const TextStyle(color: dark),
       decoration: const InputDecoration(
         hintStyle: TextStyle(
@@ -380,7 +387,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   Widget pickTime() {
     return TextFormField(
       controller: _timeText,
-      readOnly: true,
+      readOnly: false,
       style: const TextStyle(color: dark),
       decoration: const InputDecoration(
         hintStyle: TextStyle(
@@ -428,7 +435,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
     );
   }
 
-  Widget buttonAdd() {
+  Widget buttonUpdate() {
     return TextButton(
       style: TextButton.styleFrom(
         backgroundColor: primary,
@@ -436,13 +443,14 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
+        padding: EdgeInsets.all(20),
       ),
       onPressed: () {
         Map<String, String> transaction = {
           'type': activeType.toString(),
           'name': _nameText.text,
           'category': _categoryText.text,
-          'added': DateTime.now().toString(),
+          'added': _dateText.text ,
           'amount': _amountText.text,
         };
 
@@ -450,7 +458,27 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
           Navigator.pop(context),
         });
       },
-      child: const Text("Add transaction"),
+      child: const Text("Update transaction"),
+    );
+  }
+
+  Widget buttonCancel() {
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.all(20),
+        backgroundColor: white,
+        foregroundColor: primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: const BorderSide(
+            color: primary,
+          ),
+        ),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text("Cancel"),
     );
   }
 }

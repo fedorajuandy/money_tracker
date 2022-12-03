@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:money_tracker/screens/edit_balance_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
@@ -95,31 +94,6 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     ),
                   ),
                 ],
-              ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(
-                      color: white,
-                    ),
-                  ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Text(
-                    "Edit",
-                    style: TextStyle(
-                      color: white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => const EditBalanceScreen()),
-                  );
-                },
               ),
             ],
           ),
