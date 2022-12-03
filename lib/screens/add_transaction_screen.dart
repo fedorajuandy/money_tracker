@@ -425,7 +425,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
         Map<String, String> transaction = {
@@ -433,7 +433,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           'name': _nameText.text,
           'category': _categoryText.text,
           'amount': _amountText.text,
-          'added': _dateText.text,
+          'date': _dateText.text,
           'time': _timeText.text,
         };
 

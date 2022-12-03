@@ -38,8 +38,8 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
     _nameText.text = transaction['name'];
     _categoryText.text = transaction['category'];
     _amountText.text = transaction['amount'];
-    _dateText.text = transaction['date'];
-    _timeText.text = transaction['time'];
+    _dateText.text = transaction['date'].toString();
+    _timeText.text = transaction['time'].toString();
   }
 
   @override
@@ -444,7 +444,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
         Map<String, String> transaction = {
@@ -467,7 +467,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   Widget buttonCancel() {
     return TextButton(
       style: TextButton.styleFrom(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         backgroundColor: white,
         foregroundColor: primary,
         shape: RoundedRectangleBorder(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/screens/update_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/currency_format.dart';
@@ -19,10 +20,6 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   Query dbRef = FirebaseDatabase.instance.ref().child('transactions');
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
-  /* Map<dynamic, dynamic> transactions = dbRef.data.value;
-    transactions.forEach((key, transactions) {
-      needs.add(Need.fromSnapshot(transactions));
-  }); */
   final currFormat = NumberFormat("#,##0.00", "en_US");
   // today's date
   int selectedIndex = DateTime.now().day - 1;
@@ -31,17 +28,18 @@ class _TransactionScreenState extends State<TransactionScreen> {
   late DateTime lastDayOfMonth;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime? _selectedDay;
+  double _sum = 0;
 
   @override
   void initState() {
     super.initState();
     // get the next month, then take a step back to the last day (the last '0')
     lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+    setSum(0);
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: dark.withOpacity(0.05),
       body: screen(),
@@ -154,6 +152,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   Widget transactionList({required Map transaction}) {
     var size = MediaQuery.of(context).size;
+    double amount = double.parse(transaction['amount']);
+    setSum(getSum() + amount);
 
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -211,7 +211,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
                             Text(
-                              CurrencyFormat.convertToIdr(int.parse(transaction['amount']), 2),
+                              CurrencyFormat.convertToIdr(amount, 2),
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 15,
@@ -282,7 +282,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   Widget total() {
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 84),
+      padding: const EdgeInsets.only(left: 20, right: 84),
       child: Row(
         children: <Widget>[
           Text(
@@ -298,8 +298,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 5),
             child: Text(
-              // CurrencyFormat.convertToIdr(getTotal(transaction: transaction), 2),
-              "YOLO",
+              CurrencyFormat.convertToIdr(getSum(), 2),
               style: const TextStyle(
                 fontSize: 20,
                 color: dark,
@@ -313,16 +312,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
-  double getTotal({required Map transaction}) {
-    double sum = 0;
-
-    for(int i = 0; i < transaction.length; i++){
-      sum += transaction['amount'][i];
-    }
-
-    return sum;
-  }
-
   Widget horisontalLine() {
     return const Padding(
       padding: EdgeInsets.only(top: 8),
@@ -330,5 +319,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
         thickness: 0.8,
       ),
     );
+  }
+
+  void setSum(double sum) {
+    _sum = sum;
+  }
+  double getSum() {
+    return _sum;
   }
 }
