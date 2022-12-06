@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:money_tracker/models/balance.dart';
+import 'package:money_tracker/models/new_balance.dart';
 
 class BalanceOperation extends ChangeNotifier {
   final List<Balance> _balance = [];

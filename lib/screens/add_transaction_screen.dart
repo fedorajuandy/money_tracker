@@ -428,13 +428,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        Map<String, String> transaction = {
-          'type': activeType.toString(),
+        Map<String, dynamic> transaction = {
+          'type': activeType,
           'name': _nameText.text,
           'category': _categoryText.text,
           'amount': _amountText.text,
-          'date': _dateText.text,
-          'time': _timeText.text,
+          'date': _dateText,
+          'time': _timeText,
         };
 
         dbRef.push().set(transaction);
@@ -447,7 +447,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget buttonCancel() {
     return TextButton(
       style: TextButton.styleFrom(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         backgroundColor: white,
         foregroundColor: primary,
         shape: RoundedRectangleBorder(

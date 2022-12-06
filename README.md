@@ -2,7 +2,7 @@
 
 2019130032 - Fedora Yoshe Juandy
 
-<span style="color: red;">NOTE! Ignore master branch</span>
+==NOTE! Ignore master branch==
 
 Long story short:
 
@@ -15,7 +15,7 @@ Long story short:
 
 ## Money Tracker
 
-<a href="https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins">How to Add Firebase to Flutter</a>
+[How to Add Firebase to Flutter](https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins)
 
 ### Firebase CLI setup
 

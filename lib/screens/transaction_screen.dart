@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/screens/update_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/currency_format.dart';
@@ -20,12 +19,11 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   Query dbRef = FirebaseDatabase.instance.ref().child('transactions');
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
-  final currFormat = NumberFormat("#,##0.00", "en_US");
   // today's date
   int selectedIndex = DateTime.now().day - 1;
-  DateTime now = DateTime.now();
+  DateTime _now = DateTime.now();
   // late = when runtime, not when initialised
-  late DateTime lastDayOfMonth;
+  late DateTime _lastDayOfMonth;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime? _selectedDay;
   double _sum = 0;
@@ -34,8 +32,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   void initState() {
     super.initState();
     // get the next month, then take a step back to the last day (the last '0')
-    lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
-    setSum(0);
+    _lastDayOfMonth = DateTime(_now.year, _now.month + 1, 0);
   }
 
   @override
@@ -76,6 +73,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           ),
         ),
         sbh32(),
+        // main screen
         Expanded(
           child: SingleChildScrollView(
             physics: const ScrollPhysics(),
@@ -105,8 +103,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Widget tableCalendar() {
     return TableCalendar(
       firstDay: DateTime(2010, 1, 1),
-      focusedDay: now,
-      lastDay: lastDayOfMonth,
+      focusedDay: _now,
+      lastDay: _lastDayOfMonth,
       calendarFormat: _calendarFormat,
       calendarStyle: CalendarStyle(
         selectedDecoration: BoxDecoration(
@@ -134,7 +132,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
       onDaySelected: (selectedDay, focusedDay) {
         setState(() {
           _selectedDay = selectedDay;
-          now = focusedDay;
+          _now = focusedDay;
         });
       },
       onFormatChanged: (format) {
@@ -145,7 +143,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         }
       },
       onPageChanged: (focusedDay) {
-        now = focusedDay;
+        _now = focusedDay;
       },
     );
   }
@@ -153,7 +151,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Widget transactionList({required Map transaction}) {
     var size = MediaQuery.of(context).size;
     double amount = double.parse(transaction['amount']);
-    setSum(getSum() + amount);
+    _sum += amount;
 
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -298,7 +296,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 5),
             child: Text(
-              CurrencyFormat.convertToIdr(getSum(), 2),
+              CurrencyFormat.convertToIdr(_sum, 2),
               style: const TextStyle(
                 fontSize: 20,
                 color: dark,
@@ -319,12 +317,5 @@ class _TransactionScreenState extends State<TransactionScreen> {
         thickness: 0.8,
       ),
     );
-  }
-
-  void setSum(double sum) {
-    _sum = sum;
-  }
-  double getSum() {
-    return _sum;
   }
 }
