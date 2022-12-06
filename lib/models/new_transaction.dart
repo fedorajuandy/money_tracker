@@ -25,12 +25,4 @@ class NewTransaction {
     'date': date,
     'time': time,
   };
-
-  void setKey(String a) {
-    key = a;
-  }
-
-  String? getKey() {
-    return key;
-  }
 }

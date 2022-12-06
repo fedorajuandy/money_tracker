@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:money_tracker/controllers/transaction_operation.dart';
 import 'package:money_tracker/models/new_transaction.dart';
+import 'package:money_tracker/models/report.dart';
 import 'package:money_tracker/screens/update_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/currency_format.dart';
@@ -29,7 +30,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   late DateTime _lastDayOfMonth;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime? _selectedDay;
-  double _sum = 0;
+  Report dailyReport = Report();
 
   @override
   void initState() {
@@ -155,8 +156,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   Widget transactionList(String? key, int type, String name, String category, double amount, String date, String time) {
     var size = MediaQuery.of(context).size;
-    // double amount = amount;
-    _sum += amount;
 
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -301,7 +300,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 5),
             child: Text(
-              CurrencyFormat.convertToIdr(_sum, 2),
+              CurrencyFormat.convertToIdr(dailyReport.getDailySum(), 2),
               style: const TextStyle(
                 fontSize: 20,
                 color: dark,

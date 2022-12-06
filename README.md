@@ -1,8 +1,8 @@
-# PPB UAS
+# PPB UAS - Money Tracker
 
 2019130032 - Fedora Yoshe Juandy
 
-==NOTE! Ignore master branch==
+`NOTE! Ignore master branch`
 
 Long story short:
 
@@ -10,18 +10,16 @@ Long story short:
 - tried to sync at LIKMI
 - WiFi error
 - everything got messed up
-- my fever-addled brain decided just moved the branch
+- my fever-addled brain decided just to move the branch
 - present time:
 
-## Money Tracker
-
-[How to Add Firebase to Flutter](https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins)
+## Firebase Realtime Database Setup[^1]
 
 ### Firebase CLI setup
 
-1. npm install -g firebase-tools
+1. `npm install -g firebase-tools`
 2. firebase login
-3. dart pub global activate flutterfire_cli
+3. `dart pub global activate flutterfire_cli`
 4. Add the path to env
 
 ### Firebase app setup
@@ -45,41 +43,20 @@ For iOS:
 9. Choose iOS (most left)
 10. Enter name from ios/Runner.xcodeproj/project.pbxproj (PRODUCT_BUNDLE_IDENTIFIER)
 11. Download plist to ios/Runner
-12. add:
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-    );
-    to main.dart main and correct mistake with the bulb
-13. change home to (more or less):
-    FutureBuilder(
-        future: _fbApp,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text("Error:  ${snapshot.error.toString()}");
-          } else if (snapshot.hasData) {
-            return const MyHomePage(title: "LOL");
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
 
 ### Firebase project setup
 
-1. flutterfire configure
-2. flutter pub add firebase_core [CAN ADD MANUALY TO yaml IF YA WANNA <a href="https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins">Firebase plugins</a>]
-3. flutter pub add firebase_database
-4. flutterfire configure
+1. `flutterfire configure`
+2. `flutter pub add firebase_core` [CAN ADD MANUALY TO yaml IF YA WANNA <a href="https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins">Firebase plugins</a>]
+3. `flutter pub add firebase_database`
+4. `flutterfire configure`
 5. In main.dart add
-    import 'package:firebase_core/firebase_core.dart';
-    import 'firebase_options.dart';
+    `import 'package:firebase_core/firebase_core.dart';`
+    `import 'firebase_options.dart';`
 6. add:
-    final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+    `final Future<FirebaseApp> _fbApp = Firebase.initializeApp();`
     to MyApp and change the app not to const
-7. flutterfire configure
+7. `flutterfire configure`
 
 ## Code references
 
@@ -111,3 +88,7 @@ For iOS:
 ## Image references
 
 - Icon is made using <a href="https://express.adobe.com/express-apps/logo-maker">Adobe Express</a> and edited using <a href="https://www.figma.com/">Figma</a>
+
+### README references
+
+[^1]: [How to Add Firebase to Flutter](https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins)
