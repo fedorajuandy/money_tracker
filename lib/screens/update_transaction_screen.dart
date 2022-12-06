@@ -34,12 +34,12 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   void getTransactionData() async {
     DataSnapshot snapshot = await dbRef.child(widget.transactionKey).get();
     Map transaction = snapshot.value as Map;
-    activeType = int.parse(transaction['type']);
+    activeType = transaction['type'];
     _nameText.text = transaction['name'];
     _categoryText.text = transaction['category'];
-    _amountText.text = transaction['amount'];
-    _dateText.text = transaction['date'].toString();
-    _timeText.text = transaction['time'].toString();
+    _amountText.text = transaction['amount'].toString();
+    _dateText.text = transaction['date'];
+    _timeText.text = transaction['time'];
   }
 
   @override

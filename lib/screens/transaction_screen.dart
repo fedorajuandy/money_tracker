@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:money_tracker/controllers/transaction_operation.dart';
+import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/screens/update_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/currency_format.dart';
@@ -18,6 +20,7 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   Query dbRef = FirebaseDatabase.instance.ref().child('transactions');
+  final transactionOperation = TransactionOperation();
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
   // today's date
   int selectedIndex = DateTime.now().day - 1;
@@ -80,11 +83,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
             child: Column(
               children: <Widget>[
                 FirebaseAnimatedList(
-                  query: dbRef,
+                  query: transactionOperation.getQuery(),
                   itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-                    Map transaction = snapshot.value as Map;
-                    transaction['key'] = snapshot.key;
-                    return transactionList(transaction: transaction);
+                    final json = snapshot.value as Map<dynamic, dynamic>;
+                    final transaction = NewTransaction.fromJson(json);
+                    /* Map transaction = snapshot.value as Map;
+                    transaction['key'] = snapshot.key; */
+                    return transactionList(snapshot.key, transaction.type, transaction.name, transaction.category, transaction.amount, transaction.date, transaction.time);
                   },
                   physics: const ScrollPhysics(),
                   shrinkWrap: true,
@@ -148,9 +153,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
-  Widget transactionList({required Map transaction}) {
+  Widget transactionList(String? key, int type, String name, String category, double amount, String date, String time) {
     var size = MediaQuery.of(context).size;
-    double amount = double.parse(transaction['amount']);
+    // double amount = amount;
     _sum += amount;
 
     return Padding(
@@ -171,7 +176,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            transaction['name'],
+                            name,
                             style: const TextStyle(
                               fontSize: 14,
                               color: dark,
@@ -181,7 +186,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           ),
                           sbh4(),
                           Text(
-                            transaction['category'],
+                            category,
                             style: TextStyle(
                               fontSize: 12,
                               color: dark.withOpacity(0.5),
@@ -213,12 +218,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 15,
-                                color: transaction['type'] == "1" ? red1 : secondary,
+                                color: type == 1 ? red1 : secondary,
                               ),
                             ),
                             sbh4(),
                             Text(
-                              transaction['time'],
+                              time,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: dark.withOpacity(0.5),
@@ -242,7 +247,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => UpdateTransactionScreen(transactionKey: transaction['key'])));
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => UpdateTransactionScreen(transactionKey: key ?? "")));
                       },
                       child: Row(
                         children: const <Widget>[
@@ -256,7 +261,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     sbw8(),
                     GestureDetector(
                       onTap: () {
-                        reference.child(transaction['key']).remove();
+                        reference.child(key ?? "").remove();
                       },
                       child: Row(
                         children: const <Widget>[

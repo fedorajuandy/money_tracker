@@ -1,20 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:money_tracker/models/new_transaction.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-class TransactionOperation extends ChangeNotifier {
-  final List<NewTransaction> _transactions = [];
+class TransactionOperation {
+  final DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
 
-  List<NewTransaction> get getTransaction {
-    return _transactions;
+  void add(NewTransaction n) {
+    reference.push().set(n.toJson());
   }
 
-  TransactionOperation() {
-    addNewTransaction(0, "Name", "Category", 0, DateTime.now(), DateTime.now());
-  }
-
-  void addNewTransaction(int type, String name, String category, double amount, DateTime date, DateTime time) {
-    NewTransaction transaction = NewTransaction(type, name, category, amount, date, time);
-    _transactions.add(transaction);
-    notifyListeners();
+  Query getQuery() {
+    return reference;
   }
 }

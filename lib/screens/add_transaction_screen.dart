@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:money_tracker/controllers/transaction_operation.dart';
+import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
@@ -19,6 +21,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final TextEditingController _amountText = TextEditingController();
   final TextEditingController _dateText = TextEditingController();
   final TextEditingController _timeText = TextEditingController();
+  final transactionOperation = TransactionOperation();
   DateTime now = DateTime.now();
   int activeType = 0;
   late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('transactions');
@@ -428,7 +431,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        Map<String, dynamic> transaction = {
+        final newTransaction = NewTransaction(activeType, _nameText.text, _categoryText.text, double.parse(_amountText.text), _dateText.text, _timeText.text);
+        transactionOperation.add(newTransaction);
+
+        /* Map<String, dynamic> transaction = {
           'type': activeType,
           'name': _nameText.text,
           'category': _categoryText.text,
@@ -437,7 +443,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           'time': _timeText,
         };
 
-        dbRef.push().set(transaction);
+        dbRef.push().set(transaction); */
         return Navigator.pop(context);
       },
       child: const Text("Add transaction"),
