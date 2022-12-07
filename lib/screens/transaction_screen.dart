@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:money_tracker/controllers/transaction_operation.dart';
@@ -29,7 +28,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   // late = when runtime, not when initialised
   late DateTime _lastDayOfMonth;
   CalendarFormat _calendarFormat = CalendarFormat.week;
-  DateTime? _selectedDay;
+  DateTime? _selectedDay = DateTime.now();
   Report dailyReport = Report();
 
   @override
@@ -37,6 +36,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     super.initState();
     // get the next month, then take a step back to the last day (the last '0')
     _lastDayOfMonth = DateTime(_now.year, _now.month + 1, 0);
+    print(_selectedDay.toString().substring(0, 11));
   }
 
   @override
@@ -84,13 +84,30 @@ class _TransactionScreenState extends State<TransactionScreen> {
             child: Column(
               children: <Widget>[
                 FirebaseAnimatedList(
-                  query: transactionOperation.getQuery(),
+                  query: transactionOperation.getQuery(_selectedDay.toString().substring(0, 11)),
                   itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-                    final json = snapshot.value as Map<dynamic, dynamic>;
-                    final transaction = NewTransaction.fromJson(json);
-                    /* Map transaction = snapshot.value as Map;
-                    transaction['key'] = snapshot.key; */
-                    return transactionList(snapshot.key, transaction.type, transaction.name, transaction.category, transaction.amount, transaction.date, transaction.time);
+                    transactionOperation.getQuery(_selectedDay.toString().substring(0, 11)).once();
+                    if (transactionOperation.getExist() == true) {
+                      // Map transaction = snapshot.value as Map;
+                      // transaction['key'] = snapshot.key;
+                      final json = snapshot.value as Map<dynamic, dynamic>;
+                      final transaction = NewTransaction.fromJson(json);
+                      return transactionList(snapshot.key, transaction.type, transaction.name, transaction.category, transaction.amount, transaction.date, transaction.time);
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text("YOLO"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
                   physics: const ScrollPhysics(),
                   shrinkWrap: true,
