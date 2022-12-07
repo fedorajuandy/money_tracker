@@ -89,6 +89,6 @@ For iOS:
 
 - Icon is made using <a href="https://express.adobe.com/express-apps/logo-maker">Adobe Express</a> and edited using <a href="https://www.figma.com/">Figma</a>
 
-### README references
+### Other references
 
 [^1]: [How to Add Firebase to Flutter](https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins)
