@@ -21,9 +21,11 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   final TextEditingController _dateText = TextEditingController();
   final TextEditingController _timeText = TextEditingController();
   DateTime now = DateTime.now();
-  int activeType = 1;
+  int _prevType = 0;
+  int activeType = 0;
   late DatabaseReference dbTransaction;
   late DatabaseReference dbBalance;
+  double _prevAmount = 0;
   double _amount = 0;
 
   @override
@@ -38,9 +40,11 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   void getTransactionData() async {
     DataSnapshot snapshot = await dbTransaction.child(widget.transactionKey).get();
     Map transaction = snapshot.value as Map;
+    _prevType = transaction['type'];
     activeType = transaction['type'];
     _nameText.text = transaction['name'];
     _categoryText.text = transaction['category'];
+    _prevAmount = transaction['amount'];
     _amountText.text = transaction['amount'].toString();
     _dateText.text = transaction['date'];
     _timeText.text = transaction['time'];
@@ -457,23 +461,33 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
+        double currAmount = double.parse(_amountText.text);
         Map<String, dynamic> transaction = {
           'type': activeType,
           'name': _nameText.text,
           'category': _categoryText.text,
-          'amount': double.parse(_amountText.text),
+          'amount': currAmount,
           'date': _dateText.text,
           'time': _timeText.text,
         };
 
-        if(activeType == 0) {
-          _amount += double.parse(_amountText.text);
+        double addAmount = 0;
+        if(_prevType == 0) {
+          if(activeType ==  0) {
+            addAmount = currAmount - _prevAmount;
+          } else {
+            addAmount = currAmount + _prevAmount;
+          }
         } else {
-          _amount -= double.parse(_amountText.text);
+          if(activeType ==  0) {
+            addAmount = currAmount + _prevAmount;
+          } else {
+            addAmount = currAmount - _prevAmount;
+          }
         }
 
         Map<String, dynamic> balance = {
-          'amount': _amount += double.parse(_amountText.text),
+          'amount': _amount += addAmount,
         };
 
         dbTransaction.child(widget.transactionKey).update(transaction);

@@ -90,7 +90,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               children: <Widget>[
                 fat(),
                 sbh16(),
-                total(),
+                // total(),
               ],
             ),
           ),
