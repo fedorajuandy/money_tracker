@@ -1,21 +1,31 @@
-/* import 'package:flutter/cupertino.dart';
-import 'package:money_tracker/models/plan.dart';
+import 'package:money_tracker/models/new_plan.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-class PlanOperation extends ChangeNotifier {
-  final List<Plan> _plan = [];
+class PlanOperation {
+  final DatabaseReference reference = FirebaseDatabase.instance.ref().child('plans');
+  bool _exist = false;
 
-  List<Plan> get getPlan {
-    return _plan;
+  void add(NewPlan n) {
+    reference.push().set(n.toJson());
   }
 
-  PlanOperation() {
-    addNewPlan("Plan name", "Category", 10000, DateTime.now());
+  Query getQuery(String currDate) {
+    print(reference.child("/target").toString());
+    if (reference.child("/target").toString() == currDate) {
+      _exist = true;
+      print(_exist);
+      return reference;
+    } else {
+      _exist = false;
+      print(_exist);
+      return FirebaseDatabase.instance.ref().child('placeholders/plan');
+    }
   }
 
-  void addNewPlan(String name, String category, double amount, DateTime planMade) {
-    Plan plan = Plan(name, category, amount, planMade);
-    _plan.add(plan);
-    notifyListeners();
+  bool getExist() {
+    return _exist;
+  }
+  void setExist(bool a) {
+    _exist = a;
   }
 }
- */
