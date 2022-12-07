@@ -22,17 +22,21 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   final TextEditingController _timeText = TextEditingController();
   DateTime now = DateTime.now();
   int activeType = 1;
-  late DatabaseReference dbRef;
+  late DatabaseReference dbTransaction;
+  late DatabaseReference dbBalance;
+  double _amount = 0;
 
   @override
   void initState() {
     super.initState();
-    dbRef = FirebaseDatabase.instance.ref().child('transactions');
+    dbTransaction = FirebaseDatabase.instance.ref().child('transactions');
+    dbBalance = FirebaseDatabase.instance.ref().child('balance');
     getTransactionData();
+    getBalance();
   }
 
   void getTransactionData() async {
-    DataSnapshot snapshot = await dbRef.child(widget.transactionKey).get();
+    DataSnapshot snapshot = await dbTransaction.child(widget.transactionKey).get();
     Map transaction = snapshot.value as Map;
     activeType = transaction['type'];
     _nameText.text = transaction['name'];
@@ -40,6 +44,12 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
     _amountText.text = transaction['amount'].toString();
     _dateText.text = transaction['date'];
     _timeText.text = transaction['time'];
+  }
+
+  void getBalance() async {
+    DataSnapshot snapshot = await dbBalance.get();
+    Map balance = snapshot.value as Map;
+    _amount = double.parse(balance['amount'].toString());
   }
 
   @override
@@ -376,7 +386,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
         );
 
         if (pickedDate != null) {
-          String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
           setState(() {
             _dateText.text = formattedDate;
           });
@@ -456,7 +466,18 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
           'time': _timeText.text,
         };
 
-        dbRef.child(widget.transactionKey).update(transaction).then((value) => {
+        if(activeType == 0) {
+          _amount += double.parse(_amountText.text);
+        } else {
+          _amount -= double.parse(_amountText.text);
+        }
+
+        Map<String, dynamic> balance = {
+          'amount': _amount += double.parse(_amountText.text),
+        };
+
+        dbTransaction.child(widget.transactionKey).update(transaction);
+        dbBalance.child("amount").update(balance).then((value) => {
           Navigator.pop(context),
         });
       },

@@ -75,6 +75,7 @@ For iOS:
 - <a href="https://galangaji.medium.com/5-flutter-tutorial-cara-mudah-format-rupiah-pada-dart-c1711621e648">IDR format</a>
 - <a href="https://stackoverflow.com/questions/54027270/how-to-create-a-scroll-view-with-fixed-footer-with-flutter">Fixed header footer</a>
 - <a href="https://www.youtube.com/watch?v=eMHbgIgJyUQ">Icons</a>
+- [For future builds](https://stackoverflow.com/questions/66100385/flutter-setstate-or-markneedsbuild-called-during-build-using-future-builde)
 
 ## Design references
 

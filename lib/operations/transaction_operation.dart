@@ -9,18 +9,8 @@ class TransactionOperation {
     reference.push().set(n.toJson());
   }
 
-  Query getQuery(String currDate) {
-    print(reference.child("/date").toString());
-    if (reference.child("/date").toString() == currDate) {
-      _exist = true;
-      print(_exist);
-      return reference;
-    } else {
-      _exist = true;
-      print(_exist);
-      return reference;
-      // return FirebaseDatabase.instance.ref().child('placeholders/transaction');
-    }
+  Query getQuery() {
+    return reference;
   }
 
   bool getExist() {

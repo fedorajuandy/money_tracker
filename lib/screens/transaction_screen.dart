@@ -19,7 +19,7 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  Query dbRef = FirebaseDatabase.instance.ref().child('transactions');
+  // Query dbRef = FirebaseDatabase.instance.ref().child('transactions');
   final transactionOperation = TransactionOperation();
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
   // today's date
@@ -30,13 +30,18 @@ class _TransactionScreenState extends State<TransactionScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime? _selectedDay = DateTime.now();
   Report dailyReport = Report();
+  double _sum = 0;
 
   @override
   void initState() {
     super.initState();
     // get the next month, then take a step back to the last day (the last '0')
     _lastDayOfMonth = DateTime(_now.year, _now.month + 1, 0);
-    print(_selectedDay.toString().substring(0, 11));
+    // print(_selectedDay.toString().substring(0, 11));
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      fat();
+      total();
+    });
   }
 
   @override
@@ -63,7 +68,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
+            padding: const EdgeInsets.only(top: 64, bottom: 24, right: 20, left: 20),
             child: Column(
               children: <Widget>[
                 title("Transactions"),
@@ -83,35 +88,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             physics: const ScrollPhysics(),
             child: Column(
               children: <Widget>[
-                FirebaseAnimatedList(
-                  query: transactionOperation.getQuery(_selectedDay.toString().substring(0, 11)),
-                  itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-                    transactionOperation.getQuery(_selectedDay.toString().substring(0, 11)).once();
-                    if (transactionOperation.getExist() == true) {
-                      // Map transaction = snapshot.value as Map;
-                      // transaction['key'] = snapshot.key;
-                      final json = snapshot.value as Map<dynamic, dynamic>;
-                      final transaction = NewTransaction.fromJson(json);
-                      return transactionList(snapshot.key, transaction.type, transaction.name, transaction.category, transaction.amount, transaction.date, transaction.time);
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text("YOLO"),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
-                  physics: const ScrollPhysics(),
-                  shrinkWrap: true,
-                ),
+                fat(),
                 sbh16(),
                 total(),
               ],
@@ -120,6 +97,26 @@ class _TransactionScreenState extends State<TransactionScreen> {
         ),
         sbh40(),
       ],
+    );
+  }
+
+  Widget fat() {
+    return FirebaseAnimatedList(
+      query: transactionOperation.getQuery(),
+      itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+          if (snapshot.child("/date").value.toString() == _selectedDay.toString().substring(0, 10)) {
+            // Map transaction = snapshot.value as Map;
+            // transaction['key'] = snapshot.key;
+            final json = snapshot.value as Map<dynamic, dynamic>;
+            final transaction = NewTransaction.fromJson(json);
+            updateTotal(int.parse(snapshot.child("/type").value.toString()), double.parse(snapshot.child("/amount").value.toString()));
+            return transactionList(snapshot.key, transaction.type, transaction.name, transaction.category, transaction.amount, transaction.date, transaction.time);
+          } else {
+            return Container();
+          }
+      },
+      physics: const ScrollPhysics(),
+      shrinkWrap: true,
     );
   }
 
@@ -156,6 +153,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         setState(() {
           _selectedDay = selectedDay;
           _now = focusedDay;
+          resetTotal();
         });
       },
       onFormatChanged: (format) {
@@ -317,7 +315,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 5),
             child: Text(
-              CurrencyFormat.convertToIdr(dailyReport.getDailySum(), 2),
+              CurrencyFormat.convertToIdr(_sum, 2),
               style: const TextStyle(
                 fontSize: 20,
                 color: dark,
@@ -338,5 +336,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
         thickness: 0.8,
       ),
     );
+  }
+
+  void resetTotal() {
+    _sum = 0;
+  }
+  void updateTotal(int type, double a) {
+    if (type == 0) {
+      _sum += a;
+    } else {
+      _sum -= a;
+    }
   }
 }

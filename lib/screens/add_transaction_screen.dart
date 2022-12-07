@@ -24,7 +24,22 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final transactionOperation = TransactionOperation();
   DateTime now = DateTime.now();
   int activeType = 0;
-  late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('transactions');
+  late DatabaseReference dbTransaction = FirebaseDatabase.instance.ref().child('transactions');
+  late DatabaseReference dbBalance;
+  double _amount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    dbBalance = FirebaseDatabase.instance.ref().child('balance');
+    getBalance();
+  }
+
+  void getBalance() async {
+    DataSnapshot snapshot = await dbBalance.get();
+    Map balance = snapshot.value as Map;
+    _amount = double.parse(balance['amount'].toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -360,7 +375,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         );
 
         if (pickedDate != null) {
-          String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+          String formattedDate = DateFormat('yyy-MM-dd').format(pickedDate);
           setState(() {
             _dateText.text = formattedDate;
           });
@@ -433,6 +448,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       onPressed: () {
         final newTransaction = NewTransaction(activeType, _nameText.text, _categoryText.text, double.parse(_amountText.text), _dateText.text, _timeText.text);
         transactionOperation.add(newTransaction);
+        if(activeType == 0) {
+          _amount += double.parse(_amountText.text);
+        } else {
+          _amount -= double.parse(_amountText.text);
+        }
+
+        Map<String, dynamic> balance = {
+          'amount': _amount,
+        };
 
         /* Map<String, dynamic> transaction = {
           'type': activeType,
@@ -443,8 +467,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           'time': _timeText,
         };
 
-        dbRef.push().set(transaction); */
-        return Navigator.pop(context);
+        dbTransaction.push().set(transaction); */
+        dbBalance.child("amount").update(balance).then((value) => {
+          Navigator.pop(context),
+        });
       },
       child: const Text("Add transaction"),
     );

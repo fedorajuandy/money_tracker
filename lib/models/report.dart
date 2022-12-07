@@ -1,5 +1,4 @@
 class Report {
-  double dailySum = 0;
   double monthlyExpense = 0;
   double monthlyIncome = 0;
   double yearlyExpense = 0;
@@ -8,16 +7,6 @@ class Report {
   double highestExpense = 0;
   double lowestIncome = 0;
   double highestIncome = 0;
-
-  resetDailySum() {
-    dailySum = 0;
-  }
-  addDailySum(double a) {
-    dailySum += a;
-  }
-  double getDailySum() {
-    return dailySum;
-  }
 
   resetMonthlyExpense() {
     monthlyExpense = 0;
