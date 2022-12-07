@@ -1,5 +1,9 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:money_tracker/models/new_plan.dart';
+import 'package:money_tracker/operations/plan_operation.dart';
 import 'package:money_tracker/screens/add_plan_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
@@ -20,6 +24,8 @@ class _PlanScreenState extends State<PlanScreen> {
   List <Widget> reports = [];
   String? yearText = "Other";
   List<String> years = <String>['2010', '2015', '2022'];
+  final planOperation = PlanOperation();
+  DatabaseReference reference = FirebaseDatabase.instance.ref().child('plans');
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +88,25 @@ class _PlanScreenState extends State<PlanScreen> {
           sbh40(),
         ],
       ),
+    );
+  }
+
+  Widget fat() {
+    return FirebaseAnimatedList(
+      query: planOperation.getQuery(),
+      itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+        if (snapshot.child("/date").value.toString() == _selectedDay.toString().substring(0, 10)) {
+          // Map transaction = snapshot.value as Map;
+          // transaction['key'] = snapshot.key;
+          final json = snapshot.value as Map<dynamic, dynamic>;
+          final transaction = NewPlan.fromJson(json);
+          return transactionList(snapshot.key, transaction.type, transaction.name, transaction.category, transaction.amount, transaction.date, transaction.time);
+        } else {
+          return Container();
+        }
+      },
+      physics: const ScrollPhysics(),
+      shrinkWrap: true,
     );
   }
 
@@ -206,7 +231,7 @@ class _PlanScreenState extends State<PlanScreen> {
     );
   }
 
-  Widget plans() {
+  Widget planList(String? key, int type, String name, String category, double amount, String date, String time) {
     var size = MediaQuery.of(context).size;
 
     return Padding(
