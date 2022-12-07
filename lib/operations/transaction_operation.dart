@@ -16,9 +16,10 @@ class TransactionOperation {
       print(_exist);
       return reference;
     } else {
-      _exist = false;
+      _exist = true;
       print(_exist);
-      return FirebaseDatabase.instance.ref().child('placeholders/transaction');
+      return reference;
+      // return FirebaseDatabase.instance.ref().child('placeholders/transaction');
     }
   }
 

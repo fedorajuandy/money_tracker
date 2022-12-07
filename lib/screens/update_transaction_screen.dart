@@ -447,12 +447,12 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        Map<String, String> transaction = {
-          'type': activeType.toString(),
+        Map<String, dynamic> transaction = {
+          'type': activeType,
           'name': _nameText.text,
           'category': _categoryText.text,
-          'amount': _amountText.text,
-          'added': _dateText.text,
+          'amount': double.parse(_amountText.text),
+          'date': _dateText.text,
           'time': _timeText.text,
         };
 
