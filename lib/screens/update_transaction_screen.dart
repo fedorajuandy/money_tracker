@@ -22,7 +22,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   final TextEditingController _timeText = TextEditingController();
   DateTime now = DateTime.now();
   int _prevType = 0;
-  int activeType = 0;
+  late int activeType;
   late DatabaseReference dbTransaction;
   late DatabaseReference dbBalance;
   double _prevAmount = 0;

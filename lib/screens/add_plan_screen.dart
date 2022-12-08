@@ -22,20 +22,7 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
   final TextEditingController _endDateText = TextEditingController();
   DateTime now = DateTime.now();
   late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('plans');
-  late DatabaseReference dbBalance;
   final planOperation = PlanOperation();
-
-  @override
-  void initState() {
-    super.initState();
-    dbBalance = FirebaseDatabase.instance.ref().child('balance');
-    getBalance();
-  }
-
-  void getBalance() async {
-    DataSnapshot snapshot = await dbBalance.get();
-    Map balance = snapshot.value as Map;
-  }
 
   @override
   Widget build(BuildContext context) {
