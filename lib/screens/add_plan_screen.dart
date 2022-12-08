@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:money_tracker/models/new_plan.dart';
+import 'package:money_tracker/operations/plan_operation.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
@@ -15,12 +17,25 @@ class AddPlanScreen extends StatefulWidget {
 class _AddTransactionScreenState extends State<AddPlanScreen> {
   final GlobalKey<FormState> _keyform = GlobalKey<FormState>();
   final TextEditingController _nameText = TextEditingController();
-  final TextEditingController _categoryText = TextEditingController();
-  final TextEditingController _amountText = TextEditingController();
-  final TextEditingController _progressText = TextEditingController();
-  final TextEditingController _dateText = TextEditingController();
+  final TextEditingController _targetText = TextEditingController();
+  final TextEditingController _startDateText = TextEditingController();
+  final TextEditingController _endDateText = TextEditingController();
   DateTime now = DateTime.now();
-  late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('transactions');
+  late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('plans');
+  late DatabaseReference dbBalance;
+  final planOperation = PlanOperation();
+
+  @override
+  void initState() {
+    super.initState();
+    dbBalance = FirebaseDatabase.instance.ref().child('balance');
+    getBalance();
+  }
+
+  void getBalance() async {
+    DataSnapshot snapshot = await dbBalance.get();
+    Map balance = snapshot.value as Map;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +79,20 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
                 children: <Widget>[
                   textFieldName(),
                   sbh20(),
-                  textFieldCategory(),
+                  textFieldTarget(),
                   sbh20(),
-                  textFieldAmount(),
+                  pickStartDate(),
                   sbh20(),
-                  textFieldProgress(),
-                  sbh20(),
-                  pickDateTime(),
+                  pickEndDate(),
                   sbh32(),
-                  buttonAdd(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      buttonCancel(),
+                      sbw8(),
+                      buttonAdd(),
+                    ],
+                  ),
                   sbh40(),
                 ],
               ),
@@ -110,43 +130,16 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
     );
   }
 
-  Widget textFieldCategory() {
+  Widget textFieldTarget() {
     return TextFormField(
       cursorColor: primary,
       style: const TextStyle(color: dark),
       decoration: const InputDecoration(
-        hintText: "Category",
+        hintText: "Target",
         hintStyle: TextStyle(
           color: Colors.black54,
         ),
-        labelText: "Category",
-        labelStyle: TextStyle(
-          color: primary,
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      controller: _categoryText,
-      validator: (value) {
-        return (value !.isEmpty? "Please input transaction category": null);
-      },
-    );
-  }
-
-  Widget textFieldAmount() {
-    return TextFormField(
-      cursorColor: primary,
-      style: const TextStyle(color: dark),
-      decoration: const InputDecoration(
-        hintText: "Amount",
-        hintStyle: TextStyle(
-          color: Colors.black54,
-        ),
-        labelText: 'Amount',
+        labelText: 'Target',
         labelStyle: TextStyle(
           color: primary,
         ),
@@ -158,23 +151,23 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
         ),
       ),
       keyboardType: TextInputType.number,
-      controller: _amountText,
+      controller: _targetText,
       validator: (value) {
-        return (value !.isEmpty? "Please input transaction amount": null);
+        return (value !.isEmpty? "Please input target amount": null);
       },
     );
   }
 
-  Widget pickDateTime() {
+  Widget pickStartDate() {
     return TextFormField(
-      controller: _dateText,
+      controller: _startDateText,
       readOnly: true,
       style: const TextStyle(color: dark),
       decoration: const InputDecoration(
         hintStyle: TextStyle(
           color: Colors.black54,
         ),
-        labelText: 'Date',
+        labelText: 'Start date',
         labelStyle: TextStyle(
           color: primary,
         ),
@@ -195,12 +188,12 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
           context: context,
           initialDate: now,
           firstDate: DateTime(now.year - 10),
-          lastDate: now,
+          lastDate: DateTime(now.year + 10),
           builder: (context, child) {
             return Theme(
               data: Theme.of(context).copyWith(
                 colorScheme: const ColorScheme.light(
-                  primary: primary, // <-- SEE HERE
+                  primary: primary,
                 ),
               ),
               child: child!,
@@ -211,24 +204,28 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
         if (pickedDate != null) {
           String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
           setState(() {
-            _dateText.text = formattedDate;
+            _startDateText.text = formattedDate;
           });
         }
       },
     );
   }
 
-  Widget textFieldProgress() {
+  Widget pickEndDate() {
     return TextFormField(
-      cursorColor: primary,
+      controller: _endDateText,
+      readOnly: true,
       style: const TextStyle(color: dark),
       decoration: const InputDecoration(
-        hintText: "Progress",
         hintStyle: TextStyle(
           color: Colors.black54,
         ),
-        labelText: 'Progress',
+        labelText: 'End date',
         labelStyle: TextStyle(
+          color: primary,
+        ),
+        suffixIcon: Icon(
+          Icons.calendar_month,
           color: primary,
         ),
         border: OutlineInputBorder(),
@@ -238,8 +235,32 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
           ),
         ),
       ),
-      keyboardType: TextInputType.number,
-      controller: _progressText,
+      cursorColor: primary,
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: now,
+          firstDate: DateTime(now.year - 10),
+          lastDate: DateTime(now.year + 10),
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: const ColorScheme.light(
+                  primary: primary,
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+
+        if (pickedDate != null) {
+          String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+          setState(() {
+            _endDateText.text = formattedDate;
+          });
+        }
+      },
     );
   }
 
@@ -251,20 +272,34 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
+        padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        // Map<String, String> transaction = {
-        //   'name': _nameText.text,
-        //   'category': _categoryText.text,
-        //   'added': DateTime.now().toString(),
-        //   'amount': _amountText.text,
-        // };
-
-        // dbRef.push().set(transaction);
-        // Provider.of<TransactionOperation>(context, listen: false).addNewTransaction(_nameText.text, _typeText.text, _categoryText.text, double.parse(_amountText.text), DateTime.now());
-        return Navigator.pop(context);
+        final newPlan = NewPlan(_nameText.text, double.parse(_targetText.text), 0, _startDateText.text, _endDateText.text);
+        planOperation.add(newPlan);
+        Navigator.pop(context);
       },
-      child: const Text("Add transaction"),
+      child: const Text("Add plan"),
+    );
+  }
+
+  Widget buttonCancel() {
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.all(20),
+        backgroundColor: white,
+        foregroundColor: primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: const BorderSide(
+            color: primary,
+          ),
+        ),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text("Cancel"),
     );
   }
 }

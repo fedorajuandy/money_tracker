@@ -2,26 +2,26 @@ class NewPlan {
   String? key;
   String name;
   double target;
-  double currAmount;
-  String addDate;
-  String dueDate;
+  double currAmount = 0;
+  String startDate;
+  String endDate;
   double suggestedAmount = 0;
 
-  NewPlan(this.name, this.target, this.currAmount, this.addDate, this.dueDate);
+  NewPlan(this.name, this.target, this.currAmount, this.startDate, this.endDate);
 
   NewPlan.fromJson(Map<dynamic, dynamic> json)
     : name = json['name'] as String,
       target = json['target'] as double,
       currAmount = json['currAmount'] as double,
-      addDate = json['addDate'] as String,
-      dueDate = json['dueDate'] as String;
+      startDate = json['startDate'] as String,
+      endDate = json['endDate'] as String;
 
   Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
     'name': name,
     'target': target,
     'currAmount': currAmount,
-    'addDate': addDate,
-    'dueDate': dueDate,
+    'startDate': startDate,
+    'endDate': endDate,
   };
 
   int daysBetween(DateTime from, DateTime to) {
@@ -31,8 +31,8 @@ class NewPlan {
   }
 
   void setSuggestedAmount() {
-    DateTime date1 = DateTime.parse(addDate);
-    DateTime date2 = DateTime.parse(dueDate);
+    DateTime date1 = DateTime.parse(startDate);
+    DateTime date2 = DateTime.parse(endDate);
 
     suggestedAmount = target / daysBetween(date1, date2);
   }

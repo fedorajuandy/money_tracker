@@ -95,11 +95,11 @@ class _PlanScreenState extends State<PlanScreen> {
     return FirebaseAnimatedList(
       query: planOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        String dd = snapshot.child("/dueDate").value.toString();
+        String dd = snapshot.child("/endDate").value.toString();
         if (dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 6) == selectedIndex.toString()) {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final plan = NewPlan.fromJson(json);
-          return planList(snapshot.key, plan.name, plan.target, plan.currAmount, plan.addDate, plan.dueDate);
+          return planList(snapshot.key, plan.name, plan.target, plan.currAmount, plan.startDate, plan.endDate);
         } else {
           return Container();
         }
@@ -230,7 +230,7 @@ class _PlanScreenState extends State<PlanScreen> {
     );
   }
 
-  Widget planList(String? key, String name, double target, double currAmount, String addDate, String dueDate) {
+  Widget planList(String? key, String name, double target, double currAmount, String startDate, String endDate) {
     var size = MediaQuery.of(context).size;
     double progress = (currAmount / target) * 100;
 
@@ -271,7 +271,7 @@ class _PlanScreenState extends State<PlanScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 3),
                           child: Text(
-                            dueDate,
+                            endDate,
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,

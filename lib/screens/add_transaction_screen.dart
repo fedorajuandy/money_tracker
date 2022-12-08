@@ -38,7 +38,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   void getBalance() async {
     DataSnapshot snapshot = await dbBalance.get();
     Map balance = snapshot.value as Map;
-    _amount = double.parse(balance['amount'].toString());
+    _amount = double.parse(balance['amount']);
   }
 
   @override
@@ -417,7 +417,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             return Theme(
               data: Theme.of(context).copyWith(
                 colorScheme: const ColorScheme.light(
-                  primary: primary, // <-- SEE HERE
+                  primary: primary,
                 ),
               ),
               child: child!,
