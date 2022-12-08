@@ -1,5 +1,10 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:money_tracker/models/balance.dart';
+import 'package:money_tracker/operations/balance_operation.dart';
 import 'package:money_tracker/themes/colors.dart';
+import 'package:money_tracker/themes/currency_format.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
 
@@ -11,6 +16,8 @@ class BalanceScreen extends StatefulWidget {
 }
 
 class _BalanceScreenState extends State<BalanceScreen> {
+  final balanceOperation = BalanceOperation();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,20 +46,33 @@ class _BalanceScreenState extends State<BalanceScreen> {
               padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
-                  title("Reports"),
+                  title("Balance"),
                 ],
               ),
             ),
           ),
           sbh32(),
-          balance(),
+          fat(),
           sbh40(),
         ],
       ),
     );
   }
 
-  Widget balance() {
+  Widget fat() {
+    return FirebaseAnimatedList(
+      query: balanceOperation.getQuery(),
+      itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+        final json = snapshot.value as Map<dynamic, dynamic>;
+        final b = Balance.fromJson(json);
+        return balance(b.amount);
+      },
+      physics: const ScrollPhysics(),
+      shrinkWrap: true,
+    );
+  }
+
+  Widget balance(double amount) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Container(
@@ -85,9 +105,9 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     ),
                   ),
                   sbh12(),
-                  const Text(
-                    "Rp100,000.00",
-                    style: TextStyle(
+                  Text(
+                    CurrencyFormat.convertToIdr(amount, 2),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                       color: Colors.white
