@@ -375,7 +375,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         );
 
         if (pickedDate != null) {
-          String formattedDate = DateFormat('yyy-MM-dd').format(pickedDate);
+          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
           setState(() {
             _dateText.text = formattedDate;
           });

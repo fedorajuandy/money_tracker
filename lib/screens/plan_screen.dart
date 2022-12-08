@@ -18,15 +18,22 @@ class PlanScreen extends StatefulWidget {
 }
 
 class _PlanScreenState extends State<PlanScreen> {
-  int selectedIndex = DateTime.now().month + 1;
+  int selectedIndex = DateTime.now().month - 1;
   final DateTime _selectedDate = DateTime.now();
   int _selectedYear = DateTime.now().year;
   DateTime now = DateTime.now();
-  List <Widget> reports = [];
   String? yearText = "Other";
-  List<String> years = <String>['2010', '2015', '2022'];
   final planOperation = PlanOperation();
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('plans');
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      fat();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +103,7 @@ class _PlanScreenState extends State<PlanScreen> {
       query: planOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
         String dd = snapshot.child("/endDate").value.toString();
-        if (dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 6) == selectedIndex.toString()) {
+        if (dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (selectedIndex + 1).toString()) {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final plan = NewPlan.fromJson(json);
           return planList(snapshot.key, plan.name, plan.target, plan.currAmount, plan.startDate, plan.endDate);
@@ -188,7 +195,7 @@ class _PlanScreenState extends State<PlanScreen> {
       physics: const ClampingScrollPhysics(),
       child: Row(
         // generate in a loop < months
-        children: List.generate(now.month + 1, (index) {
+        children: List.generate(now.month, (index) {
           final monthName = DateFormat("MMMM").format(DateTime(now.year, index + 1, 1));
 
           return Padding(
