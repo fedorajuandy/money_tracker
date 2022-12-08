@@ -6,6 +6,7 @@ import 'package:money_tracker/models/new_plan.dart';
 import 'package:money_tracker/operations/plan_operation.dart';
 import 'package:money_tracker/screens/add_plan_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
+import 'package:money_tracker/themes/currency_format.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
 
@@ -83,8 +84,7 @@ class _PlanScreenState extends State<PlanScreen> {
             ),
           ),
           sbh32(),
-          plans(),
-          plans(),
+          fat(),
           sbh40(),
         ],
       ),
@@ -95,12 +95,11 @@ class _PlanScreenState extends State<PlanScreen> {
     return FirebaseAnimatedList(
       query: planOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        if (snapshot.child("/date").value.toString() == _selectedDay.toString().substring(0, 10)) {
-          // Map transaction = snapshot.value as Map;
-          // transaction['key'] = snapshot.key;
+        String dd = snapshot.child("/dueDate").value.toString();
+        if (dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 6) == selectedIndex.toString()) {
           final json = snapshot.value as Map<dynamic, dynamic>;
-          final transaction = NewPlan.fromJson(json);
-          return transactionList(snapshot.key, transaction.type, transaction.name, transaction.category, transaction.amount, transaction.date, transaction.time);
+          final plan = NewPlan.fromJson(json);
+          return planList(snapshot.key, plan.name, plan.target, plan.currAmount, plan.addDate, plan.dueDate);
         } else {
           return Container();
         }
@@ -231,8 +230,9 @@ class _PlanScreenState extends State<PlanScreen> {
     );
   }
 
-  Widget planList(String? key, int type, String name, String category, double amount, String date, String time) {
+  Widget planList(String? key, String name, double target, double currAmount, String addDate, String dueDate) {
     var size = MediaQuery.of(context).size;
+    double progress = (currAmount / target) * 100;
 
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -262,7 +262,7 @@ class _PlanScreenState extends State<PlanScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          "Plan name",
+                          name,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
@@ -271,7 +271,7 @@ class _PlanScreenState extends State<PlanScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 3),
                           child: Text(
-                            "2022-12-31",
+                            dueDate,
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
@@ -287,9 +287,9 @@ class _PlanScreenState extends State<PlanScreen> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            const Text(
-                              "Rp0.00",
-                              style: TextStyle(
+                            Text(
+                              CurrencyFormat.convertToIdr(target, 2),
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
                               ),
@@ -311,7 +311,7 @@ class _PlanScreenState extends State<PlanScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 3),
                           child: Text(
-                            "Rp0.00",
+                            "$progress%",
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
