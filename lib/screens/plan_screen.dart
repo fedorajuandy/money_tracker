@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:money_tracker/models/new_plan.dart';
 import 'package:money_tracker/operations/plan_operation.dart';
 import 'package:money_tracker/screens/add_plan_screen.dart';
+import 'package:money_tracker/screens/update_plan_screen.dart';
+import 'package:money_tracker/screens/update_progress_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/currency_format.dart';
 import 'package:money_tracker/themes/spaces.dart';
@@ -44,57 +46,64 @@ class _PlanScreenState extends State<PlanScreen> {
   }
 
   Widget screen() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          // the 'header'
-          Container(
-            decoration: BoxDecoration(
-              color: dark.withOpacity(0.05),
-              boxShadow: [
-                BoxShadow(
-                  color: dark.withOpacity(0.01),
-                  spreadRadius: 10,
-                  blurRadius: 3,
+    return Column(
+      children: <Widget>[
+        // the 'header'
+        Container(
+          decoration: BoxDecoration(
+            color: dark.withOpacity(0.05),
+            boxShadow: [
+              BoxShadow(
+                color: dark.withOpacity(0.01),
+                spreadRadius: 10,
+                blurRadius: 3,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        title("Plans"),
+                        sbw8(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3),
+                          child: addPlanButton(),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    yearPicker(),
+                  ],
+                ),
+                sbh24(),
+                Column(
+                  children: <Widget>[
+                    sbh8(),
+                    horisontalCalendar(),
+                  ],
                 ),
               ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          title("Plans"),
-                          sbw8(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 3),
-                            child: addPlanButton(),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      yearPicker(),
-                    ],
-                  ),
-                  sbh24(),
-                  Column(
-                    children: <Widget>[
-                      sbh8(),
-                      horisontalCalendar(),
-                    ],
-                  ),
-                ],
-              ),
+          ),
+        ),
+        sbh32(),
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const ScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                fat(),
+              ],
             ),
           ),
-          sbh32(),
-          fat(),
-          sbh40(),
-        ],
-      ),
+        ),
+        sbh40(),
+      ],
     );
   }
 
@@ -305,7 +314,7 @@ class _PlanScreenState extends State<PlanScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 3),
                               child: Text(
-                                "50%",
+                                "$progress%",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14,
@@ -315,15 +324,53 @@ class _PlanScreenState extends State<PlanScreen> {
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 3),
-                          child: Text(
-                            "$progress%",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: dark.withOpacity(0.6),
-                            ),
+                        SizedBox(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => UpdateProgressScreen(planKey: key ?? "")));
+                                },
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.add,
+                                      color: dark.withOpacity(0.5),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              sbw8(),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => UpdatePlanScreen(planKey: key ?? "")));
+                                },
+                                child: Row(
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.edit,
+                                      color: primary,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              sbw8(),
+                              GestureDetector(
+                                onTap: () {
+                                  reference.child(key ?? "").remove();
+                                },
+                                child: Row(
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.delete,
+                                      color: red,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -340,7 +387,7 @@ class _PlanScreenState extends State<PlanScreen> {
                           ),
                         ),
                         Container(
-                          width: (size.width - 80) * 0.5,
+                          width: (size.width - 80) * progress / 100,
                           height: 4,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),

@@ -242,7 +242,7 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
         );
 
         if (pickedDate != null) {
-          String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
           setState(() {
             _endDateText.text = formattedDate;
           });
