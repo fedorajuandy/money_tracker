@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:money_tracker/screens/balance_screen.dart';
-import 'package:money_tracker/screens/plan_screen.dart';
-import 'package:money_tracker/screens/report_screen.dart';
-import 'package:money_tracker/screens/transaction_screen.dart';
-import 'package:money_tracker/screens/add_transaction_screen.dart';
+import 'package:money_tracker/screens/balance_screens/balance_screen.dart';
+import 'package:money_tracker/screens/plan_screens/plan_screen.dart';
+import 'package:money_tracker/screens/report_screens/report_screen.dart';
+import 'package:money_tracker/screens/transaction_screens/transaction_screen.dart';
+import 'package:money_tracker/screens/transaction_screens/add_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 
 class Layout extends StatefulWidget {
