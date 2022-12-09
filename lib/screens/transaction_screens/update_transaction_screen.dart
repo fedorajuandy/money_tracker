@@ -356,6 +356,9 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   Widget pickDate() {
     return TextFormField(
       controller: _dateText,
+      validator: (value) {
+        return (value !.isEmpty? "Please input transaction date": null);
+      },
       readOnly: false,
       style: const TextStyle(color: dark),
       decoration: const InputDecoration(
@@ -409,6 +412,9 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   Widget pickTime() {
     return TextFormField(
       controller: _timeText,
+      validator: (value) {
+        return (value !.isEmpty? "Please input transaction time": null);
+      },
       readOnly: false,
       style: const TextStyle(color: dark),
       decoration: const InputDecoration(
@@ -468,39 +474,46 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        double currAmount = double.parse(_amountText.text);
-        Map<String, dynamic> transaction = {
-          'type': activeType,
-          'name': _nameText.text,
-          'category': _categoryText.text,
-          'amount': currAmount,
-          'date': _dateText.text,
-          'time': _timeText.text,
-        };
+        if (_keyform.currentState !.validate()) {
+          double currAmount = double.parse(_amountText.text);
+          Map<String, dynamic> transaction = {
+            'type': activeType,
+            'name': _nameText.text,
+            'category': _categoryText.text,
+            'amount': currAmount,
+            'date': _dateText.text,
+            'time': _timeText.text,
+          };
 
-        double addAmount = 0;
-        if(_prevType == 0) {
-          if(activeType ==  0) {
-            addAmount = currAmount - _prevAmount;
+          double addAmount = 0;
+          if(_prevType == 0) {
+            if(activeType ==  0) {
+              addAmount = currAmount - _prevAmount;
+            } else {
+              addAmount = 0 - currAmount - _prevAmount;
+            }
           } else {
-            addAmount = 0 - currAmount - _prevAmount;
+            if(activeType ==  0) {
+              addAmount = _prevAmount + currAmount;
+            } else {
+              addAmount = _prevAmount - currAmount;
+            }
           }
+
+          Map<String, dynamic> balance = {
+            'amount': _amount += addAmount,
+          };
+
+          dbTransaction.child(widget.transactionKey).update(transaction);
+          dbBalance.child("user0").update(balance).then((value) => {
+            Navigator.pop(context),
+          });
         } else {
-          if(activeType ==  0) {
-            addAmount = _prevAmount + currAmount;
-          } else {
-            addAmount = _prevAmount - currAmount;
-          }
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Please enter all required fields."),
+            backgroundColor: primary,
+          ));
         }
-
-        Map<String, dynamic> balance = {
-          'amount': _amount += addAmount,
-        };
-
-        dbTransaction.child(widget.transactionKey).update(transaction);
-        dbBalance.child("user0").update(balance).then((value) => {
-          Navigator.pop(context),
-        });
       },
       child: const Text("Update transaction"),
     );

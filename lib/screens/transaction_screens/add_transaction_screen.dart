@@ -334,6 +334,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget pickDate() {
     return TextFormField(
       controller: _dateText,
+      validator: (value) {
+        return (value !.isEmpty? "Please input transaction date": null);
+      },
       readOnly: true,
       style: const TextStyle(color: dark),
       decoration: const InputDecoration(
@@ -387,6 +390,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget pickTime() {
     return TextFormField(
       controller: _timeText,
+      validator: (value) {
+        return (value !.isEmpty? "Please input transaction time": null);
+      },
       readOnly: true,
       style: const TextStyle(color: dark),
       decoration: const InputDecoration(
@@ -446,31 +452,38 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        final newTransaction = NewTransaction(activeType, _nameText.text, _categoryText.text, double.parse(_amountText.text), _dateText.text, _timeText.text);
-        transactionOperation.add(newTransaction);
-        if(activeType == 0) {
-          _amount += double.parse(_amountText.text);
+        if (_keyform.currentState !.validate()) {
+          final newTransaction = NewTransaction(activeType, _nameText.text, _categoryText.text, double.parse(_amountText.text), _dateText.text, _timeText.text);
+          transactionOperation.add(newTransaction);
+          if(activeType == 0) {
+            _amount += double.parse(_amountText.text);
+          } else {
+            _amount -= double.parse(_amountText.text);
+          }
+
+          Map<String, dynamic> balance = {
+            'amount': _amount,
+          };
+
+          /* Map<String, dynamic> transaction = {
+            'type': activeType,
+            'name': _nameText.text,
+            'category': _categoryText.text,
+            'amount': _amountText.text,
+            'date': _dateText,
+            'time': _timeText,
+          };
+
+          dbTransaction.push().set(transaction); */
+          dbBalance.child("user0").update(balance).then((value) => {
+            Navigator.pop(context),
+          });
         } else {
-          _amount -= double.parse(_amountText.text);
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Please enter all required fields."),
+            backgroundColor: primary,
+          ));
         }
-
-        Map<String, dynamic> balance = {
-          'amount': _amount,
-        };
-
-        /* Map<String, dynamic> transaction = {
-          'type': activeType,
-          'name': _nameText.text,
-          'category': _categoryText.text,
-          'amount': _amountText.text,
-          'date': _dateText,
-          'time': _timeText,
-        };
-
-        dbTransaction.push().set(transaction); */
-        dbBalance.child("user0").update(balance).then((value) => {
-          Navigator.pop(context),
-        });
       },
       child: const Text("Add transaction"),
     );
