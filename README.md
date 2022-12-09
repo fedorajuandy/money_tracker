@@ -85,6 +85,7 @@ For iOS:
 - [Difference between two dates](https://stackoverflow.com/questions/52713115/flutter-find-the-number-of-days-between-two-dates/67679455#67679455)
 - [Modified alert dialog](https://medium.com/multiverse-software/alert-dialog-and-confirmation-dialog-in-flutter-8d8c160f4095)
 - [FlatButton alternative](https://stackoverflow.com/questions/66805535/flutter-flatbutton-is-deprecated-alternative-solution-with-width-and-height)
+- [String to TimeOfDay](https://stackoverflow.com/questions/53382971/how-to-convert-string-to-timeofday-in-flutter)
 
 ## Design references
 
