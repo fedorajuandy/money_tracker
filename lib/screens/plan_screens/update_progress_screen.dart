@@ -286,23 +286,30 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        final newProgress = NewProgress(activeType, double.parse(_amountText.text), now.toString(), widget.planKey);
-        progressOperation.add(newProgress);
+        if (_keyform.currentState !.validate()) {
+          final newProgress = NewProgress(activeType, double.parse(_amountText.text), now.toString(), widget.planKey);
+          progressOperation.add(newProgress);
 
-        if(activeType == 0) {
-          currAmount += double.parse(_amountText.text);
+          if(activeType == 0) {
+            currAmount += double.parse(_amountText.text);
+          } else {
+            currAmount -= double.parse(_amountText.text);
+          }
+
+          Map<String, dynamic> plan = {
+            'type': activeType,
+            'currAmount': double.parse(_amountText.text),
+          };
+
+          dbPlan.child(widget.planKey).update(plan).then((value) => {
+            Navigator.pop(context),
+          });
         } else {
-          currAmount -= double.parse(_amountText.text);
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Please enter all required fields."),
+            backgroundColor: primary,
+          ));
         }
-
-        Map<String, dynamic> plan = {
-          'type': activeType,
-          'currAmount': double.parse(_amountText.text),
-        };
-
-        dbPlan.child(widget.planKey).update(plan).then((value) => {
-          Navigator.pop(context),
-        });
       },
       child: const Text("Update plan"),
     );

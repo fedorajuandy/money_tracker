@@ -134,8 +134,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
   }
 
   Widget progressList(String? key, int type, double amount, String datetime) {
-    var size = MediaQuery.of(context).size;
-
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Column(

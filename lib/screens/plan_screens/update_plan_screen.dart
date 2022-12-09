@@ -283,16 +283,23 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        Map<String, dynamic> plan = {
-          'name': _nameText.text,
-          'target': double.parse(_targetText.text),
-          'startDate': _startDateText.text,
-          'endDate': _endDateText.text,
-        };
+        if (_keyform.currentState !.validate()) {
+          Map<String, dynamic> plan = {
+            'name': _nameText.text,
+            'target': double.parse(_targetText.text),
+            'startDate': _startDateText.text,
+            'endDate': _endDateText.text,
+          };
 
-        dbPlan.child(widget.planKey).update(plan).then((value) => {
-          Navigator.pop(context),
-        });
+          dbPlan.child(widget.planKey).update(plan).then((value) => {
+            Navigator.pop(context),
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Please enter all required fields."),
+            backgroundColor: primary,
+          ));
+        }
       },
       child: const Text("Update plan"),
     );

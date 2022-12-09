@@ -269,9 +269,16 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        final newPlan = NewPlan(_nameText.text, double.parse(_targetText.text), 0, _startDateText.text, _endDateText.text);
-        planOperation.add(newPlan);
-        Navigator.pop(context);
+        if (_keyform.currentState !.validate()) {
+          final newPlan = NewPlan(_nameText.text, double.parse(_targetText.text), 0, _startDateText.text, _endDateText.text);
+          planOperation.add(newPlan);
+          Navigator.pop(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Please enter all required fields."),
+            backgroundColor: primary,
+          ));
+        }
       },
       child: const Text("Add plan"),
     );
