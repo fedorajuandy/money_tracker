@@ -420,7 +420,7 @@ class _PlanScreenState extends State<PlanScreen> {
                             "Per day: ${CurrencyFormat.convertToIdr(calculateSA(target, startDate, endDate), 2)}",
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 14,
+                              fontSize: 10,
                               color: dark.withOpacity(0.6),
                             ),
                           ),
@@ -433,7 +433,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                 CurrencyFormat.convertToIdr(currAmount, 2),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 14,
+                                  fontSize: 10,
                                   color: dark.withOpacity(0.6),
                                 ),
                               ),
@@ -445,7 +445,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                 "($progress%)",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 14,
+                                  fontSize: 10,
                                   color: dark.withOpacity(0.6),
                                 ),
                               ),
