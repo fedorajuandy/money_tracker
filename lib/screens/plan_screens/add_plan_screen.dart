@@ -33,60 +33,67 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
   }
 
   Widget screen() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          // the 'header'
-          Container(
-            decoration: BoxDecoration(
-              color: dark.withOpacity(0.05),
-              boxShadow: [
-                BoxShadow(
-                  color: dark.withOpacity(0.01),
-                  spreadRadius: 10,
-                  blurRadius: 3,
+    return Column(
+      children: <Widget>[
+        // the 'header'
+        Container(
+          decoration: BoxDecoration(
+            color: dark.withOpacity(0.05),
+            boxShadow: [
+              BoxShadow(
+                color: dark.withOpacity(0.01),
+                spreadRadius: 10,
+                blurRadius: 3,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
+            child: Column(
+              children: <Widget>[
+                titleWithBack("Add plan", context),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const ScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                sbh32(),
+                Padding(
+                  padding:const EdgeInsets.only(left: 20, right: 20),
+                  child: Form(
+                    key: _keyform,
+                    child: Column(
+                      children: <Widget>[
+                        textFieldName(),
+                        sbh20(),
+                        textFieldTarget(),
+                        sbh20(),
+                        pickStartDate(),
+                        sbh20(),
+                        pickEndDate(),
+                        sbh32(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            buttonCancel(),
+                            sbw8(),
+                            buttonAdd(),
+                          ],
+                        ),
+                        sbh40(),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
-              child: Column(
-                children: <Widget>[
-                  titleWithBack("Add plan", context),
-                ],
-              ),
-            ),
           ),
-          sbh32(),
-          Padding(
-            padding:const EdgeInsets.only(left: 20, right: 20),
-            child: Form(
-              key: _keyform,
-              child: Column(
-                children: <Widget>[
-                  textFieldName(),
-                  sbh20(),
-                  textFieldTarget(),
-                  sbh20(),
-                  pickStartDate(),
-                  sbh20(),
-                  pickEndDate(),
-                  sbh32(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      buttonCancel(),
-                      sbw8(),
-                      buttonAdd(),
-                    ],
-                  ),
-                  sbh40(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

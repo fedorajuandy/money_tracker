@@ -72,76 +72,83 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   }
 
   Widget screen() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          // the 'header'
-          Container(
-            decoration: BoxDecoration(
-              color: dark.withOpacity(0.05),
-              boxShadow: [
-                BoxShadow(
-                  color: dark.withOpacity(0.01),
-                  spreadRadius: 10,
-                  blurRadius: 3,
+    return Column(
+      children: <Widget>[
+        // the 'header'
+        Container(
+          decoration: BoxDecoration(
+            color: dark.withOpacity(0.05),
+            boxShadow: [
+              BoxShadow(
+                color: dark.withOpacity(0.01),
+                spreadRadius: 10,
+                blurRadius: 3,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
+            child: Column(
+              children: <Widget>[
+                title("Add transaction"),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const ScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                sbh32(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Text(
+                    "Choose type",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: dark.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+                sbh20(),
+                chooseType(),
+                sbh40(),
+                Padding(
+                  padding:const EdgeInsets.only(left: 20, right: 20),
+                  child: Form(
+                    key: _keyform,
+                    child: Column(
+                      children: <Widget>[
+                        textFieldName(),
+                        sbh20(),
+                        textFieldCategory(),
+                        sbh20(),
+                        textFieldAmount(),
+                        sbh20(),
+                        pickDate(),
+                        sbh20(),
+                        pickTime(),
+                        sbh32(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            buttonCancel(),
+                            sbw8(),
+                            buttonUpdate(),
+                          ],
+                        ),
+                        sbh40(),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
-              child: Column(
-                children: <Widget>[
-                  title("Add transaction"),
-                ],
-              ),
-            ),
           ),
-          sbh32(),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Text(
-              "Choose type",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: dark.withOpacity(0.5),
-              ),
-            ),
-          ),
-          sbh20(),
-          chooseType(),
-          sbh40(),
-          Padding(
-            padding:const EdgeInsets.only(left: 20, right: 20),
-            child: Form(
-              key: _keyform,
-              child: Column(
-                children: <Widget>[
-                  textFieldName(),
-                  sbh20(),
-                  textFieldCategory(),
-                  sbh20(),
-                  textFieldAmount(),
-                  sbh20(),
-                  pickDate(),
-                  sbh20(),
-                  pickTime(),
-                  sbh32(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      buttonCancel(),
-                      sbw8(),
-                      buttonUpdate(),
-                    ],
-                  ),
-                  sbh40(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
