@@ -16,3 +16,32 @@ Widget title(String titleText) {
     ],
   );
 }
+
+Widget titleWithBack(String titleText, dynamic context) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: <Widget>[
+      GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Row(
+          children: const <Widget>[
+            Icon(
+              Icons.arrow_back,
+              color: primary,
+            ),
+          ],
+        ),
+      ),
+      Text(
+        titleText,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: dark,
+        ),
+      ),
+    ],
+  );
+}
