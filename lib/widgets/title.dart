@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_tracker/themes/colors.dart';
+import 'package:money_tracker/themes/spaces.dart';
 
 Widget title(String titleText) {
   return Row(
@@ -19,7 +20,7 @@ Widget title(String titleText) {
 
 Widget titleWithBack(String titleText, dynamic context) {
   return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    mainAxisAlignment: MainAxisAlignment.start,
     children: <Widget>[
       GestureDetector(
         onTap: () {
@@ -34,6 +35,7 @@ Widget titleWithBack(String titleText, dynamic context) {
           ],
         ),
       ),
+      sbw8(),
       Text(
         titleText,
         style: const TextStyle(
