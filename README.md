@@ -15,17 +15,17 @@ Long story short:
 
 ## Notes
 
-1. Cannot get parent key id[^2]
+1. Cannot get parent key id[^1]
 
 Firebase realtime database cannot get parent id from its child.
 
-2. Cannot getChildren at snapshot[^3]
+2. Cannot getChildren at snapshot[^2]
 
 Apparently, it has already been an issue for quite awhile without further information. While the android version has it, the Flutter library does not. The suggested method is to use another cloud function, which I do not know what even it is in Flutter term.
 
 
 
-## Firebase Realtime Database Setup[^1]
+## Firebase Realtime Database Setup[^3]
 
 ### Firebase CLI setup
 
@@ -108,6 +108,6 @@ For iOS:
 
 ### Other references
 
-[^1]: [How to Add Firebase to Flutter](https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins)
-[^2]: [How to find parent key using child key in firebase realtime-database?](https://stackoverflow.com/questions/65725337/how-to-find-parent-key-using-child-key-in-firebase-realtime-database)
-[^3]: [[firebase_database] Get children count without downloading all the children #1069](https://github.com/firebase/flutterfire/issues/1069)
+[^3]: [How to Add Firebase to Flutter](https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins)
+[^1]: [How to find parent key using child key in firebase realtime-database?](https://stackoverflow.com/questions/65725337/how-to-find-parent-key-using-child-key-in-firebase-realtime-database)
+[^2]: [[firebase_database] Get children count without downloading all the children #1069](https://github.com/firebase/flutterfire/issues/1069)

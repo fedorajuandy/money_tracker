@@ -49,8 +49,14 @@ class _ReportScreenState extends State<ReportScreen> {
         report.setMontlyIncome(report.getMonthlyIncome());
         report.setYearlyExpense(report.getYearlyIncome());
       });
-      monthly(monthlyExpense, monthlyIncome);
-      yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome());
+      Future.delayed(const Duration(milliseconds: 3000), () {
+        monthly(monthlyExpense, monthlyIncome);
+        yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome());
+
+        setState(() {
+          // Here you can write your code for open new view
+        });
+      });
     });
   }
 
