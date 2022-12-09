@@ -1,5 +1,10 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:money_tracker/models/new_transaction.dart';
+import 'package:money_tracker/models/report.dart';
+import 'package:money_tracker/operations/transaction_operation.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
@@ -17,7 +22,18 @@ class _ReportScreenState extends State<ReportScreen> {
   final DateTime _selectedDate = DateTime.now();
   DateTime now = DateTime.now();
   int _selectedYear = DateTime.now().year;
-  List <Widget> reports = [];
+  final transactionOperation = TransactionOperation();
+  DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
+  final report = Report();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      fatYearly();
+      fatMonthly();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,12 +82,84 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
           ),
           sbh32(),
-          monthly(),
+          fatMonthly(),
           sbh24(),
-          yearly(),
+          fatYearly(),
           sbh40(),
         ],
       ),
+    );
+  }
+
+  Widget fatMonthly() {
+    report.resetMonthlyExpense();
+    report.resetMonthlyIncome();
+
+    return FirebaseAnimatedList(
+      query: transactionOperation.getQuery(),
+      itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+        String dd = snapshot.child("/date").value.toString();
+        if(dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (selectedIndex + 1).toString()) {
+          int type = int.parse(snapshot.child("/type").value.toString());
+          double amount = double.parse(snapshot.child("/amount").value.toString());
+
+          if(type == 0) {
+            report.addMonthlyIncome(amount);
+          } else {
+            report.addMonthlyExpense(amount);
+          }
+          return monthly(report.getMonthlyExpense(), report.getMonthlyIncome());
+        } else {
+          return Container();
+        }
+      },
+      physics: const ScrollPhysics(),
+      shrinkWrap: true,
+    );
+  }
+
+  Widget fatYearly() {
+    report.resetHighestExpense();
+    report.resetHighestIncome();
+    report.resetLowestExpense();
+    report.resetLowestIncome();
+    report.resetYearlyExpense();
+    report.resetYearlyIncome();
+
+    return FirebaseAnimatedList(
+      query: transactionOperation.getQuery(),
+      itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+        String dd = snapshot.child("/date").value.toString();
+        if(dd.substring(0, 4) == _selectedYear.toString()) {
+          int type = int.parse(snapshot.child("/type").value.toString());
+          double amount = double.parse(snapshot.child("/amount").value.toString());
+          double lowestExpense = 0;
+          double highestExpense = 0;
+          double lowestIncome = 0;
+          double highestIncome = 0;
+
+          if(index == 0) {
+            lowestExpense = amount;
+            highestExpense = amount;
+            lowestIncome = amount;
+            highestIncome = amount;
+          } else {
+            if(type == 0) {
+              if(amount < lowestIncome) lowestIncome = amount;
+              if(amount > highestIncome) highestIncome = amount;
+            } else {
+              if(amount < lowestExpense) lowestExpense = amount;
+              if(amount > highestExpense) highestExpense = amount;
+            }
+          }
+
+          return yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome());
+        } else {
+          return Container();
+        }
+      },
+      physics: const ScrollPhysics(),
+      shrinkWrap: true,
     );
   }
 
@@ -173,7 +261,7 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget yearly() {
+  Widget yearly(double yearlyExpense, double yearlyIncome, double highestExpense, double highestIncome, double lowestExpense, double lowestIncome) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Container(
@@ -293,7 +381,7 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget monthly() {
+  Widget monthly(double monthlyExpense, double monthlyIncome) {
     var size = MediaQuery.of(context).size;
 
     return Wrap(

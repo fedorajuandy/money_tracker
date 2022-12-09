@@ -77,6 +77,8 @@ For iOS:
 - <a href="https://www.youtube.com/watch?v=eMHbgIgJyUQ">Icons</a>
 - [For future builds](https://stackoverflow.com/questions/66100385/flutter-setstate-or-markneedsbuild-called-during-build-using-future-builde)
 - [Difference between two dates](https://stackoverflow.com/questions/52713115/flutter-find-the-number-of-days-between-two-dates/67679455#67679455)
+- [Modified alert dialog](https://medium.com/multiverse-software/alert-dialog-and-confirmation-dialog-in-flutter-8d8c160f4095)
+- [FlatButton alternative](https://stackoverflow.com/questions/66805535/flutter-flatbutton-is-deprecated-alternative-solution-with-width-and-height)
 
 ## Design references
 

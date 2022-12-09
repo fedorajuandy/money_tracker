@@ -275,7 +275,39 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     sbw8(),
                     GestureDetector(
                       onTap: () {
-                        reference.child(key ?? "").remove();
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text("Confirmation"),
+                              content: const Text("Would you like to delete selected item?"),
+                              actions: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: dark.withOpacity(0.5),
+                                    fixedSize: const Size.fromWidth(100),
+                                    padding: const EdgeInsets.all(10),
+                                  ),
+                                  child: const Text("Cancel"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: primary,
+                                    fixedSize: const Size.fromWidth(100),
+                                    padding: const EdgeInsets.all(10),
+                                  ),
+                                  child: const Text("Yes"),
+                                  onPressed: () {
+                                    reference.child(key ?? "").remove();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       child: Row(
                         children: const <Widget>[
