@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/models/report.dart';
 import 'package:money_tracker/operations/transaction_operation.dart';
 import 'package:money_tracker/themes/colors.dart';
@@ -91,9 +92,12 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
+  
+
   Widget fatMonthly() {
     report.resetMonthlyExpense();
     report.resetMonthlyIncome();
+    int counter = 28;
 
     return FirebaseAnimatedList(
       query: transactionOperation.getQuery(),
@@ -102,25 +106,18 @@ class _ReportScreenState extends State<ReportScreen> {
         if(dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (selectedIndex + 1).toString()) {
           int type = int.parse(snapshot.child("/type").value.toString());
           double amount = double.parse(snapshot.child("/amount").value.toString());
-          int count = 0;
-
-          while(snapshot.exists) {
-            count++;
-          }
-
           if(type == 0) {
             report.addMonthlyIncome(amount);
           } else {
             report.addMonthlyExpense(amount);
           }
-          print(index.toString() + "=" + (count).toString());
-          if(index == count) {
+          if(index == 28) {
             return monthly(report.getMonthlyExpense(), report.getMonthlyIncome());
           } else {
-            return (Text("KAEYA"));
+            return Container();
           }
         } else {
-            return (Text("DILUC"));
+            return Container();
         }
       },
       physics: const ScrollPhysics(),
@@ -163,7 +160,7 @@ class _ReportScreenState extends State<ReportScreen> {
             }
           }
 
-          if(index == snapshot.children.length - 1) {
+          if(index == 28) {
             return yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome());
           } else {
             return (Text("YAYA"));
@@ -236,7 +233,7 @@ class _ReportScreenState extends State<ReportScreen> {
         ),
       ),
       child: Text(
-        now.year.toString(),
+        _selectedYear.toString(),
         style: const TextStyle(
           color: dark,
           fontSize: 12,
