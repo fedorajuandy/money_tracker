@@ -110,7 +110,7 @@ class _PlanScreenState extends State<PlanScreen> {
     return FirebaseAnimatedList(
       query: planOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        String dd = snapshot.child("/endDate").value.toString();
+        String dd = snapshot.child("endDate").value.toString();
         if (dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (selectedIndex + 1).toString()) {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final plan = NewPlan.fromJson(json);

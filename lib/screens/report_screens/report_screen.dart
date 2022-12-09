@@ -132,10 +132,10 @@ class _ReportScreenState extends State<ReportScreen> {
     return FirebaseAnimatedList(
       query: transactionOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        String dd = snapshot.child("/date").value.toString();
+        String dd = snapshot.child("date").value.toString();
         if(dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (selectedIndex + 1).toString()) {
-          int type = int.parse(snapshot.child("/type").value.toString());
-          double amount = double.parse(snapshot.child("/amount").value.toString());
+          int type = int.parse(snapshot.child("type").value.toString());
+          double amount = double.parse(snapshot.child("amount").value.toString());
           if(type == 0) {
             report.addMonthlyIncome(amount);
             monthlyIncome += amount;
@@ -162,10 +162,10 @@ class _ReportScreenState extends State<ReportScreen> {
     return FirebaseAnimatedList(
       query: transactionOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        String dd = snapshot.child("/date").value.toString();
+        String dd = snapshot.child("date").value.toString();
         if(dd.substring(0, 4) == _selectedYear.toString()) {
-          int type = int.parse(snapshot.child("/type").value.toString());
-          double amount = double.parse(snapshot.child("/amount").value.toString());
+          int type = int.parse(snapshot.child("type").value.toString());
+          double amount = double.parse(snapshot.child("amount").value.toString());
           double lowestExpense = 0;
           double highestExpense = 0;
           double lowestIncome = 0;

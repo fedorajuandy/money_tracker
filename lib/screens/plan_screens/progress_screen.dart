@@ -97,7 +97,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return FirebaseAnimatedList(
       query: progressOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        if (snapshot.child("/parentKey").value.toString() == widget.planKey) {
+        if (snapshot.child("parentKey").value.toString() == widget.planKey) {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final progress = NewProgress.fromJson(json);
           return progressList(snapshot.key, progress.activeType, progress.amount, progress.datetime);

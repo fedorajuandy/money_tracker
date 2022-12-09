@@ -113,12 +113,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
     return FirebaseAnimatedList(
       query: transactionOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-          if (snapshot.child("/date").value.toString() == _selectedDay.toString().substring(0, 10)) {
+          if (snapshot.child("date").value.toString() == _selectedDay.toString().substring(0, 10)) {
             // Map transaction = snapshot.value as Map;
             // transaction['key'] = snapshot.key;
             final json = snapshot.value as Map<dynamic, dynamic>;
             final transaction = NewTransaction.fromJson(json);
-            updateTotal(int.parse(snapshot.child("/type").value.toString()), double.parse(snapshot.child("/amount").value.toString()));
+            updateTotal(int.parse(snapshot.child("type").value.toString()), double.parse(snapshot.child("amount").value.toString()));
             return transactionList(snapshot.key, transaction.type, transaction.name, transaction.category, transaction.amount, transaction.date, transaction.time);
           } else {
             return Container();
