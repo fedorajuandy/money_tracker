@@ -2,11 +2,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/models/report.dart';
 import 'package:money_tracker/operations/transaction_operation.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   // current month
-  int selectedIndex = DateTime.now().month + 1;
+  int selectedIndex = DateTime.now().month - 1;
   final DateTime _selectedDate = DateTime.now();
   DateTime now = DateTime.now();
   int _selectedYear = DateTime.now().year;
@@ -30,8 +30,8 @@ class _ReportScreenState extends State<ReportScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_){
-      fatYearly();
       fatMonthly();
+      fatYearly();
     });
   }
 
@@ -102,15 +102,25 @@ class _ReportScreenState extends State<ReportScreen> {
         if(dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (selectedIndex + 1).toString()) {
           int type = int.parse(snapshot.child("/type").value.toString());
           double amount = double.parse(snapshot.child("/amount").value.toString());
+          int count = 0;
+
+          while(snapshot.exists) {
+            count++;
+          }
 
           if(type == 0) {
             report.addMonthlyIncome(amount);
           } else {
             report.addMonthlyExpense(amount);
           }
-          return monthly(report.getMonthlyExpense(), report.getMonthlyIncome());
+          print(index.toString() + "=" + (count).toString());
+          if(index == count) {
+            return monthly(report.getMonthlyExpense(), report.getMonthlyIncome());
+          } else {
+            return (Text("KAEYA"));
+          }
         } else {
-          return Container();
+            return (Text("DILUC"));
         }
       },
       physics: const ScrollPhysics(),
@@ -153,9 +163,13 @@ class _ReportScreenState extends State<ReportScreen> {
             }
           }
 
-          return yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome());
+          if(index == snapshot.children.length - 1) {
+            return yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome());
+          } else {
+            return (Text("YAYA"));
+          }
         } else {
-          return Container();
+            return (Text("LUC"));
         }
       },
       physics: const ScrollPhysics(),
@@ -169,7 +183,7 @@ class _ReportScreenState extends State<ReportScreen> {
       physics: const ClampingScrollPhysics(),
       child: Row(
         // generate in a loop < months
-        children: List.generate(now.month + 1, (index) {
+        children: List.generate(now.month, (index) {
           final monthName = DateFormat("MMMM").format(DateTime(now.year, index + 1, 1));
 
           return Padding(
@@ -296,17 +310,17 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                     ),
                     sbh12(),
-                    yearlyTextPositive("Income", "Rp20,000.00"),
+                    yearlyTextPositive("Income", CurrencyFormat.convertToIdr(yearlyIncome, 2)),
                     sbh8(),
-                    yearlyTextNegative("Expenses", "Rp20,000.00"),
+                    yearlyTextNegative("Expenses", CurrencyFormat.convertToIdr(yearlyExpense, 2)),
                     sbh8(),
-                    yearlyTextPositive("Highest income", "Rp20,000.00"),
+                    yearlyTextPositive("Highest income", CurrencyFormat.convertToIdr(highestIncome, 2)),
                     sbh8(),
-                    yearlyTextNegative("Lowest income", "Rp20,000.00"),
+                    yearlyTextNegative("Lowest income", CurrencyFormat.convertToIdr(lowestIncome, 2)),
                     sbh8(),
-                    yearlyTextPositive("Lowest expense", "Rp20,000.00"),
+                    yearlyTextPositive("Lowest expense", CurrencyFormat.convertToIdr(lowestExpense, 2)),
                     sbh8(),
-                    yearlyTextNegative("Highest expense", "Rp20,000.00"),
+                    yearlyTextNegative("Highest expense", CurrencyFormat.convertToIdr(highestExpense, 2)),
                   ],
                 ),
               ),
@@ -433,9 +447,9 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                     ),
                     sbh8(),
-                    const Text(
-                      "Rp20,000.00",
-                      style: TextStyle(
+                    Text(
+                      CurrencyFormat.convertToIdr(monthlyExpense, 2),
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -492,9 +506,9 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                     ),
                     sbh8(),
-                    const Text(
-                      "Rp50,000.00",
-                      style: TextStyle(
+                    Text(
+                      CurrencyFormat.convertToIdr(monthlyIncome, 2),
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),

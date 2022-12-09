@@ -8,71 +8,89 @@ class Report {
   double lowestIncome = 0;
   double highestIncome = 0;
 
-  resetMonthlyExpense() {
+  void resetMonthlyExpense() {
     monthlyExpense = 0;
   }
-  addMonthlyExpense(double a) {
+  void addMonthlyExpense(double a) {
     monthlyExpense += a;
+  }
+  void setMonthlyExpense(double a) {
+    monthlyExpense = a;
   }
   double getMonthlyExpense() {
     return monthlyExpense;
   }
 
-  resetMonthlyIncome() {
+  void resetMonthlyIncome() {
     monthlyIncome = 0;
   }
-  addMonthlyIncome(double a) {
+  void addMonthlyIncome(double a) {
     monthlyIncome += a;
+  }
+  void setMontlyIncome(double a) {
+    monthlyIncome = a;
   }
   double getMonthlyIncome() {
     return monthlyIncome;
   }
 
-  resetYearlyExpense() {
+  void resetYearlyExpense() {
     yearlyExpense = 0;
   }
-  addYearlyExpense(double a) {
+  void addYearlyExpense(double a) {
     yearlyExpense += a;
+  }
+  void setYearlyExpense(double a) {
+    yearlyExpense = a;
   }
   double getYearlyExpense() {
     return yearlyExpense;
   }
 
-  resetYearlyIncome() {
+  void resetYearlyIncome() {
     yearlyIncome = 0;
   }
-  addYearlyIncome(double a) {
+  void addYearlyIncome(double a) {
     yearlyIncome += a;
   }
   double getYearlyIncome() {
     return yearlyIncome;
   }
 
-  resetLowestExpense() {
+  void resetLowestExpense() {
     lowestExpense = 0;
   }
-  addLowestExpense(double a) {
+  void addLowestExpense(double a) {
     lowestExpense += a;
+  }
+  void setLowestExpense(double a) {
+    lowestExpense = a;
   }
   double getLowestExpense() {
     return lowestExpense;
   }
 
-  resetHighestExpense() {
+  void resetHighestExpense() {
     highestExpense = 0;
   }
-  addHighestExpense(double a) {
+  void addHighestExpense(double a) {
     highestExpense += a;
+  }
+  void setHighestExpense(double a) {
+    highestExpense = a;
   }
   double getHighestExpense() {
     return highestExpense;
   }
 
-  resetLowestIncome() {
+  void resetLowestIncome() {
     lowestIncome = 0;
   }
-  addLowestIncome(double a) {
+  void addLowestIncome(double a) {
     lowestIncome += a;
+  }
+  void setLowestIncome(double a) {
+    lowestIncome = a;
   }
   double getLowestIncome() {
     return lowestIncome;
@@ -83,6 +101,9 @@ class Report {
   }
   addHighestIncome(double a) {
     highestIncome += a;
+  }
+  void setHighestIncome(double a) {
+    highestIncome = a;
   }
   double getHighestIncome() {
     return highestIncome;

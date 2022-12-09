@@ -7,7 +7,6 @@ import 'package:money_tracker/operations/plan_operation.dart';
 import 'package:money_tracker/screens/plan_screens/add_plan_screen.dart';
 import 'package:money_tracker/screens/plan_screens/progress_screen.dart';
 import 'package:money_tracker/screens/plan_screens/update_plan_screen.dart';
-import 'package:money_tracker/screens/plan_screens/update_progress_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/themes/spaces.dart';
@@ -25,7 +24,6 @@ class _PlanScreenState extends State<PlanScreen> {
   final DateTime _selectedDate = DateTime.now();
   int _selectedYear = DateTime.now().year;
   DateTime now = DateTime.now();
-  String? yearText = "Other";
   final planOperation = PlanOperation();
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('plans');
 
@@ -160,7 +158,7 @@ class _PlanScreenState extends State<PlanScreen> {
         ),
       ),
       child: Text(
-        now.year.toString(),
+        _selectedYear.toString(),
         style: const TextStyle(
           color: dark,
           fontSize: 12,
