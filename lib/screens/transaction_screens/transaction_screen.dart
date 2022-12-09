@@ -50,7 +50,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   void getBalance() async {
     DataSnapshot snapshot = await dbBalance.child("user0").get();
     Map balance = snapshot.value as Map;
-    _amount = balance['amount'];
+    _amount = balance['amount'].toDouble();
   }
 
   @override
