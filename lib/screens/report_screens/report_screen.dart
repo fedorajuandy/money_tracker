@@ -2,7 +2,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/models/report.dart';
 import 'package:money_tracker/operations/transaction_operation.dart';
 import 'package:money_tracker/themes/colors.dart';
@@ -26,6 +25,14 @@ class _ReportScreenState extends State<ReportScreen> {
   final transactionOperation = TransactionOperation();
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
   final report = Report();
+  double monthlyExpense = 0;
+  double monthlyIncome = 0;
+  double yearlyExpense = 0;
+  double yearlyIncome = 0;
+  double lowestExpense = 0;
+  double highestExpense = 0;
+  double lowestIncome = 0;
+  double highestIncome = 0;
 
   @override
   void initState() {
@@ -33,6 +40,17 @@ class _ReportScreenState extends State<ReportScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_){
       fatMonthly();
       fatYearly();
+      setState(() {
+        report.setHighestExpense(report.getHighestExpense());
+        report.setHighestIncome(report.getHighestIncome());
+        report.setLowestExpense(report.getLowestExpense());
+        report.setLowestIncome(report.getLowestIncome());
+        report.setMonthlyExpense(report.getMonthlyExpense());
+        report.setMontlyIncome(report.getMonthlyIncome());
+        report.setYearlyExpense(report.getYearlyIncome());
+      });
+      monthly(monthlyExpense, monthlyIncome);
+      yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome());
     });
   }
 
@@ -45,59 +63,65 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Widget screen() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          // the 'header'
-          Container(
-            decoration: BoxDecoration(
-              color: dark.withOpacity(0.05),
-              boxShadow: [
-                BoxShadow(
-                  color: dark.withOpacity(0.01),
-                  spreadRadius: 10,
-                  blurRadius: 3,
+    return Column(
+      children: <Widget>[
+        // the 'header'
+        Container(
+          decoration: BoxDecoration(
+            color: dark.withOpacity(0.05),
+            boxShadow: [
+              BoxShadow(
+                color: dark.withOpacity(0.01),
+                spreadRadius: 10,
+                blurRadius: 3,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    title("Reports"),
+                    const Spacer(),
+                    yearPicker(),
+                  ],
+                ),
+                sbh24(),
+                Column(
+                  children: <Widget>[
+                    sbh8(),
+                    horisontalCalendar(),
+                  ],
                 ),
               ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      title("Reports"),
-                      const Spacer(),
-                      yearPicker(),
-                    ],
-                  ),
-                  sbh24(),
-                  Column(
-                    children: <Widget>[
-                      sbh8(),
-                      horisontalCalendar(),
-                    ],
-                  ),
-                ],
-              ),
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const ScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                sbh32(),
+                fatMonthly(),
+                monthly(report.getMonthlyExpense(), report.getMonthlyIncome()),
+                sbh24(),
+                fatYearly(),
+                yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome()),
+                sbh40(),
+              ],
             ),
           ),
-          sbh32(),
-          fatMonthly(),
-          sbh24(),
-          fatYearly(),
-          sbh40(),
-        ],
-      ),
+        ),
+      ],
     );
   }
-
-  
 
   Widget fatMonthly() {
     report.resetMonthlyExpense();
     report.resetMonthlyIncome();
-    int counter = 28;
 
     return FirebaseAnimatedList(
       query: transactionOperation.getQuery(),
@@ -108,17 +132,13 @@ class _ReportScreenState extends State<ReportScreen> {
           double amount = double.parse(snapshot.child("/amount").value.toString());
           if(type == 0) {
             report.addMonthlyIncome(amount);
+            monthlyIncome += amount;
           } else {
             report.addMonthlyExpense(amount);
+            monthlyExpense += amount;
           }
-          if(index == 28) {
-            return monthly(report.getMonthlyExpense(), report.getMonthlyIncome());
-          } else {
-            return Container();
-          }
-        } else {
-            return Container();
         }
+        return Container();
       },
       physics: const ScrollPhysics(),
       shrinkWrap: true,
@@ -159,15 +179,8 @@ class _ReportScreenState extends State<ReportScreen> {
               if(amount > highestExpense) highestExpense = amount;
             }
           }
-
-          if(index == 28) {
-            return yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome());
-          } else {
-            return (Text("YAYA"));
-          }
-        } else {
-            return (Text("LUC"));
         }
+        return Container();
       },
       physics: const ScrollPhysics(),
       shrinkWrap: true,
