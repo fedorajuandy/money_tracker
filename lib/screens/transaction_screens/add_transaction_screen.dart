@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:money_tracker/operations/transaction_operation.dart';
 import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class AddTransactionScreen extends StatefulWidget {
@@ -36,9 +36,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   }
 
   void getBalance() async {
-    DataSnapshot snapshot = await dbBalance.get();
+    DataSnapshot snapshot = await dbBalance.child("user0").get();
     Map balance = snapshot.value as Map;
-    _amount = double.parse(balance['amount']);
+    _amount = balance['amount'];
   }
 
   @override
@@ -375,7 +375,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         );
 
         if (pickedDate != null) {
-          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+          String formattedDate = formatDate(pickedDate);
           setState(() {
             _dateText.text = formattedDate;
           });
@@ -426,7 +426,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         );
 
         if (pickedTime != null) {
-          String formattedTime = "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
+          String formattedTime = formatTime(pickedTime);
           setState(() {
             _timeText.text = formattedTime;
           });
@@ -468,7 +468,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         };
 
         dbTransaction.push().set(transaction); */
-        dbBalance.child("amount").update(balance).then((value) => {
+        dbBalance.child("user0").update(balance).then((value) => {
           Navigator.pop(context),
         });
       },

@@ -22,7 +22,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   final TextEditingController _timeText = TextEditingController();
   DateTime now = DateTime.now();
   int _prevType = 0;
-  late int activeType;
+  late int activeType = 0;
   late DatabaseReference dbTransaction;
   late DatabaseReference dbBalance;
   double _prevAmount = 0;
@@ -35,6 +35,13 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
     dbBalance = FirebaseDatabase.instance.ref().child('balance');
     getTransactionData();
     getBalance();
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      setState(() {
+        activeType = activeType;
+      });
+      chooseType();
+    });
   }
 
   void getTransactionData() async {
@@ -51,9 +58,9 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   }
 
   void getBalance() async {
-    DataSnapshot snapshot = await dbBalance.get();
+    DataSnapshot snapshot = await dbBalance.child("user0").get();
     Map balance = snapshot.value as Map;
-    _amount = double.parse(balance['amount'].toString());
+    _amount = balance['amount'];
   }
 
   @override
@@ -476,13 +483,13 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
           if(activeType ==  0) {
             addAmount = currAmount - _prevAmount;
           } else {
-            addAmount = currAmount + _prevAmount;
+            addAmount = 0 - currAmount - _prevAmount;
           }
         } else {
           if(activeType ==  0) {
-            addAmount = currAmount + _prevAmount;
+            addAmount = _prevAmount + currAmount;
           } else {
-            addAmount = currAmount - _prevAmount;
+            addAmount = _prevAmount - currAmount;
           }
         }
 
@@ -491,7 +498,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
         };
 
         dbTransaction.child(widget.transactionKey).update(transaction);
-        dbBalance.child("amount").update(balance).then((value) => {
+        dbBalance.child("user0").update(balance).then((value) => {
           Navigator.pop(context),
         });
       },

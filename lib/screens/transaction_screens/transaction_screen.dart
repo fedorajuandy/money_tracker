@@ -6,7 +6,7 @@ import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/models/report.dart';
 import 'package:money_tracker/screens/transaction_screens/update_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
-import 'package:money_tracker/themes/currency_format.dart';
+import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -31,16 +31,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
   DateTime? _selectedDay = DateTime.now();
   Report dailyReport = Report();
   double _sum = 0;
+  double _total = 0;
 
   @override
   void initState() {
     super.initState();
     // get the next month, then take a step back to the last day (the last '0')
     _lastDayOfMonth = DateTime(_now.year, _now.month + 1, 0);
-    // print(_selectedDay.toString().substring(0, 11));
     WidgetsBinding.instance.addPostFrameCallback((_){
       fat();
-      total();
     });
   }
 
@@ -90,7 +89,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 sbh32(),
                 fat(),
                 sbh16(),
-                // total(),
+                total(),
               ],
             ),
           ),
@@ -153,6 +152,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
         setState(() {
           _selectedDay = selectedDay;
           _now = focusedDay;
+          _total = _sum;
+          _total = _total;
           resetTotal();
         });
       },
@@ -301,6 +302,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   ),
                                   child: const Text("Yes"),
                                   onPressed: () {
+                                    Navigator.pop(context);
                                     reference.child(key ?? "").remove();
                                   },
                                 ),
@@ -347,7 +349,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 5),
             child: Text(
-              CurrencyFormat.convertToIdr(_sum, 2),
+              CurrencyFormat.convertToIdr(_total, 2),
               style: const TextStyle(
                 fontSize: 20,
                 color: dark,
