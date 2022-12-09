@@ -9,7 +9,7 @@ import 'package:money_tracker/screens/plan_screens/progress_screen.dart';
 import 'package:money_tracker/screens/plan_screens/update_plan_screen.dart';
 import 'package:money_tracker/screens/plan_screens/update_progress_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
-import 'package:money_tracker/themes/currency_format.dart';
+import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
 
