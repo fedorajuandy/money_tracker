@@ -3,7 +3,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:money_tracker/models/new_progress.dart';
 import 'package:money_tracker/operations/progress_operation.dart';
-import 'package:money_tracker/screens/update_progress_screen.dart';
+import 'package:money_tracker/screens/plan_screens/update_progress_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/currency_format.dart';
 import 'package:money_tracker/themes/spaces.dart';
@@ -18,11 +18,12 @@ class ProgressScreen extends StatefulWidget {
 }
 
 class _ProgressScreenState extends State<ProgressScreen> {
-  final progressOperation = ProgressOperation();
+  late ProgressOperation progressOperation;
 
   @override
   void initState() {
     super.initState();
+    progressOperation = ProgressOperation(widget.planKey);
 
     WidgetsBinding.instance.addPostFrameCallback((_){
       fat();
@@ -60,7 +61,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        title("Progresses"),
+                        titleWithBack("Progresses", context),
                         sbw8(),
                         Padding(
                           padding: const EdgeInsets.only(top: 3),
@@ -96,9 +97,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return FirebaseAnimatedList(
       query: progressOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        final json = snapshot.value as Map<dynamic, dynamic>;
-        final progress = NewProgress.fromJson(json);
-        return progressList(snapshot.key, progress.amount, progress.datetime);
+        print(snapshot.child("/parentKey").value.toString() + "=" + widget.planKey);
+        if (snapshot.child("/parentKey").value.toString() == widget.planKey) {
+          final json = snapshot.value as Map<dynamic, dynamic>;
+          final progress = NewProgress.fromJson(json);
+          return progressList(snapshot.key, progress.amount, progress.datetime);
+        } else {
+          return Container();
+        }
       },
       physics: const ScrollPhysics(),
       shrinkWrap: true,
@@ -122,7 +128,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
       ),
       onPressed: () {
         Navigator.push(
-          context, MaterialPageRoute(builder: (context) => UpdateProgressScreen(planKey: key ?? "")),
+          context, MaterialPageRoute(builder: (context) => UpdateProgressScreen(planKey: key ?? "YATAA")),
         );
       },
     );

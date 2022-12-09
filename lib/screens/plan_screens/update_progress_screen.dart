@@ -17,11 +17,10 @@ class UpdateProgressScreen extends StatefulWidget {
 class _AddTransactionScreenState extends State<UpdateProgressScreen> {
   final GlobalKey<FormState> _keyform = GlobalKey<FormState>();
   final TextEditingController _amountText = TextEditingController();
-  final progresOperation = ProgressOperation();
+  late ProgressOperation progressOperation;
   DateTime now = DateTime.now();
   late DatabaseReference dbProgress;
   late DatabaseReference dbPlan;
-  final progressOperation = ProgressOperation();
   int activeType = 0;
   double currAmount = 0;
 
@@ -29,6 +28,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
   void initState() {
     super.initState();
     String pk = widget.planKey;
+    progressOperation = ProgressOperation(pk);
     dbProgress = FirebaseDatabase.instance.ref().child('plans/$pk/operations');
     dbPlan = FirebaseDatabase.instance.ref().child('plans');
     getPlanData();
@@ -68,7 +68,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
               padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
-                  title("Add plan"),
+                  titleWithBack("Progress list", context),
                 ],
               ),
             ),
@@ -279,7 +279,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        final newProgress = NewProgress(double.parse(_amountText.text), now.toString());
+        final newProgress = NewProgress(double.parse(_amountText.text), now.toString(), widget.planKey);
         progressOperation.add(newProgress);
 
         if(activeType == 0) {
@@ -289,7 +289,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
         }
 
         Map<String, dynamic> plan = {
-          'currAmount': _amountText,
+          'currAmount': double.parse(_amountText.text),
         };
 
         dbPlan.child(widget.planKey).update(plan).then((value) => {

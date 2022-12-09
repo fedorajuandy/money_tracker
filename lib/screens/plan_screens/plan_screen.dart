@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money_tracker/models/new_plan.dart';
 import 'package:money_tracker/operations/plan_operation.dart';
-import 'package:money_tracker/screens/add_plan_screen.dart';
-import 'package:money_tracker/screens/update_plan_screen.dart';
-import 'package:money_tracker/screens/update_progress_screen.dart';
+import 'package:money_tracker/screens/plan_screens/add_plan_screen.dart';
+import 'package:money_tracker/screens/plan_screens/progress_screen.dart';
+import 'package:money_tracker/screens/plan_screens/update_plan_screen.dart';
+import 'package:money_tracker/screens/plan_screens/update_progress_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/currency_format.dart';
 import 'package:money_tracker/themes/spaces.dart';
@@ -331,7 +332,7 @@ class _PlanScreenState extends State<PlanScreen> {
                             children: <Widget>[
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (_) => UpdateProgressScreen(planKey: key ?? "")));
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => ProgressScreen(planKey: key ?? "")));
                                 },
                                 child: Row(
                                   children: <Widget>[

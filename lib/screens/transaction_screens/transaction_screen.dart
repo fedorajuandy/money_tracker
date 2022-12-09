@@ -4,7 +4,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:money_tracker/operations/transaction_operation.dart';
 import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/models/report.dart';
-import 'package:money_tracker/screens/update_transaction_screen.dart';
+import 'package:money_tracker/screens/transaction_screens/update_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/currency_format.dart';
 import 'package:money_tracker/themes/spaces.dart';
@@ -68,26 +68,26 @@ class _TransactionScreenState extends State<TransactionScreen> {
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 64, bottom: 24, right: 20, left: 20),
+            padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
             child: Column(
               children: <Widget>[
                 title("Transactions"),
-                Column(
-                  children: <Widget>[
-                    tableCalendar(),
-                  ],
-                ),
               ],
             ),
           ),
         ),
-        sbh32(),
         // main screen
         Expanded(
           child: SingleChildScrollView(
             physics: const ScrollPhysics(),
             child: Column(
               children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    tableCalendar(),
+                  ],
+                ),
+                sbh32(),
                 fat(),
                 sbh16(),
                 // total(),

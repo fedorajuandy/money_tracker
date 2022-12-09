@@ -32,10 +32,10 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
   void getPlanData() async {
     DataSnapshot snapshot = await dbPlan.child(widget.planKey).get();
     Map plan = snapshot.value as Map;
-    _nameText.text = plan['type'];
-    _targetText.text = plan['type'];
-    _startDateText.text = plan['name'];
-    _endDateText.text = plan['category'];
+    _nameText.text = plan['name'];
+    _targetText.text = plan['target'].toString();
+    _startDateText.text = plan['startDate'];
+    _endDateText.text = plan['endDate'];
   }
 
   @override
@@ -66,7 +66,7 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
               padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
-                  title("Add plan"),
+                  titleWithBack("Add plan", context),
                 ],
               ),
             ),
