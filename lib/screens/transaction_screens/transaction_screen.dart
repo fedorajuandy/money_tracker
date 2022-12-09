@@ -20,22 +20,22 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   // Query dbRef = FirebaseDatabase.instance.ref().child('transactions');
+  Report dailyReport = Report();
   final transactionOperation = TransactionOperation();
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
-  // today's date
-  int selectedIndex = DateTime.now().day - 1;
   DateTime _now = DateTime.now();
+  int selectedIndex = DateTime.now().day - 1;
   // late = when runtime, not when initialised
   late DateTime _lastDayOfMonth;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime? _selectedDay = DateTime.now();
-  Report dailyReport = Report();
   double _sum = 0;
   double _total = 0;
 
   @override
   void initState() {
     super.initState();
+
     // get the next month, then take a step back to the last day (the last '0')
     _lastDayOfMonth = DateTime(_now.year, _now.month + 1, 0);
     WidgetsBinding.instance.addPostFrameCallback((_){

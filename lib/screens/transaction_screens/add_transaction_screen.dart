@@ -22,15 +22,16 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final TextEditingController _dateText = TextEditingController();
   final TextEditingController _timeText = TextEditingController();
   final transactionOperation = TransactionOperation();
-  DateTime now = DateTime.now();
-  int activeType = 0;
   late DatabaseReference dbTransaction = FirebaseDatabase.instance.ref().child('transactions');
   late DatabaseReference dbBalance;
+  DateTime now = DateTime.now();
+  int activeType = 0;
   double _amount = 0;
 
   @override
   void initState() {
     super.initState();
+
     dbBalance = FirebaseDatabase.instance.ref().child('balance');
     getBalance();
   }
@@ -475,6 +476,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           };
 
           dbTransaction.push().set(transaction); */
+
           dbBalance.child("user0").update(balance).then((value) => {
             Navigator.pop(context),
           });

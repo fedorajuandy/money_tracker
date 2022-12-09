@@ -384,7 +384,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
       onTap: () async {
         DateTime? pickedDate = await showDatePicker(
           context: context,
-          initialDate: now,
+          initialDate: DateTime.parse(_dateText.text),
           firstDate: DateTime(now.year - 10),
           lastDate: now,
           builder: (context, child) {
@@ -440,7 +440,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
       onTap: () async {
         TimeOfDay? pickedTime = await showTimePicker(
           context: context,
-          initialTime: TimeOfDay.now(),
+          initialTime: TimeOfDay(hour:int.parse(_timeText.text.split(":")[0]),minute: int.parse(_timeText.text.split(":")[1])),
           builder: (context, child) {
             return Theme(
               data: Theme.of(context).copyWith(
