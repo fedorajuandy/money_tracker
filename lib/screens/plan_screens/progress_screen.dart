@@ -97,11 +97,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return FirebaseAnimatedList(
       query: progressOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        print(snapshot.child("/parentKey").value.toString() + "=" + widget.planKey);
         if (snapshot.child("/parentKey").value.toString() == widget.planKey) {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final progress = NewProgress.fromJson(json);
-          return progressList(snapshot.key, progress.amount, progress.datetime);
+          return progressList(snapshot.key, progress.activeType, progress.amount, progress.datetime);
         } else {
           return Container();
         }
@@ -134,7 +133,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     );
   }
 
-  Widget progressList(String? key, double amount, String datetime) {
+  Widget progressList(String? key, int type, double amount, String datetime) {
     var size = MediaQuery.of(context).size;
 
     return Padding(
@@ -181,7 +180,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           children: <Widget>[
                             Text(
                               CurrencyFormat.convertToIdr(amount, 2),
-                              style: const TextStyle(
+                              style: TextStyle(
+                                color: type == 1 ? red1 : secondary,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
                               ),

@@ -244,6 +244,21 @@ class _PlanScreenState extends State<PlanScreen> {
       ),
     );
   }
+  
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return (to.difference(from).inHours / 24).round();
+  }
+
+  double suggestedAmount = 0;
+  double calculateSA(double target, String startDate, String endDate) {
+    DateTime date1 = DateTime.parse(startDate);
+    DateTime date2 = DateTime.parse(endDate);
+
+    suggestedAmount = target / daysBetween(date1, date2);
+    return suggestedAmount;
+  }
 
   Widget planList(String? key, String name, double target, double currAmount, String startDate, String endDate) {
     var size = MediaQuery.of(context).size;
@@ -309,18 +324,6 @@ class _PlanScreenState extends State<PlanScreen> {
                                 fontSize: 20,
                               ),
                             ),
-                            sbw8(),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 3),
-                              child: Text(
-                                "$progress%",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: dark.withOpacity(0.6),
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                         SizedBox(
@@ -358,7 +361,40 @@ class _PlanScreenState extends State<PlanScreen> {
                               sbw8(),
                               GestureDetector(
                                 onTap: () {
-                                  reference.child(key ?? "").remove();
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text("Confirmation"),
+                                        content: const Text("Would you like to delete selected item?"),
+                                        actions: [
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: dark.withOpacity(0.5),
+                                              fixedSize: const Size.fromWidth(100),
+                                              padding: const EdgeInsets.all(10),
+                                            ),
+                                            child: const Text("Cancel"),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: primary,
+                                              fixedSize: const Size.fromWidth(100),
+                                              padding: const EdgeInsets.all(10),
+                                            ),
+                                            child: const Text("Yes"),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              reference.child(key ?? "").remove();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 },
                                 child: Row(
                                   children: const <Widget>[
@@ -371,6 +407,50 @@ class _PlanScreenState extends State<PlanScreen> {
                               ),
                             ],
                           ),
+                        ),
+                      ],
+                    ),
+                    sbh12(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3),
+                          child: Text(
+                            "Per day: ${CurrencyFormat.convertToIdr(calculateSA(target, startDate, endDate), 2)}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: dark.withOpacity(0.6),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 3),
+                              child: Text(
+                                CurrencyFormat.convertToIdr(currAmount, 2),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: dark.withOpacity(0.6),
+                                ),
+                              ),
+                            ),
+                            sbw8(),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 3),
+                              child: Text(
+                                "($progress%)",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: dark.withOpacity(0.6),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

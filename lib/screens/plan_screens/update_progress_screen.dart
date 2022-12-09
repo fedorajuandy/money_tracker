@@ -279,7 +279,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
         padding: const EdgeInsets.all(20),
       ),
       onPressed: () {
-        final newProgress = NewProgress(double.parse(_amountText.text), now.toString(), widget.planKey);
+        final newProgress = NewProgress(activeType, double.parse(_amountText.text), now.toString(), widget.planKey);
         progressOperation.add(newProgress);
 
         if(activeType == 0) {
@@ -289,6 +289,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
         }
 
         Map<String, dynamic> plan = {
+          'type': activeType,
           'currAmount': double.parse(_amountText.text),
         };
 

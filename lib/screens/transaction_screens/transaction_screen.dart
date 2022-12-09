@@ -23,6 +23,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Report dailyReport = Report();
   final transactionOperation = TransactionOperation();
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
+  late DatabaseReference dbBalance;
   DateTime _now = DateTime.now();
   int selectedIndex = DateTime.now().day - 1;
   // late = when runtime, not when initialised
@@ -31,16 +32,25 @@ class _TransactionScreenState extends State<TransactionScreen> {
   DateTime? _selectedDay = DateTime.now();
   double _sum = 0;
   double _total = 0;
+  double _amount = 0;
 
   @override
   void initState() {
     super.initState();
 
+    dbBalance = FirebaseDatabase.instance.ref().child('balance');
+    getBalance();
     // get the next month, then take a step back to the last day (the last '0')
     _lastDayOfMonth = DateTime(_now.year, _now.month + 1, 0);
     WidgetsBinding.instance.addPostFrameCallback((_){
       fat();
     });
+  }
+
+  void getBalance() async {
+    DataSnapshot snapshot = await dbBalance.child("user0").get();
+    Map balance = snapshot.value as Map;
+    _amount = balance['amount'];
   }
 
   @override
@@ -303,6 +313,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   child: const Text("Yes"),
                                   onPressed: () {
                                     Navigator.pop(context);
+                                    if(type == 0) {
+                                      _amount -= amount;
+                                    } else {
+                                      _amount += amount;
+                                    }
+                                    Map<String, dynamic> balance = {
+                                      'amount': _amount,
+                                    };
+                                    dbBalance.child("user0").update(balance);
                                     reference.child(key ?? "").remove();
                                   },
                                 ),
