@@ -17,7 +17,7 @@ class BalanceScreen extends StatefulWidget {
 
 class _BalanceScreenState extends State<BalanceScreen> {
   final balanceOperation = BalanceOperation();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +78,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: primary,
+          color: amount >= 0 ? primary : red,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
