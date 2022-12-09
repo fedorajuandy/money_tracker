@@ -13,7 +13,7 @@ class NewTransaction {
     : type = json['type'] as int,
       name = json['name'] as String,
       category = json['category'] as String,
-      amount = json['amount'] as double,
+      amount = json['amount'].toDouble() as double,
       date = json['date'] as String,
       time = json['time'] as String;
 

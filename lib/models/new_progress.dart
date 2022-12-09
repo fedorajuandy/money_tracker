@@ -7,7 +7,7 @@ class NewProgress {
   NewProgress(this.amount, this.datetime, this.parentKey);
 
   NewProgress.fromJson(Map<dynamic, dynamic> json)
-    : amount = json['amount'] as double,
+    : amount = json['amount'].toDouble() as double,
       datetime = json['datetime'] as String,
       parentKey = json['parentKey'] as String;
 

@@ -11,8 +11,8 @@ class NewPlan {
 
   NewPlan.fromJson(Map<dynamic, dynamic> json)
     : name = json['name'] as String,
-      target = json['target'] as double,
-      currAmount = json['currAmount'] as double,
+      target = json['target'].toDouble() as double,
+      currAmount = json['currAmount'].toDouble() as double,
       startDate = json['startDate'] as String,
       endDate = json['endDate'] as String;
 
