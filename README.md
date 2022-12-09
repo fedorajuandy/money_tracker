@@ -13,6 +13,12 @@ Long story short:
 - my fever-addled brain decided just to move the branch
 - present time:
 
+## Notes
+
+1. Cannot get parent key id[^2]
+
+Firebase realtime database cannot get parent id from its child.
+
 ## Firebase Realtime Database Setup[^1]
 
 ### Firebase CLI setup
@@ -96,3 +102,4 @@ For iOS:
 ### Other references
 
 [^1]: [How to Add Firebase to Flutter](https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins)
+[^2]: [How to find parent key using child key in firebase realtime-database?](https://stackoverflow.com/questions/65725337/how-to-find-parent-key-using-child-key-in-firebase-realtime-database)
