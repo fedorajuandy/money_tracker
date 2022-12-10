@@ -105,6 +105,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
             ),
           ),
         ),
+        // main screen
         Expanded(
           child: SingleChildScrollView(
             physics: const ScrollPhysics(),
