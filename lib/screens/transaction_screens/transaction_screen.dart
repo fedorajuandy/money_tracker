@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:money_tracker/operations/transaction_operation.dart';
-import 'package:money_tracker/models/new_transaction.dart';
-import 'package:money_tracker/models/report.dart';
-import 'package:money_tracker/screens/transaction_screens/update_transaction_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/models/balance.dart';
+import 'package:money_tracker/models/new_transaction.dart';
+import 'package:money_tracker/models/report.dart';
+import 'package:money_tracker/operations/balance_operation.dart';
+import 'package:money_tracker/operations/transaction_operation.dart';
+import 'package:money_tracker/screens/transaction_screens/update_transaction_screen.dart';
 import 'package:money_tracker/widgets/title.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -19,11 +21,10 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  // Query dbRef = FirebaseDatabase.instance.ref().child('transactions');
-  Report dailyReport = Report();
-  final transactionOperation = TransactionOperation();
-  DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
   late DatabaseReference dbBalance;
+  final transactionOperation = TransactionOperation();
+  final balanceOperation = BalanceOperation();
+  Report dailyReport = Report();
   DateTime _now = DateTime.now();
   int selectedIndex = DateTime.now().day - 1;
   // late = when runtime, not when initialised
@@ -37,19 +38,21 @@ class _TransactionScreenState extends State<TransactionScreen> {
   @override
   void initState() {
     super.initState();
-
     dbBalance = FirebaseDatabase.instance.ref().child('balance');
     getBalance();
     // get the next month, then take a step back to the last day (the last '0')
     _lastDayOfMonth = DateTime(_now.year, _now.month + 1, 0);
+
     WidgetsBinding.instance.addPostFrameCallback((_){
-      fat();
+      fal();
+      total();
     });
   }
 
   void getBalance() async {
     DataSnapshot snapshot = await dbBalance.child("user0").get();
     Map balance = snapshot.value as Map;
+
     _amount = balance['amount'].toDouble();
   }
 
@@ -64,7 +67,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Widget screen() {
     return Column(
       children: <Widget>[
-        // the 'header'
+        // header
         Container(
           decoration: BoxDecoration(
             color: dark.withOpacity(0.05),
@@ -97,7 +100,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   ],
                 ),
                 sbh32(),
-                fat(),
+                fal(),
                 sbh16(),
                 total(),
               ],
@@ -109,7 +112,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
-  Widget fat() {
+  Widget fal() {
     return FirebaseAnimatedList(
       query: transactionOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
@@ -318,11 +321,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     } else {
                                       _amount += amount;
                                     }
-                                    Map<String, dynamic> balance = {
-                                      'amount': _amount,
-                                    };
-                                    dbBalance.child("user0").update(balance);
-                                    reference.child(key ?? "").remove();
+                                    
+                                    final newBalance = Balance(_amount);
+
+                                    balanceOperation.update(newBalance);
+                                    transactionOperation.delete(key);
                                   },
                                 ),
                               ],

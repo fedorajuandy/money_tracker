@@ -47,20 +47,24 @@ class _BalanceScreenState extends State<BalanceScreen> {
               padding: const EdgeInsets.only(top: 60, bottom: 20, right: 20, left: 20),
               child: Column(
                 children: <Widget>[
-                  title("Balance"),
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
-                    },
-                    child: Row(
-                      children: const <Widget>[
-                        Icon(
-                          Icons.edit,
-                          color: primary,
+                  Row(
+                    children: <Widget>[
+                      title("Balance"),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
+                        },
+                        child: Row(
+                          children: const <Widget>[
+                            Icon(
+                              Icons.edit,
+                              color: primary,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
