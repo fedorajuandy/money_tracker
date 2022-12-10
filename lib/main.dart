@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:money_tracker/screens/layout.dart';
 import 'firebase_options.dart';
+import 'package:money_tracker/screens/layout.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,8 +20,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Money Tracker',
-      theme: ThemeData(
-      ),
       home: FutureBuilder(
         future: _fbApp,
         builder: (context, snapshot) {

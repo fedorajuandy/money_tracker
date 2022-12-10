@@ -400,7 +400,7 @@ class _ReportScreenState extends State<ReportScreen> {
               amount,
               style: const TextStyle(
                 fontSize: 16,
-                color: red1,
+                color: redSecondary,
                 fontWeight: FontWeight.bold,
               ),
               overflow: TextOverflow.ellipsis,

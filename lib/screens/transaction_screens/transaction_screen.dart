@@ -243,7 +243,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 15,
-                                color: type == 1 ? red1 : secondary,
+                                color: type == 1 ? redSecondary : secondary,
                               ),
                             ),
                             sbh4(),

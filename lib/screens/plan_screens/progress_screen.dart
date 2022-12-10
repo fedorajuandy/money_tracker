@@ -179,7 +179,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                             Text(
                               CurrencyFormat.convertToIdr(amount, 2),
                               style: TextStyle(
-                                color: type == 1 ? red1 : secondary,
+                                color: type == 1 ? redSecondary : secondary,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
                               ),
