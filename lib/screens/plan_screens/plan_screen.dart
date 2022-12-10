@@ -39,7 +39,7 @@ class _PlanScreenState extends State<PlanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: white,
+      backgroundColor: bg,
       body: screen(),
     );
   }
@@ -114,7 +114,7 @@ class _PlanScreenState extends State<PlanScreen> {
         if (dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (selectedIndex + 1).toString()) {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final plan = NewPlan.fromJson(json);
-          return planList(snapshot.key, plan.name, plan.target, plan.currAmount, plan.startDate, plan.endDate);
+          return planList(snapshot.key, plan.getName(), plan.getTarget(), plan.getCurrAmount(), plan.getStartDate(), plan.getEndDate());
         } else {
           return Container();
         }
@@ -442,7 +442,7 @@ class _PlanScreenState extends State<PlanScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 3),
                               child: Text(
-                                "($progress%)",
+                                "${num.parse(progress.toStringAsFixed(2))}%",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 10,

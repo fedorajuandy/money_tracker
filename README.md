@@ -20,7 +20,7 @@ Long story short:
 > Firebase realtime database cannot get parent id from its child. For plan's operations, every operation has a parentKey for reference.
 
 2. Cannot getChildren at snapshot[^2]
-    
+
 > For FirebaseAnimatedList, there is supposed to be a method getChildren() in android; unfortunately there is no such thing in Flutter and has already been an issue for quite awhile. So the 'Report' part of application cannot simply just itterate the whole thing and return the very last one.
 
 ## Firebase Realtime Database Setup[^3]
@@ -84,6 +84,7 @@ For iOS:
 - [For modified alert dialog](https://medium.com/multiverse-software/alert-dialog-and-confirmation-dialog-in-flutter-8d8c160f4095)
 - [For FlatButton widget alternative](https://stackoverflow.com/questions/66805535/flutter-flatbutton-is-deprecated-alternative-solution-with-width-and-height)
 - [For converting String to TimeOfDay](https://stackoverflow.com/questions/53382971/how-to-convert-string-to-timeofday-in-flutter)
+- [For decimals precise places](https://stackoverflow.com/questions/28419255/how-do-you-round-a-double-in-dart-to-a-given-degree-of-precision-after-the-decim)
 
 ### Designs
 
