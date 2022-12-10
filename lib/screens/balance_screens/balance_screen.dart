@@ -3,6 +3,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:money_tracker/models/balance.dart';
 import 'package:money_tracker/operations/balance_operation.dart';
+import 'package:money_tracker/screens/balance_screens/profile_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/themes/spaces.dart';
@@ -21,7 +22,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: dark.withOpacity(0.05),
+      backgroundColor: white,
       body: screen(),
     );
   }
@@ -47,6 +48,20 @@ class _BalanceScreenState extends State<BalanceScreen> {
               child: Column(
                 children: <Widget>[
                   title("Balance"),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
+                    },
+                    child: Row(
+                      children: const <Widget>[
+                        Icon(
+                          Icons.edit,
+                          color: primary,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

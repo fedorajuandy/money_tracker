@@ -39,7 +39,7 @@ class _PlanScreenState extends State<PlanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: dark.withOpacity(0.05),
+      backgroundColor: white,
       body: screen(),
     );
   }
