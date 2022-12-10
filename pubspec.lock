@@ -113,13 +113,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  equatable:
-    dependency: transitive
-    description:
-      name: equatable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:
@@ -169,13 +162,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.1+14"
-  fl_chart:
-    dependency: "direct main"
-    description:
-      name: fl_chart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.55.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -266,13 +252,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  nested:
-    dependency: transitive
-    description:
-      name: nested
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   page_transition:
     dependency: "direct main"
     description:
@@ -287,13 +266,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
-  percent_indicator:
-    dependency: "direct main"
-    description:
-      name: percent_indicator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.2.2"
   petitparser:
     dependency: transitive
     description:
@@ -315,13 +287,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.6.2"
-  provider:
-    dependency: "direct main"
-    description:
-      name: provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.0.4"
   simple_gesture_detector:
     dependency: transitive
     description:
@@ -413,4 +378,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.18.2 <3.0.0"
-  flutter: ">=2.12.0"
+  flutter: ">=1.20.0"
