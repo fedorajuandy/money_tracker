@@ -16,10 +16,12 @@ Long story short:
 ## Notes
 
 1. Cannot get parent key id[^1]
-Firebase realtime database cannot get parent id from its child. For plan's operations, every operation has a parentKey for reference.
+
+> Firebase realtime database cannot get parent id from its child. For plan's operations, every operation has a parentKey for reference.
 
 2. Cannot getChildren at snapshot[^2]
-For FirebaseAnimatedList, there is supposed to be a method getChildren() in android; unfortunately there is no such thing in Flutter and has already been an issue for quite awhile. So the 'Report' part of application cannot simply just itterate the whole thing and return the very last one.
+    
+> For FirebaseAnimatedList, there is supposed to be a method getChildren() in android; unfortunately there is no such thing in Flutter and has already been an issue for quite awhile. So the 'Report' part of application cannot simply just itterate the whole thing and return the very last one.
 
 ## Firebase Realtime Database Setup[^3]
 
@@ -56,17 +58,13 @@ For iOS:
 2. `flutter pub add firebase_core` [CAN ADD MANUALY TO yaml by [Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins)
 3. `flutter pub add firebase_database`
 4. `flutterfire configure`
-5. In main.dart add
-    `import 'package:firebase_core/firebase_core.dart';`
-    `import 'firebase_options.dart';`
-6. add:
-    `final Future<FirebaseApp> _fbApp = Firebase.initializeApp();`
-    to MyApp and change the app not to const
+5. In main.dart add `import 'package:firebase_core/firebase_core.dart';` and `import 'firebase_options.dart';`
+6. add `final Future<FirebaseApp> _fbApp = Firebase.initializeApp();` to MyApp and change the app not to const
 7. `flutterfire configure`
 
 ## References
 
-### Codea
+### Codes
 
 - PPB class notes and past projects
 - [Flutter documentation](https://docs.flutter.dev/)
@@ -94,7 +92,7 @@ For iOS:
 - [Finance app colors](https://uxdesign.cc/3-colors-for-financial-applications-ec75c806e454)
 - [Finance app color palletes](https://www.crazyegg.com/blog/color-palettes-financial/)
 
-> Green for choices, quantity, quality, and growth. And money, of course.
+> Green for choices, quantity, quality, and growth. Also money, of course.
 
 ### Images
 
