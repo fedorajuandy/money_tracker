@@ -56,7 +56,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: white,
+      backgroundColor: bg,
       body: screen(),
     );
   }
@@ -119,7 +119,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             final json = snapshot.value as Map<dynamic, dynamic>;
             final transaction = NewTransaction.fromJson(json);
             updateTotal(int.parse(snapshot.child("type").value.toString()), double.parse(snapshot.child("amount").value.toString()));
-            return transactionList(snapshot.key, transaction.type, transaction.name, transaction.category, transaction.amount, transaction.date, transaction.time);
+            return transactionList(snapshot.key, transaction.getType(), transaction.getName(), transaction.getCategory(), transaction.getAmount(), transaction.getDate(), transaction.getTime());
           } else {
             return Container();
           }

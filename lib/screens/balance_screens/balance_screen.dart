@@ -22,7 +22,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: white,
+      backgroundColor: bg,
       body: screen(),
     );
   }
@@ -80,7 +80,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
         final json = snapshot.value as Map<dynamic, dynamic>;
         final b = Balance.fromJson(json);
-        return balance(b.amount);
+        return balance(b.getAmount());
       },
       physics: const ScrollPhysics(),
       shrinkWrap: true,

@@ -33,7 +33,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: white,
+      backgroundColor: bg,
       body: screen(),
     );
   }
@@ -100,7 +100,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         if (snapshot.child("parentKey").value.toString() == widget.planKey) {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final progress = NewProgress.fromJson(json);
-          return progressList(snapshot.key, progress.activeType, progress.amount, progress.datetime);
+          return progressList(snapshot.key, progress.getActiveType(), progress.getAmount(), progress.getDatetime());
         } else {
           return Container();
         }
