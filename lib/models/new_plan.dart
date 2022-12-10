@@ -34,7 +34,7 @@ class NewPlan {
       _startDate = json['startDate'] as String,
       _endDate = json['endDate'] as String;
 
-  Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
     'name': _name,
     'target': _target,
     'currAmount': _currAmount,

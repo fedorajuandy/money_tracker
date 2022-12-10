@@ -10,7 +10,7 @@ class Balance {
   Balance.fromJson(Map<dynamic, dynamic> json)
     : _amount = json['amount'].toDouble() as double;
 
-  Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
     'amount': _amount,
   };
 }

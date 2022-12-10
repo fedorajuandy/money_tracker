@@ -40,7 +40,7 @@ class NewTransaction {
       _date = json['date'] as String,
       _time = json['time'] as String;
 
-  Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
     'type': _type,
     'name': _name,
     'category': _category,

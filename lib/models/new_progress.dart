@@ -28,7 +28,7 @@ class NewProgress {
       _datetime = json['datetime'] as String,
       _parentKey = json['parentKey'] as String;
 
-  Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
     'type': _activeType,
     'amount': _amount,
     'datetime': _datetime,
