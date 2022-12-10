@@ -1,12 +1,16 @@
 class Balance {
-  double amount = 0;
+  final double _amount;
 
-  Balance(this.amount);
+  Balance(this._amount);
+
+  double getAmount() {
+    return _amount;
+  }
 
   Balance.fromJson(Map<dynamic, dynamic> json)
-    : amount = json['amount'].toDouble() as double;
+    : _amount = json['amount'].toDouble() as double;
 
   Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
-    'amount': amount,
+    'amount': _amount,
   };
 }
