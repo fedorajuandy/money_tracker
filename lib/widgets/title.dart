@@ -18,7 +18,7 @@ Widget title(String titleText) {
   );
 }
 
-Widget titleWithBack(String titleText, dynamic context) {
+Widget titleWithBack(String titleText, BuildContext context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: <Widget>[

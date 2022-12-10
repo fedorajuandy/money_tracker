@@ -43,6 +43,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   void getBalance() async {
     DataSnapshot snapshot = await dbBalance.child("user0").get();
     Map balance = snapshot.value as Map;
+
     _amount = balance['amount'].toDouble();
   }
 
@@ -335,7 +336,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           color: primary,
         ),
         suffixIcon: Icon(
-          Icons.calendar_month,
+          Icons.access_time,
           color: primary,
         ),
         border: OutlineInputBorder(),

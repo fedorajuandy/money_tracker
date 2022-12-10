@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_tracker/themes/colors.dart';
 
-Widget buttonCancel(dynamic context) {
+Widget buttonCancel(BuildContext context) {
   return TextButton(
     style: TextButton.styleFrom(
       padding: const EdgeInsets.all(20),

@@ -3,6 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/models/balance.dart';
+import 'package:money_tracker/models/new_transaction.dart';
+import 'package:money_tracker/operations/balance_operation.dart';
+import 'package:money_tracker/operations/transaction_operation.dart';
+import 'package:money_tracker/widgets/button.dart';
+import 'package:money_tracker/widgets/textfield.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class UpdateTransactionScreen extends StatefulWidget {
@@ -20,11 +26,13 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   final TextEditingController _amountText = TextEditingController();
   final TextEditingController _dateText = TextEditingController();
   final TextEditingController _timeText = TextEditingController();
+  late DatabaseReference dbTransaction;
+  late DatabaseReference dbBalance;
+  final transactionOperation = TransactionOperation();
+  final balanceOperation = BalanceOperation();
   DateTime now = DateTime.now();
   int _prevType = 0;
   late int activeType = 0;
-  late DatabaseReference dbTransaction;
-  late DatabaseReference dbBalance;
   double _prevAmount = 0;
   double _amount = 0;
 
@@ -47,6 +55,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   void getTransactionData() async {
     DataSnapshot snapshot = await dbTransaction.child(widget.transactionKey).get();
     Map transaction = snapshot.value as Map;
+
     _prevType = transaction['type'];
     activeType = transaction['type'];
     _nameText.text = transaction['name'];
@@ -60,6 +69,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   void getBalance() async {
     DataSnapshot snapshot = await dbBalance.child("user0").get();
     Map balance = snapshot.value as Map;
+
     _amount = balance['amount'].toDouble();
   }
 
@@ -74,7 +84,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   Widget screen() {
     return Column(
       children: <Widget>[
-        // the 'header'
+        // header
         Container(
           decoration: BoxDecoration(
             color: dark.withOpacity(0.05),
@@ -90,7 +100,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
             padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
             child: Column(
               children: <Widget>[
-                title("Add transaction"),
+                titleWithBack("Update transaction", context),
               ],
             ),
           ),
@@ -121,11 +131,11 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
                     key: _keyform,
                     child: Column(
                       children: <Widget>[
-                        textFieldName(),
+                        textField("Transaction name", _nameText, "Please input transaction name"),
                         sbh20(),
-                        textFieldCategory(),
+                        textField("Category", _categoryText, "Please input transaction category"),
                         sbh20(),
-                        textFieldAmount(),
+                        textFieldNumber("Amount" ,_amountText, "Please input transaction amount"),
                         sbh20(),
                         pickDate(),
                         sbh20(),
@@ -134,7 +144,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            buttonCancel(),
+                            buttonCancel(context),
                             sbw8(),
                             buttonUpdate(),
                           ],
@@ -181,7 +191,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
             color: white,
             border: Border.all(
               width: 2,
-              color: activeType == 0 ? primary : Colors.transparent
+              color: activeType == 0 ? primary : Colors.transparent,
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
@@ -238,7 +248,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
             color: white,
             border: Border.all(
               width: 2,
-              color: activeType == 1 ? red : Colors.transparent
+              color: activeType == 1 ? red : Colors.transparent,
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
@@ -278,93 +288,11 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
     );
   }
 
-  Widget textFieldName() {
-    return TextFormField(
-      cursorColor: primary,
-      style: const TextStyle(color: dark),
-      decoration: const InputDecoration(
-        hintText: "Transaction name",
-        hintStyle: TextStyle(
-          color: Colors.black54,
-        ),
-        labelText: 'Transaction name',
-        labelStyle: TextStyle(
-          color: primary,
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      controller: _nameText,
-      validator: (value) {
-        return (value !.isEmpty? "Please input transaction name": null);
-      },
-    );
-  }
-
-  Widget textFieldCategory() {
-    return TextFormField(
-      cursorColor: primary,
-      style: const TextStyle(color: dark),
-      decoration: const InputDecoration(
-        hintText: "Category",
-        hintStyle: TextStyle(
-          color: Colors.black54,
-        ),
-        labelText: "Category",
-        labelStyle: TextStyle(
-          color: primary,
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      controller: _categoryText,
-      validator: (value) {
-        return (value !.isEmpty? "Please input transaction category": null);
-      },
-    );
-  }
-
-  Widget textFieldAmount() {
-    return TextFormField(
-      cursorColor: primary,
-      style: const TextStyle(color: dark),
-      decoration: const InputDecoration(
-        hintText: "Amount",
-        hintStyle: TextStyle(
-          color: Colors.black54,
-        ),
-        labelText: 'Amount',
-        labelStyle: TextStyle(
-          color: primary,
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      keyboardType: TextInputType.number,
-      controller: _amountText,
-      validator: (value) {
-        return (value !.isEmpty? "Please input transaction amount": null);
-      },
-    );
-  }
-
   Widget pickDate() {
     return TextFormField(
       controller: _dateText,
       validator: (value) {
-        return (value !.isEmpty? "Please input transaction date": null);
+        return (value !.isEmpty? "Please input transaction date" : null);
       },
       readOnly: false,
       style: const TextStyle(color: dark),
@@ -433,7 +361,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
           color: primary,
         ),
         suffixIcon: Icon(
-          Icons.calendar_month,
+          Icons.access_time,
           color: primary,
         ),
         border: OutlineInputBorder(),
@@ -483,14 +411,8 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
       onPressed: () {
         if (_keyform.currentState !.validate()) {
           double currAmount = double.parse(_amountText.text);
-          Map<String, dynamic> transaction = {
-            'type': activeType,
-            'name': _nameText.text,
-            'category': _categoryText.text,
-            'amount': currAmount,
-            'date': _dateText.text,
-            'time': _timeText.text,
-          };
+          final newTransaction = NewTransaction(activeType, _nameText.text, _categoryText.text, currAmount, _dateText.text, _timeText.text);
+          transactionOperation.update(newTransaction, widget.transactionKey);
 
           double addAmount = 0;
           if(_prevType == 0) {
@@ -506,15 +428,10 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
               addAmount = _prevAmount - currAmount;
             }
           }
+          final newBalance = Balance(_amount + addAmount);
+          balanceOperation.update(newBalance);
 
-          Map<String, dynamic> balance = {
-            'amount': _amount += addAmount,
-          };
-
-          dbTransaction.child(widget.transactionKey).update(transaction);
-          dbBalance.child("user0").update(balance).then((value) => {
-            Navigator.pop(context),
-          });
+          Navigator.pop(context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Please enter all required fields."),
@@ -523,26 +440,6 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
         }
       },
       child: const Text("Update transaction"),
-    );
-  }
-
-  Widget buttonCancel() {
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.all(20),
-        backgroundColor: white,
-        foregroundColor: primary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-          side: const BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      child: const Text("Cancel"),
     );
   }
 }
