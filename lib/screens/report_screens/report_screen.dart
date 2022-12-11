@@ -1,12 +1,13 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:money_tracker/models/report.dart';
-import 'package:money_tracker/operations/transaction_operation.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:money_tracker/models/new_transaction.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/themes/text_formats.dart';
+import 'package:money_tracker/models/report.dart';
+import 'package:money_tracker/operations/transaction_operation.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -17,29 +18,26 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-  // current month
-  int selectedIndex = DateTime.now().month - 1;
-  final DateTime _selectedDate = DateTime.now();
-  DateTime now = DateTime.now();
-  int _selectedYear = DateTime.now().year;
-  final transactionOperation = TransactionOperation();
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('transactions');
+  final transactionOperation = TransactionOperation();
   final report = Report();
-  double monthlyExpense = 0;
-  double monthlyIncome = 0;
-  double yearlyExpense = 0;
-  double yearlyIncome = 0;
-  double lowestExpense = 0;
-  double highestExpense = 0;
-  double lowestIncome = 0;
-  double highestIncome = 0;
+  DateTime now = DateTime.now();
+  // current month
+  late DateTime _selectedDate;
+  late int _selectedIndex;
+  late int _selectedYear;
 
   @override
   void initState() {
     super.initState();
+    _selectedDate = now;
+    // current month
+    _selectedIndex = now.month - 1;
+    _selectedYear = now.year;
+
     WidgetsBinding.instance.addPostFrameCallback((_){
-      fatMonthly();
-      fatYearly();
+      falMonthly();
+      falYearly();
       setState(() {
         report.setHighestExpense(report.getHighestExpense());
         report.setHighestIncome(report.getHighestIncome());
@@ -48,14 +46,6 @@ class _ReportScreenState extends State<ReportScreen> {
         report.setMonthlyExpense(report.getMonthlyExpense());
         report.setMontlyIncome(report.getMonthlyIncome());
         report.setYearlyExpense(report.getYearlyIncome());
-      });
-      Future.delayed(const Duration(milliseconds: 3000), () {
-        monthly(monthlyExpense, monthlyIncome);
-        yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome());
-
-        setState(() {
-          // Here you can write your code for open new view
-        });
       });
     });
   }
@@ -71,7 +61,7 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget screen() {
     return Column(
       children: <Widget>[
-        // the 'header'
+        // header
         Container(
           decoration: BoxDecoration(
             color: dark.withOpacity(0.05),
@@ -105,16 +95,17 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
           ),
         ),
+        // main screen
         Expanded(
           child: SingleChildScrollView(
             physics: const ScrollPhysics(),
             child: Column(
               children: <Widget>[
                 sbh32(),
-                fatMonthly(),
+                falMonthly(),
                 monthly(report.getMonthlyExpense(), report.getMonthlyIncome()),
                 sbh24(),
-                fatYearly(),
+                falYearly(),
                 yearly(report.getYearlyExpense(), report.getYearlyIncome(), report.getHighestExpense(), report.getHighestIncome(), report.getLowestExpense(), report.getLowestIncome()),
                 sbh40(),
               ],
@@ -125,25 +116,29 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget fatMonthly() {
+  Widget falMonthly() {
     report.resetMonthlyExpense();
     report.resetMonthlyIncome();
 
     return FirebaseAnimatedList(
       query: transactionOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        String dd = snapshot.child("date").value.toString();
-        if(dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (selectedIndex + 1).toString()) {
-          int type = int.parse(snapshot.child("type").value.toString());
-          double amount = double.parse(snapshot.child("amount").value.toString());
+        final json = snapshot.value as Map<dynamic, dynamic>;
+        final transaction = NewTransaction.fromJson(json);
+        String dd = transaction.getDate();
+
+        if(dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (_selectedIndex + 1).toString()) {
+          int type = transaction.getType();
+          double amount = transaction.getAmount();
+
           if(type == 0) {
             report.addMonthlyIncome(amount);
-            monthlyIncome += amount;
           } else {
             report.addMonthlyExpense(amount);
-            monthlyExpense += amount;
           }
         }
+
+        // NOT YET
         return Container();
       },
       physics: const ScrollPhysics(),
@@ -151,7 +146,7 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget fatYearly() {
+  Widget falYearly() {
     report.resetHighestExpense();
     report.resetHighestIncome();
     report.resetLowestExpense();
@@ -162,10 +157,13 @@ class _ReportScreenState extends State<ReportScreen> {
     return FirebaseAnimatedList(
       query: transactionOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        String dd = snapshot.child("date").value.toString();
+        final json = snapshot.value as Map<dynamic, dynamic>;
+        final transaction = NewTransaction.fromJson(json);
+        String dd = transaction.getDate();
+
         if(dd.substring(0, 4) == _selectedYear.toString()) {
-          int type = int.parse(snapshot.child("type").value.toString());
-          double amount = double.parse(snapshot.child("amount").value.toString());
+          int type = transaction.getType();
+          double amount = transaction.getAmount();
           double lowestExpense = 0;
           double highestExpense = 0;
           double lowestIncome = 0;
@@ -186,6 +184,8 @@ class _ReportScreenState extends State<ReportScreen> {
             }
           }
         }
+
+        // NOT YET
         return Container();
       },
       physics: const ScrollPhysics(),
@@ -198,7 +198,6 @@ class _ReportScreenState extends State<ReportScreen> {
       scrollDirection: Axis.horizontal,
       physics: const ClampingScrollPhysics(),
       child: Row(
-        // generate in a loop < months
         children: List.generate(now.month, (index) {
           final monthName = DateFormat("MMMM").format(DateTime(now.year, index + 1, 1));
 
@@ -206,7 +205,7 @@ class _ReportScreenState extends State<ReportScreen> {
             padding: EdgeInsets.only(left: index == 0 ? 16.0 : 0.0, right: 16.0),
             child: GestureDetector(
               onTap: () => setState(() {
-                selectedIndex = index;
+                _selectedIndex = index;
               }),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -214,10 +213,10 @@ class _ReportScreenState extends State<ReportScreen> {
                   // month's name (MMM)
                   Container(
                     decoration: BoxDecoration(
-                      color: selectedIndex == index ? primary : Colors.transparent,
+                      color: _selectedIndex == index ? primary : Colors.transparent,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(
-                        color: selectedIndex == index ? primary : dark.withOpacity(0.1),
+                        color: _selectedIndex == index ? primary : dark.withOpacity(0.1),
                       ),
                     ),
                     child: Padding(
@@ -226,7 +225,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         monthName.substring(0, 3),
                         style: TextStyle(
                           fontSize: 14,
-                          color: selectedIndex == index ? Colors.white : dark,
+                          color: _selectedIndex == index ? Colors.white : dark,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

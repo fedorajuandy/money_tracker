@@ -31,6 +31,7 @@ class _PlanScreenState extends State<PlanScreen> {
   void initState() {
     super.initState();
     _selectedDate = now;
+    // current month
     _selectedIndex = now.month - 1;
     _selectedYear = now.year;
 
