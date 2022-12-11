@@ -86,6 +86,7 @@ For iOS:
 - [For FlatButton widget alternative](https://stackoverflow.com/questions/66805535/flutter-flatbutton-is-deprecated-alternative-solution-with-width-and-height)
 - [For converting String to TimeOfDay](https://stackoverflow.com/questions/53382971/how-to-convert-string-to-timeofday-in-flutter)
 - [For decimals precise places](https://stackoverflow.com/questions/28419255/how-do-you-round-a-double-in-dart-to-a-given-degree-of-precision-after-the-decim)
+- [AboutDialog](https://api.flutter.dev/flutter/material/AboutDialog-class.html)
 
 ### Designs
 

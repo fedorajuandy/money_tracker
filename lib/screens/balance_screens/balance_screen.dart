@@ -6,7 +6,6 @@ import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/models/balance.dart';
 import 'package:money_tracker/operations/balance_operation.dart';
-import 'package:money_tracker/screens/balance_screens/profile_screen.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class BalanceScreen extends StatefulWidget {
@@ -18,6 +17,7 @@ class BalanceScreen extends StatefulWidget {
 
 class _BalanceScreenState extends State<BalanceScreen> {
   final balanceOperation = BalanceOperation();
+  DateTime now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,26 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     const Spacer(),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
+                        showAboutDialog(
+                          context: context,
+                          applicationVersion: "v1.0",
+                          applicationIcon: const Image(
+                            image: AssetImage('logos/app_logo.png'),
+                            height: 50,
+                            width: 50,
+                          ),
+                          applicationLegalese: "© 2019130032 - Fedora Yoshe Juandy, ${now.year}",
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 32),
+                              child: Column(
+                                children: const <Widget>[
+                                  Text("An application for recording daily transactions and planning budgets."),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
                       },
                       child: Row(
                         children: const <Widget>[
