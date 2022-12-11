@@ -127,7 +127,7 @@ class _ReportScreenState extends State<ReportScreen> {
         final transaction = NewTransaction.fromJson(json);
         String dd = transaction.getDate();
 
-        if(dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (_selectedIndex + 1).toString()) {
+        if(dd.substring(0, 4) == _selectedYear.toString() && int.parse(dd.substring(5, 7)) == (_selectedIndex + 1)) {
           int type = transaction.getType();
           double amount = transaction.getAmount();
 
