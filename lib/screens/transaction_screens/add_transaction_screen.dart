@@ -42,9 +42,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   void getBalance() async {
     DataSnapshot snapshot = await dbBalance.child("user0").get();
-    Map balance = snapshot.value as Map;
-
-    _amount = balance['amount'].toDouble();
+    final json = snapshot.value as Map<dynamic, dynamic>;
+    final balance = Balance.fromJson(json);
+    _amount = balance.getAmount();
   }
 
   @override

@@ -51,9 +51,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   void getBalance() async {
     DataSnapshot snapshot = await dbBalance.child("user0").get();
-    Map balance = snapshot.value as Map;
-
-    _amount = balance['amount'].toDouble();
+    final json = snapshot.value as Map<dynamic, dynamic>;
+    final balance = Balance.fromJson(json);
+    _amount = balance.getAmount();
   }
 
   @override
@@ -117,11 +117,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
       query: transactionOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
           if (snapshot.child("date").value.toString() == _selectedDay.toString().substring(0, 10)) {
-            // Map transaction = snapshot.value as Map;
-            // transaction['key'] = snapshot.key;
             final json = snapshot.value as Map<dynamic, dynamic>;
             final transaction = NewTransaction.fromJson(json);
-            updateTotal(int.parse(snapshot.child("type").value.toString()), double.parse(snapshot.child("amount").value.toString()));
+            updateTotal(transaction.getType(), transaction.getAmount());
             return transactionList(snapshot.key, transaction.getType(), transaction.getName(), transaction.getCategory(), transaction.getAmount(), transaction.getDate(), transaction.getTime());
           } else {
             return Container();
@@ -267,12 +265,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 ),
               ),
               sbw8(),
-              // for edit and delete
+              // actions (edit and delete)
               SizedBox(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    // edit
                     GestureDetector(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) => UpdateTransactionScreen(transactionKey: key ?? "")));
@@ -287,6 +286,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       ),
                     ),
                     sbw8(),
+                    // delete
                     GestureDetector(
                       onTap: () {
                         showDialog(
@@ -316,15 +316,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   child: const Text("Yes"),
                                   onPressed: () {
                                     Navigator.pop(context);
+
                                     if(type == 0) {
                                       _amount -= amount;
                                     } else {
                                       _amount += amount;
                                     }
-                                    
-                                    final newBalance = Balance(_amount);
 
+                                    final newBalance = Balance(_amount);
                                     balanceOperation.update(newBalance);
+
                                     transactionOperation.delete(key);
                                   },
                                 ),
@@ -387,7 +388,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   Widget horisontalLine() {
     return const Padding(
-      padding: EdgeInsets.only(top: 8),
+      padding: EdgeInsets.only(top: 4, bottom: 4),
       child: Divider(
         thickness: 0.8,
       ),

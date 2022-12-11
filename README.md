@@ -78,6 +78,7 @@ For iOS:
 - [For TimePicker widget](https://www.youtube.com/watch?v=3wsIBoyKmdA)
 - [For rupiah currency formatting](https://galangaji.medium.com/5-flutter-tutorial-cara-mudah-format-rupiah-pada-dart-c1711621e648)
 - [For scroll view with some parts fixed](https://stackoverflow.com/questions/54027270/how-to-create-a-scroll-view-with-fixed-footer-with-flutter)
+- [For base MVC in Realtime Database](https://www.kodeco.com/24346128-firebase-realtime-database-tutorial-for-flutter)
 - [How to change app icon](https://stackoverflow.com/questions/53967670/flutter-launcher-icon-not-getting-changed); [cannot use SVG format](https://stackoverflow.com/questions/68243711/is-there-any-way-to-use-svg-as-app-icon-in-flutter)
 - [For future builds](https://stackoverflow.com/questions/66100385/flutter-setstate-or-markneedsbuild-called-during-build-using-future-builde)
 - [For difference between two dates](https://stackoverflow.com/questions/52713115/flutter-find-the-number-of-days-between-two-dates/67679455#67679455)
