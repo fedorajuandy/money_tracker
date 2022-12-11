@@ -37,13 +37,14 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
 
   void getPlanData() async {
     DataSnapshot snapshot = await dbPlan.child(widget.planKey).get();
-    Map plan = snapshot.value as Map;
+    final json = snapshot.value as Map<dynamic, dynamic>;
+    final plan = NewPlan.fromJson(json);
 
-    _nameText.text = plan['name'];
-    _targetText.text = plan['target'].toString();
-    _currAmount = plan['currAmount'];
-    _startDateText.text = plan['startDate'];
-    _endDateText.text = plan['endDate'];
+    _nameText.text = plan.getName();
+    _targetText.text = plan.getTarget().toString();
+    _currAmount = plan.getCurrAmount();
+    _startDateText.text = plan.getStartDate();
+    _endDateText.text = plan.getEndDate();
   }
 
   @override

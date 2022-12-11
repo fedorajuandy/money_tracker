@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/models/new_plan.dart';
 import 'package:money_tracker/models/new_progress.dart';
 import 'package:money_tracker/operations/progress_operation.dart';
 import 'package:money_tracker/widgets/button.dart';
@@ -38,9 +39,10 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
 
   void getPlanData() async {
     DataSnapshot snapshot = await dbPlan.child(widget.planKey).get();
-    Map plan = snapshot.value as Map;
+    final json = snapshot.value as Map<dynamic, dynamic>;
+    final plan = NewPlan.fromJson(json);
 
-    currAmount = plan['currAmount'];
+    currAmount = plan.getCurrAmount();
   }
 
   @override

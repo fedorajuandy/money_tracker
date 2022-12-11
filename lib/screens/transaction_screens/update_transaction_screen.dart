@@ -54,16 +54,17 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
 
   void getTransactionData() async {
     DataSnapshot snapshot = await dbTransaction.child(widget.transactionKey).get();
-    Map transaction = snapshot.value as Map;
+    final json = snapshot.value as Map<dynamic, dynamic>;
+    final transaction = NewTransaction.fromJson(json);
 
-    _prevType = transaction['type'];
-    activeType = transaction['type'];
-    _nameText.text = transaction['name'];
-    _categoryText.text = transaction['category'];
-    _prevAmount = transaction['amount'];
-    _amountText.text = transaction['amount'].toString();
-    _dateText.text = transaction['date'];
-    _timeText.text = transaction['time'];
+    _prevType = transaction.getType();
+    activeType = transaction.getType();
+    _nameText.text = transaction.getName();
+    _categoryText.text = transaction.getCategory();
+    _prevAmount = transaction.getAmount();
+    _amountText.text = transaction.getAmount().toString();
+    _dateText.text = transaction.getDate();
+    _timeText.text = transaction.getTime();
   }
 
   void getBalance() async {
