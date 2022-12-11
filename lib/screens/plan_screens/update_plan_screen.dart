@@ -23,8 +23,8 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
   final TextEditingController _targetText = TextEditingController();
   final TextEditingController _startDateText = TextEditingController();
   final TextEditingController _endDateText = TextEditingController();
-  final planOperation = PlanOperation();
   late DatabaseReference dbPlan;
+  final planOperation = PlanOperation();
   DateTime now = DateTime.now();
   double _currAmount = 0;
 

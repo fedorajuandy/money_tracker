@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:money_tracker/models/new_progress.dart';
-import 'package:money_tracker/operations/progress_operation.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/models/new_progress.dart';
+import 'package:money_tracker/operations/progress_operation.dart';
+import 'package:money_tracker/widgets/button.dart';
+import 'package:money_tracker/widgets/textfield.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class UpdateProgressScreen extends StatefulWidget {
@@ -17,10 +19,10 @@ class UpdateProgressScreen extends StatefulWidget {
 class _AddTransactionScreenState extends State<UpdateProgressScreen> {
   final GlobalKey<FormState> _keyform = GlobalKey<FormState>();
   final TextEditingController _amountText = TextEditingController();
-  late ProgressOperation progressOperation;
-  DateTime now = DateTime.now();
   late DatabaseReference dbProgress;
   late DatabaseReference dbPlan;
+  late ProgressOperation progressOperation;
+  DateTime now = DateTime.now();
   int activeType = 0;
   double currAmount = 0;
 
@@ -37,6 +39,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
   void getPlanData() async {
     DataSnapshot snapshot = await dbPlan.child(widget.planKey).get();
     Map plan = snapshot.value as Map;
+
     currAmount = plan['currAmount'];
   }
 
@@ -51,7 +54,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
   Widget screen() {
     return Column(
       children: <Widget>[
-        // the 'header'
+        // header
         Container(
           decoration: BoxDecoration(
             color: dark.withOpacity(0.05),
@@ -72,6 +75,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
             ),
           ),
         ),
+        // main screen
         Expanded(
           child: SingleChildScrollView(
             physics: const ScrollPhysics(),
@@ -98,12 +102,12 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
                     key: _keyform,
                     child: Column(
                       children: <Widget>[
-                        textFieldAmount(),
+                        textFieldNumber("Amount", _amountText, "Please input target amount"),
                         sbh32(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            buttonCancel(),
+                            buttonCancel(context),
                             sbw8(),
                             buttonUpdate(),
                           ],
@@ -150,7 +154,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
             color: white,
             border: Border.all(
               width: 2,
-              color: activeType == 0 ? primary : Colors.transparent
+              color: activeType == 0 ? primary : Colors.transparent,
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
@@ -207,7 +211,7 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
             color: white,
             border: Border.all(
               width: 2,
-              color: activeType == 1 ? red : Colors.transparent
+              color: activeType == 1 ? red : Colors.transparent,
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
@@ -244,34 +248,6 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget textFieldAmount() {
-    return TextFormField(
-      cursorColor: primary,
-      style: const TextStyle(color: dark),
-      decoration: const InputDecoration(
-        hintText: "Amount",
-        hintStyle: TextStyle(
-          color: Colors.black54,
-        ),
-        labelText: 'Amount',
-        labelStyle: TextStyle(
-          color: primary,
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      keyboardType: TextInputType.number,
-      controller: _amountText,
-      validator: (value) {
-        return (value !.isEmpty? "Please input target amount": null);
-      },
     );
   }
 
@@ -312,26 +288,6 @@ class _AddTransactionScreenState extends State<UpdateProgressScreen> {
         }
       },
       child: const Text("Update plan"),
-    );
-  }
-
-  Widget buttonCancel() {
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.all(20),
-        backgroundColor: white,
-        foregroundColor: primary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-          side: const BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      child: const Text("Cancel"),
     );
   }
 }

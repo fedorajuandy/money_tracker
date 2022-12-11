@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:flutter/material.dart';
-import 'package:money_tracker/models/new_progress.dart';
-import 'package:money_tracker/operations/progress_operation.dart';
-import 'package:money_tracker/screens/plan_screens/update_progress_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/models/new_progress.dart';
+import 'package:money_tracker/operations/progress_operation.dart';
+import 'package:money_tracker/screens/plan_screens/update_progress_screen.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class ProgressScreen extends StatefulWidget {
@@ -26,7 +26,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     progressOperation = ProgressOperation(widget.planKey);
 
     WidgetsBinding.instance.addPostFrameCallback((_){
-      fat();
+      fal();
     });
   }
 
@@ -41,7 +41,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   Widget screen() {
     return Column(
       children: <Widget>[
-        // the 'header'
+        // header
         Container(
           decoration: BoxDecoration(
             color: dark.withOpacity(0.05),
@@ -61,7 +61,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        titleWithBack("Progresses", context),
+                        titleWithBack("Progress history", context),
                         sbw8(),
                         Padding(
                           padding: const EdgeInsets.only(top: 3),
@@ -77,13 +77,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ),
           ),
         ),
-        sbh32(),
+        // main screen
         Expanded(
           child: SingleChildScrollView(
             physics: const ScrollPhysics(),
             child: Column(
               children: <Widget>[
-                fat(),
+                sbh32(),
+                fal(),
               ],
             ),
           ),
@@ -93,13 +94,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
     );
   }
 
-  Widget fat() {
+  Widget fal() {
     return FirebaseAnimatedList(
       query: progressOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        if (snapshot.child("parentKey").value.toString() == widget.planKey) {
-          final json = snapshot.value as Map<dynamic, dynamic>;
-          final progress = NewProgress.fromJson(json);
+        final json = snapshot.value as Map<dynamic, dynamic>;
+        final progress = NewProgress.fromJson(json);
+
+        if (progress.getParentKey() == widget.planKey) {
           return progressList(snapshot.key, progress.getActiveType(), progress.getAmount(), progress.getDatetime());
         } else {
           return Container();
@@ -119,7 +121,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         ),
       ),
       child: const Text(
-        "Add plan",
+        "Add progress",
         style: TextStyle(
           color: white,
           fontSize: 14,
@@ -127,7 +129,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
       ),
       onPressed: () {
         Navigator.push(
-          context, MaterialPageRoute(builder: (context) => UpdateProgressScreen(planKey: key ?? "YATAA")),
+          context, MaterialPageRoute(builder: (context) => UpdateProgressScreen(planKey: key ?? "")),
         );
       },
     );
@@ -158,6 +160,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    // upper part (datetime added)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -171,6 +174,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       ],
                     ),
                     sbh12(),
+                    // progress amount (green = positive (addition) red = negative (subtraction))
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -192,8 +196,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 ),
               ),
             ),
-          )
-      ]),
+          ),
+        ],
+      ),
     );
   }
 }

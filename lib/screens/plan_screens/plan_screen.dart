@@ -277,9 +277,11 @@ class _PlanScreenState extends State<PlanScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    // upper part
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        // plan name
                         Text(
                           name,
                           style: TextStyle(
@@ -287,6 +289,7 @@ class _PlanScreenState extends State<PlanScreen> {
                             fontSize: 14,
                             color: dark.withOpacity(0.6)),
                         ),
+                        // end date
                         Padding(
                           padding: const EdgeInsets.only(top: 3),
                           child: Text(
