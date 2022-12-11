@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:flutter/material.dart';
-import 'package:money_tracker/models/balance.dart';
-import 'package:money_tracker/operations/balance_operation.dart';
-import 'package:money_tracker/screens/balance_screens/profile_screen.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/models/balance.dart';
+import 'package:money_tracker/operations/balance_operation.dart';
+import 'package:money_tracker/screens/balance_screens/profile_screen.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class BalanceScreen extends StatefulWidget {
@@ -28,53 +28,61 @@ class _BalanceScreenState extends State<BalanceScreen> {
   }
 
   Widget screen() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          // the 'header'
-          Container(
-            decoration: BoxDecoration(
-              color: dark.withOpacity(0.05),
-              boxShadow: [
-                BoxShadow(
-                  color: dark.withOpacity(0.01),
-                  spreadRadius: 10,
-                  blurRadius: 3,
+    return Column(
+      children: <Widget>[
+        // header
+        Container(
+          decoration: BoxDecoration(
+            color: dark.withOpacity(0.05),
+            boxShadow: [
+              BoxShadow(
+                color: dark.withOpacity(0.01),
+                spreadRadius: 10,
+                blurRadius: 3,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 60, bottom: 20, right: 20, left: 20),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    title("Balance"),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
+                      },
+                      child: Row(
+                        children: const <Widget>[
+                          Icon(
+                            Icons.info_outline_rounded,
+                            color: primary,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60, bottom: 20, right: 20, left: 20),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      title("Balance"),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
-                        },
-                        child: Row(
-                          children: const <Widget>[
-                            Icon(
-                              Icons.edit,
-                              color: primary,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+          ),
+        ),
+        // main screen
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const ScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                sbh32(),
+                fat(),
+                sbh40(),
+              ],
             ),
           ),
-          sbh32(),
-          fat(),
-          sbh40(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -115,6 +123,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  // upper part (subtitle)
                   const Text(
                     "Total money",
                     style: TextStyle(
@@ -124,6 +133,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     ),
                   ),
                   sbh12(),
+                  // bottom part (amount)
                   Text(
                     CurrencyFormat.convertToIdr(amount, 2),
                     style: const TextStyle(
