@@ -1,15 +1,15 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:money_tracker/themes/colors.dart';
+import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/themes/text_formats.dart';
 import 'package:money_tracker/models/new_plan.dart';
 import 'package:money_tracker/operations/plan_operation.dart';
 import 'package:money_tracker/screens/plan_screens/add_plan_screen.dart';
 import 'package:money_tracker/screens/plan_screens/progress_screen.dart';
 import 'package:money_tracker/screens/plan_screens/update_plan_screen.dart';
-import 'package:money_tracker/themes/colors.dart';
-import 'package:money_tracker/themes/text_formats.dart';
-import 'package:money_tracker/themes/spaces.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class PlanScreen extends StatefulWidget {
@@ -20,19 +20,22 @@ class PlanScreen extends StatefulWidget {
 }
 
 class _PlanScreenState extends State<PlanScreen> {
-  int selectedIndex = DateTime.now().month - 1;
-  final DateTime _selectedDate = DateTime.now();
-  int _selectedYear = DateTime.now().year;
-  DateTime now = DateTime.now();
-  final planOperation = PlanOperation();
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('plans');
+  final planOperation = PlanOperation();
+  DateTime now = DateTime.now();
+  late DateTime _selectedDate;
+  late int _selectedIndex;
+  late int _selectedYear;
 
   @override
   void initState() {
     super.initState();
+    _selectedDate = now;
+    _selectedIndex = now.month - 1;
+    _selectedYear = now.year;
 
     WidgetsBinding.instance.addPostFrameCallback((_){
-      fat();
+      fal();
     });
   }
 
@@ -47,7 +50,7 @@ class _PlanScreenState extends State<PlanScreen> {
   Widget screen() {
     return Column(
       children: <Widget>[
-        // the 'header'
+        // header
         Container(
           decoration: BoxDecoration(
             color: dark.withOpacity(0.05),
@@ -90,13 +93,14 @@ class _PlanScreenState extends State<PlanScreen> {
             ),
           ),
         ),
-        sbh32(),
+        // main screen
         Expanded(
           child: SingleChildScrollView(
             physics: const ScrollPhysics(),
             child: Column(
               children: <Widget>[
-                fat(),
+                sbh32(),
+                fal(),
               ],
             ),
           ),
@@ -106,14 +110,15 @@ class _PlanScreenState extends State<PlanScreen> {
     );
   }
 
-  Widget fat() {
+  Widget fal() {
     return FirebaseAnimatedList(
       query: planOperation.getQuery(),
       itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-        String dd = snapshot.child("endDate").value.toString();
-        if (dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (selectedIndex + 1).toString()) {
-          final json = snapshot.value as Map<dynamic, dynamic>;
-          final plan = NewPlan.fromJson(json);
+        final json = snapshot.value as Map<dynamic, dynamic>;
+        final plan = NewPlan.fromJson(json);
+        String dd = plan.getEndDate();
+
+        if (dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (_selectedIndex + 1).toString()) {
           return planList(snapshot.key, plan.getName(), plan.getTarget(), plan.getCurrAmount(), plan.getStartDate(), plan.getEndDate());
         } else {
           return Container();
@@ -178,7 +183,7 @@ class _PlanScreenState extends State<PlanScreen> {
   Widget pickYear() {
     return AlertDialog(
       title: const Text("Select Year"),
-      content: SizedBox( // Need to use container to add size constraint.
+      content: SizedBox(
         width: 300,
         height: 300,
         child: YearPicker(
@@ -202,7 +207,6 @@ class _PlanScreenState extends State<PlanScreen> {
       scrollDirection: Axis.horizontal,
       physics: const ClampingScrollPhysics(),
       child: Row(
-        // generate in a loop < months
         children: List.generate(now.month, (index) {
           final monthName = DateFormat("MMMM").format(DateTime(now.year, index + 1, 1));
 
@@ -210,7 +214,7 @@ class _PlanScreenState extends State<PlanScreen> {
             padding: EdgeInsets.only(left: index == 0 ? 16.0 : 0.0, right: 16.0),
             child: GestureDetector(
               onTap: () => setState(() {
-                selectedIndex = index;
+                _selectedIndex = index;
               }),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -218,10 +222,10 @@ class _PlanScreenState extends State<PlanScreen> {
                   // month's name (MMM)
                   Container(
                     decoration: BoxDecoration(
-                      color: selectedIndex == index ? primary : Colors.transparent,
+                      color: _selectedIndex == index ? primary : Colors.transparent,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(
-                        color: selectedIndex == index ? primary : dark.withOpacity(0.1),
+                        color: _selectedIndex == index ? primary : dark.withOpacity(0.1),
                       ),
                     ),
                     child: Padding(
@@ -230,7 +234,7 @@ class _PlanScreenState extends State<PlanScreen> {
                         monthName.substring(0, 3),
                         style: TextStyle(
                           fontSize: 14,
-                          color: selectedIndex == index ? Colors.white : dark,
+                          color: _selectedIndex == index ? Colors.white : dark,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -243,21 +247,6 @@ class _PlanScreenState extends State<PlanScreen> {
         }),
       ),
     );
-  }
-  
-  int daysBetween(DateTime from, DateTime to) {
-    from = DateTime(from.year, from.month, from.day);
-    to = DateTime(to.year, to.month, to.day);
-    return (to.difference(from).inHours / 24).round();
-  }
-
-  double suggestedAmount = 0;
-  double calculateSA(double target, String startDate, String endDate) {
-    DateTime date1 = DateTime.parse(startDate);
-    DateTime date2 = DateTime.parse(endDate);
-
-    suggestedAmount = target / daysBetween(date1, date2);
-    return suggestedAmount;
   }
 
   Widget planList(String? key, String name, double target, double currAmount, String startDate, String endDate) {
@@ -312,9 +301,11 @@ class _PlanScreenState extends State<PlanScreen> {
                       ],
                     ),
                     sbh12(),
+                    // middle part
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        // target amount
                         Row(
                           children: <Widget>[
                             Text(
@@ -326,11 +317,13 @@ class _PlanScreenState extends State<PlanScreen> {
                             ),
                           ],
                         ),
+                        // actions
                         SizedBox(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
+                              // add progress
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(builder: (_) => ProgressScreen(planKey: key ?? "")));
@@ -345,6 +338,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                 ),
                               ),
                               sbw8(),
+                              // edit
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(builder: (_) => UpdatePlanScreen(planKey: key ?? "")));
@@ -359,6 +353,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                 ),
                               ),
                               sbw8(),
+                              // delete
                               GestureDetector(
                                 onTap: () {
                                   showDialog(
@@ -411,9 +406,11 @@ class _PlanScreenState extends State<PlanScreen> {
                       ],
                     ),
                     sbh12(),
+                    // bottom part
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        // suggested amount
                         Padding(
                           padding: const EdgeInsets.only(top: 3),
                           child: Text(
@@ -425,6 +422,7 @@ class _PlanScreenState extends State<PlanScreen> {
                             ),
                           ),
                         ),
+                        // progress number
                         Row(
                           children: <Widget>[
                             Padding(
@@ -455,6 +453,7 @@ class _PlanScreenState extends State<PlanScreen> {
                       ],
                     ),
                     sbh16(),
+                    // progress bar
                     Stack(
                       children: <Widget>[
                         Container(
@@ -482,5 +481,20 @@ class _PlanScreenState extends State<PlanScreen> {
           )
       ]),
     );
+  }
+
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return (to.difference(from).inHours / 24).round();
+  }
+
+  double suggestedAmount = 0;
+  double calculateSA(double target, String startDate, String endDate) {
+    DateTime date1 = DateTime.parse(startDate);
+    DateTime date2 = DateTime.parse(endDate);
+
+    suggestedAmount = target / daysBetween(date1, date2);
+    return suggestedAmount;
   }
 }

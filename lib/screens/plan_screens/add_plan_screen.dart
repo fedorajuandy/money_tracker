@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:money_tracker/models/new_plan.dart';
-import 'package:money_tracker/operations/plan_operation.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/themes/text_formats.dart';
+import 'package:money_tracker/models/new_plan.dart';
+import 'package:money_tracker/operations/plan_operation.dart';
+import 'package:money_tracker/widgets/button.dart';
+import 'package:money_tracker/widgets/textfield.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class AddPlanScreen extends StatefulWidget {
@@ -20,9 +22,9 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
   final TextEditingController _targetText = TextEditingController();
   final TextEditingController _startDateText = TextEditingController();
   final TextEditingController _endDateText = TextEditingController();
-  DateTime now = DateTime.now();
   late DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('plans');
   final planOperation = PlanOperation();
+  DateTime now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
   Widget screen() {
     return Column(
       children: <Widget>[
-        // the 'header'
+        // header
         Container(
           decoration: BoxDecoration(
             color: dark.withOpacity(0.05),
@@ -68,9 +70,9 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
                     key: _keyform,
                     child: Column(
                       children: <Widget>[
-                        textFieldName(),
+                        textField("Plan name", _nameText, "Please input plan name"),
                         sbh20(),
-                        textFieldTarget(),
+                        textFieldNumber("Target amount", _targetText, "Please input target amount"),
                         sbh20(),
                         pickStartDate(),
                         sbh20(),
@@ -79,7 +81,7 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            buttonCancel(),
+                            buttonCancel(context),
                             sbw8(),
                             buttonAdd(),
                           ],
@@ -94,61 +96,6 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget textFieldName() {
-    return TextFormField(
-      cursorColor: primary,
-      style: const TextStyle(color: dark),
-      decoration: const InputDecoration(
-        hintText: "Plan name",
-        hintStyle: TextStyle(
-          color: Colors.black54,
-        ),
-        labelText: 'Plan name',
-        labelStyle: TextStyle(
-          color: primary,
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      controller: _nameText,
-      validator: (value) {
-        return (value !.isEmpty? "Please input plan name": null);
-      },
-    );
-  }
-
-  Widget textFieldTarget() {
-    return TextFormField(
-      cursorColor: primary,
-      style: const TextStyle(color: dark),
-      decoration: const InputDecoration(
-        hintText: "Target",
-        hintStyle: TextStyle(
-          color: Colors.black54,
-        ),
-        labelText: 'Target',
-        labelStyle: TextStyle(
-          color: primary,
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      keyboardType: TextInputType.number,
-      controller: _targetText,
-      validator: (value) {
-        return (value !.isEmpty? "Please input target amount": null);
-      },
     );
   }
 
@@ -196,7 +143,7 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
         );
 
         if (pickedDate != null) {
-          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+          String formattedDate = formatDate(pickedDate);
           setState(() {
             _startDateText.text = formattedDate;
           });
@@ -249,7 +196,7 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
         );
 
         if (pickedDate != null) {
-          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+          String formattedDate = formatDate(pickedDate);
           setState(() {
             _endDateText.text = formattedDate;
           });
@@ -281,26 +228,6 @@ class _AddTransactionScreenState extends State<AddPlanScreen> {
         }
       },
       child: const Text("Add plan"),
-    );
-  }
-
-  Widget buttonCancel() {
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.all(20),
-        backgroundColor: white,
-        foregroundColor: primary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-          side: const BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      child: const Text("Cancel"),
     );
   }
 }

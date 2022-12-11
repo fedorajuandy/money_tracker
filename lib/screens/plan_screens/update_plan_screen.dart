@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:money_tracker/themes/colors.dart';
 import 'package:money_tracker/themes/spaces.dart';
+import 'package:money_tracker/themes/text_formats.dart';
+import 'package:money_tracker/models/new_plan.dart';
+import 'package:money_tracker/operations/plan_operation.dart';
+import 'package:money_tracker/widgets/button.dart';
+import 'package:money_tracker/widgets/textfield.dart';
 import 'package:money_tracker/widgets/title.dart';
 
 class UpdatePlanScreen extends StatefulWidget {
@@ -19,8 +23,10 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
   final TextEditingController _targetText = TextEditingController();
   final TextEditingController _startDateText = TextEditingController();
   final TextEditingController _endDateText = TextEditingController();
-  DateTime now = DateTime.now();
+  final planOperation = PlanOperation();
   late DatabaseReference dbPlan;
+  DateTime now = DateTime.now();
+  double _currAmount = 0;
 
   @override
   void initState() {
@@ -32,8 +38,10 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
   void getPlanData() async {
     DataSnapshot snapshot = await dbPlan.child(widget.planKey).get();
     Map plan = snapshot.value as Map;
+
     _nameText.text = plan['name'];
     _targetText.text = plan['target'].toString();
+    _currAmount = plan['currAmount'];
     _startDateText.text = plan['startDate'];
     _endDateText.text = plan['endDate'];
   }
@@ -49,7 +57,7 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
   Widget screen() {
     return Column(
       children: <Widget>[
-        // the 'header'
+        // header
         Container(
           decoration: BoxDecoration(
             color: dark.withOpacity(0.05),
@@ -65,7 +73,7 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
             padding: const EdgeInsets.only(top: 60, bottom: 24, right: 20, left: 20),
             child: Column(
               children: <Widget>[
-                titleWithBack("Add plan", context),
+                titleWithBack("Update plan", context),
               ],
             ),
           ),
@@ -82,9 +90,9 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
                     key: _keyform,
                     child: Column(
                       children: <Widget>[
-                        textFieldName(),
+                        textField("Plan name", _nameText, "Please input plan name"),
                         sbh20(),
-                        textFieldTarget(),
+                        textFieldNumber("Target amount", _targetText, "Please input target amount"),
                         sbh20(),
                         pickStartDate(),
                         sbh20(),
@@ -93,7 +101,7 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            buttonCancel(),
+                            buttonCancel(context),
                             sbw8(),
                             buttonUpdate(),
                           ],
@@ -108,61 +116,6 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget textFieldName() {
-    return TextFormField(
-      cursorColor: primary,
-      style: const TextStyle(color: dark),
-      decoration: const InputDecoration(
-        hintText: "Plan name",
-        hintStyle: TextStyle(
-          color: Colors.black54,
-        ),
-        labelText: 'Plan name',
-        labelStyle: TextStyle(
-          color: primary,
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      controller: _nameText,
-      validator: (value) {
-        return (value !.isEmpty? "Please input plan name": null);
-      },
-    );
-  }
-
-  Widget textFieldTarget() {
-    return TextFormField(
-      cursorColor: primary,
-      style: const TextStyle(color: dark),
-      decoration: const InputDecoration(
-        hintText: "Target",
-        hintStyle: TextStyle(
-          color: Colors.black54,
-        ),
-        labelText: 'Target',
-        labelStyle: TextStyle(
-          color: primary,
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      keyboardType: TextInputType.number,
-      controller: _targetText,
-      validator: (value) {
-        return (value !.isEmpty? "Please input target amount": null);
-      },
     );
   }
 
@@ -210,7 +163,7 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
         );
 
         if (pickedDate != null) {
-          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+          String formattedDate = formatDate(pickedDate);
           setState(() {
             _startDateText.text = formattedDate;
           });
@@ -263,7 +216,7 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
         );
 
         if (pickedDate != null) {
-          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+          String formattedDate = formatDate(pickedDate);
           setState(() {
             _endDateText.text = formattedDate;
           });
@@ -284,16 +237,10 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
       ),
       onPressed: () {
         if (_keyform.currentState !.validate()) {
-          Map<String, dynamic> plan = {
-            'name': _nameText.text,
-            'target': double.parse(_targetText.text),
-            'startDate': _startDateText.text,
-            'endDate': _endDateText.text,
-          };
+          final newPlan = NewPlan(_nameText.text, double.parse(_targetText.text), _currAmount, _startDateText.text, _endDateText.text);
+          planOperation.update(newPlan, widget.planKey);
 
-          dbPlan.child(widget.planKey).update(plan).then((value) => {
-            Navigator.pop(context),
-          });
+          Navigator.pop(context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Please enter all required fields."),
@@ -302,26 +249,6 @@ class _AddTransactionScreenState extends State<UpdatePlanScreen> {
         }
       },
       child: const Text("Update plan"),
-    );
-  }
-
-  Widget buttonCancel() {
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.all(20),
-        backgroundColor: white,
-        foregroundColor: primary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-          side: const BorderSide(
-            color: primary,
-          ),
-        ),
-      ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      child: const Text("Cancel"),
     );
   }
 }
