@@ -1,5 +1,5 @@
 name: money_tracker
-description: A new Flutter project.
+description: An application for recording daily transactions and planning budgets.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -51,7 +51,7 @@ dev_dependencies:
   flutter_lints: ^2.0.1
 
 flutter_icons:
-  image_path: "assets/logos/app_logo.png"
+  image_path: "logos/app_logo.png"
   android: true
   ios: true
   remove_alpha_ios: true
