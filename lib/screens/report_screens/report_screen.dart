@@ -276,7 +276,7 @@ class _ReportScreenState extends State<ReportScreen> {
         height: 300,
         child: YearPicker(
           firstDate: DateTime(now.year - 10, 1, 1),
-          lastDate: DateTime(now.year + 10, 1, 1),
+          lastDate: DateTime(now.year, 1, 1),
           initialDate: now,
           selectedDate: _selectedDate,
           onChanged: (DateTime value) {
