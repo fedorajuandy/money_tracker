@@ -13,7 +13,7 @@ Long story short:
 - my fever-addled brain decided just to move the branch
 - present time:
 
-## Notes
+## Explanation notes and issues (for now and future)
 
 1. Cannot get parent key id[^1]
 
@@ -22,6 +22,10 @@ Long story short:
 2. Cannot getChildren at snapshot[^2]
 
 > For FirebaseAnimatedList, there is supposed to be a method getChildren() in android; unfortunately there is no such thing in Flutter and has already been an issue for quite awhile. So the 'Report' part of application cannot simply just itterate the whole thing and return the very last one.
+
+3. Problems with changing states
+
+> The date has to be clicked twice to update "Total" in daily "Transactions". Must have been a problem with updating the state and cannot found "onChildChanged" or similar in FirebaseAnimatedList to update it each time adding a new transaction (plus cannot get the index to manually update it at the last one).
 
 ## Firebase Realtime Database Setup[^3]
 
