@@ -119,7 +119,7 @@ class _PlanScreenState extends State<PlanScreen> {
         final plan = NewPlan.fromJson(json);
         String dd = plan.getEndDate();
 
-        if (dd.substring(0, 4) == _selectedYear.toString() && dd.substring(5, 7) == (_selectedIndex + 1).toString()) {
+        if (dd.substring(0, 4) == _selectedYear.toString() && int.parse(dd.substring(5, 7)) == (_selectedIndex + 1)) {
           return planList(snapshot.key, plan.getName(), plan.getTarget(), plan.getCurrAmount(), plan.getStartDate(), plan.getEndDate());
         } else {
           return Container();
